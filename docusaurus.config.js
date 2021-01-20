@@ -17,7 +17,7 @@ module.exports = {
       },
       items: [
         {
-          to: 'docs/',
+          to: 'docs/quickstart/intro',
           activeBasePath: 'docs',
           label: 'Docs',
           position: 'left',
@@ -30,7 +30,7 @@ module.exports = {
         },
       ],
     },
-    footer: {
+/*     footer: {
       style: 'dark',
       links: [
         {
@@ -78,6 +78,11 @@ module.exports = {
         },
       ],
       copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+    }, */
+       footer: {
+      links: [],
+      logo: {},
+      copyright: `Copyright © ${new Date().getFullYear()} Nervos`,
     },
   },
   presets: [
