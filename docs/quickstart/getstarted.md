@@ -97,7 +97,7 @@ Type ".help" for more information.
 ​```
 ```
 
-Config manager can also be setup through a local config file specified by the `LUMOS_CONFIG_FILE` variable. For more information, see [Config Manager](/lumos/package/configmanager).
+Config manager can also be setup through a local config file specified by the `LUMOS_CONFIG_FILE` variable. For more information, see Config Manager.
 
 ## Start Indexer
 

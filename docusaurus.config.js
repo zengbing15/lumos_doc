@@ -1,8 +1,8 @@
 module.exports = {
   title: 'Lumos',
   tagline: 'The Server and Desktop Development Framework for Nervos CKB',
-  url: 'https://your-docusaurus-test-site.com',
-  baseUrl: '/',
+  url: 'https://github.com/xying21/lumos_doc',
+  baseUrl: '/lumos_doc/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
@@ -88,7 +88,7 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/',
+            'https://github.com/xying21/lumos_doc/tree/master',
         },
         blog: {
           showReadingTime: true,
