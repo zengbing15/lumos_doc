@@ -4,8 +4,13 @@ title: Getting Started
 ---
 ## Prerequisites
 
-- NodeJS version 12+
-- OS: Windows, Linux or Mac OS X
+- The essential knowledge are required for using Lumos to develop CKB DApps:
+
+  - Basic knowledge of Nervos CKB<!-- are prerequisites for developing CKB DApps with Lumos. -->: For more details about the basic knowledge of Nervos CKB, see [Nervos CKB Basics](https://docs.nervos.org/docs/basics/introduction).
+  - CKB Data Model: For more details about the CKB data model, see [Nervos CKB Reference](https://docs.nervos.org/docs/reference/introduction) and [CKB Data Structure](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0019-data-structures/0019-data-structures.md).
+- JavaScript runtime environment: NodeJS version 12+
+- Web application framework: Express.js is recommended.
+- OS:  MacOS, Ubuntu Linux, or Windows 10 + WSL2 (Ubuntu)
 
 ## Run a Nervos CKB Node
 

@@ -5,7 +5,7 @@ module.exports = {
   baseUrl: '/lumos_doc/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon.png',
   organizationName: 'xying21', // Usually your GitHub org/user name.
   projectName: 'lumos_doc', // Usually your repo name.
   themeConfig: {

@@ -1,8 +1,8 @@
 ---
 id: configmanager
-title: Config Manager
+title: Configuration Manager
 ---
-The config manager feature deals with differences between different chains, such as mainnet, testnet, or numerous dev chains. Each chain is abstracted into an individual config file. 
+The configuration manager feature deals with differences between different chains, such as mainnet, testnet, or numerous dev chains. Each chain is abstracted into an individual config file. 
 
 When a config file is loaded, the config manager handles the chain specific logic that saves corresponding coding effort for configuration management.
 
