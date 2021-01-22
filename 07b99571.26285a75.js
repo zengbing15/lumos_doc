@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[7],{74:function(o){o.exports=JSON.parse('{"allTagsPath":"/lumos_doc/blog/tags","slug":"facebook","name":"facebook","count":1,"permalink":"/lumos_doc/blog/tags/facebook"}')}}]);
