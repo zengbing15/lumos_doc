@@ -4,7 +4,7 @@ title: Transaction Manager
 ---
 The `@ckb-lumos/transaction-manager` package deals with one problem with UTXO based blockchains. is that a certain amount of gap period exists between a transaction is accepted by a blockchain, and when it is actually committed on chain. During this gap, new cells created by the pending transaction will not be available. Transaction manager package takes care of this. It wraps an indexer instance, and makes sure cells created in pending transactions, are also exposed and available for assembling new transactions. This means you are no longer bounded to one transaction at a time, you can freely send series of transactions as you wish.
 
-Transaction Manager is a tool for manager uncommitted cells, you can `send_transaction` via this tool and get uncommitted outputs by `collector`.
+Transaction Manager is a tool for managing uncommitted cells, you can `send_transaction` via this tool and get uncommitted outputs by `collector`.
 
 ## Examples
 

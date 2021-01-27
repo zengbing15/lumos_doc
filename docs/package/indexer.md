@@ -1,6 +1,6 @@
 ---
 id: indexer
-title: Indexer
+title: Lumos Indexer
 ---
 The `@ckb-lumos/indexer` package implements a CKB cell indexer that fulfills [`Index-Query-Assemble`](https://docs.nervos.org/docs/reference/cell#index-query-assemble-pattern) pattern. 
 

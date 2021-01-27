@@ -1,7 +1,7 @@
 module.exports = {
   someSidebar: {
     Quickstart: ['quickstart/intro', 'quickstart/getstarted'],
-	'Features and Utilities': ['package/commonscripts','package/configmanager','package/hd','package/hdcache','package/helpers','package/indexer','package/sqlindexer','package/transactionmanager'],
-    'Use Cases and Examples': ['mdx'],
+	'Features': ['package/base','package/configmanager','package/commonscripts','package/indexer','package/helpers','package/transactionmanager','package/hd','package/hdcache'],
+  'General Use Cases': ['tutorials/query',{'Transaction Tasks':['tutorials/transfer','tutorials/acp','tutorials/dao','tutorials/sudt']}],
   },
 };

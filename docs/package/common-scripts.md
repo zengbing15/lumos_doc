@@ -8,7 +8,7 @@ The following common scripts on Nervos CKB are included in the `@ckb-lumos/commo
 
 - `common`: The `common` script supports common transaction tasks such as to `transfer` capacity from `fromInfos` to an address. The `common` script uses locktime pool cells first by default. 
 
-  The `common` script also provides APIs to integrate new customized lock scripts. `pw-lock` shows how to the integration of customized scripts.
+  The `common` script also provides APIs to integrate new customized lock scripts. `pw-lock` shows how to integrate customized scripts.
 
 - `dao`: The `DAO` type script
 

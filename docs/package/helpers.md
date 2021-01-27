@@ -4,7 +4,7 @@ title: Helpers
 ---
 The `@ckb-lumos/helpers` package contains the utilities for working with CKB transactions.
 
-These utilities are different with the ones in the `@ckb-lumos/base` package The utilities in the `@ckb-lumos/base` package are core definitions and stateless functions. The `@ckb-lumos/base` package can be used as a standalone library. 
+These utilities are different with the ones in the `@ckb-lumos/base` package. The utilities in the `@ckb-lumos/base` package are core definitions and stateless functions. The `@ckb-lumos/base` package can be used as a standalone library. 
 
 The `@ckb-lumos/helpers` package is used in a framework sense that requires to setup the *config manager*. So the `@ckb-lumos/helpers` package knows whether the framework is running under testnet, or mainnet environment.
 
