@@ -1,7 +1,7 @@
 module.exports = {
   someSidebar: {
     Quickstart: ['quickstart/intro', 'quickstart/getstarted'],
-	'Features': ['package/base','package/configmanager','package/commonscripts','package/indexer','package/helpers','package/transactionmanager','package/hd','package/hdcache'],
-  'General Use Cases': ['tutorials/query',{'Transaction Tasks':['tutorials/transfer','tutorials/acp','tutorials/dao','tutorials/sudt']}],
+	'Components': ['package/base','package/configmanager','package/commonscripts','package/indexer','package/helpers','package/hd','package/hdcache','package/transactionmanager'],
+    'Use Cases': ['tutorials/common',{'Script Specific Tasks':['tutorials/acp','tutorials/dao','tutorials/nft','tutorials/sudt']}],
   },
 };

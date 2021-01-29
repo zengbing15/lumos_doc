@@ -1,6 +1,6 @@
 module.exports = {
   title: 'Lumos',
-  tagline: 'The Server and Desktop Development Framework for Nervos CKB',
+  tagline: 'The Development Framework for Nervos CKB DApps',
   url: 'https://github.com/xying21/lumos_doc',
   baseUrl: '/lumos_doc/',
   onBrokenLinks: 'throw',
@@ -13,7 +13,7 @@ module.exports = {
       title: 'Lumos Documentation',
       logo: {
         alt: 'Lumos',
-        src: 'img/logo.svg',
+        src: 'img/favicon.png',
       },
       items: [
         {

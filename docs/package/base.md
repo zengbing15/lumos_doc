@@ -1,8 +1,8 @@
 ---
 id: base
-title: Common Types and Utilities
+title: Base
 ---
-The common types and utilities for CKB data structures covering cells, scripts, transactions and blocks are included in the `@ckb-lumos/base` package. 
+The base component includes the common types and utilities for CKB data structures in the `@ckb-lumos/base` package that covering cells, scripts, transactions and blocks. 
 
 ## Examples
 

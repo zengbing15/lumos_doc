@@ -2,15 +2,15 @@
 id: configmanager
 title: Configuration Manager
 ---
-The configuration manager feature deals with differences between different chains, such as mainnet, testnet, or numerous dev chains. Each chain is abstracted into an individual config file. 
+The configuration manager deals with differences between chains, such as the mainnet, testnet, or numerous dev chains. Each chain is abstracted into an individual config file. 
 
-When a config file is loaded, the config manager handles the chain specific logic that saves corresponding coding effort for configuration management.
+When a config file is loaded, the configuration manager handles the chain specific logic that saves corresponding coding effort for configuration management.
 
-The config manager supports the node app to boot with a specific chain configuration, so other parts in Lumos can consult the config manager directly for information.
+The configuration  manager supports the node app to boot with a specific chain configuration, so other parts in Lumos can consult the configuration manager directly for information.
 
-There are two options for setting up the config manager:
+There are two options for setting up the configuration manager:
 
-- Setup the config manager using pre-defined configurations specified by the `LUMOS_CONFIG_NAME` variable.
+- Setup the configuration manager using pre-defined configurations specified by the `LUMOS_CONFIG_NAME` variable.
 
   Pre-defined configurations include:
 
@@ -20,7 +20,7 @@ There are two options for setting up the config manager:
 
     **Note**: when the testnet network is reset, Lumos is upgraded with new testnet configurations.
 
-- Setup the config manager via a local config file.
+- Setup the configuration manager via a local config file.
 
   - The `LUMOS_CONFIG_FILE` variable can be set pointing to a config file from that Lumos reads the configurations.  
   
