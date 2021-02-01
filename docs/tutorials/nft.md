@@ -9,7 +9,7 @@ For more information, see the [RFC: CKB-NFT Draft Spec](https://talk.nervos.org/
 
 ## Generate NFT Token
 
-This example only support gathering capacities from one single wallet.
+This example only supports gathering capacities from one single wallet.
 
 To generate NFT token:
 
@@ -182,19 +182,71 @@ const tx = sealTransaction(skeleton, signatures);
 const txHash = await rpc.send_transaction(tx);
 ```
 
-## List NFT Tokens
+## List All Live NFT Cells
 
+Live NFT cells are the cells with the requested NFT type script.
 
+To list all current live NFT cells:
+
+```javascript
+const collector = indexer.collector({
+  type: buildNftTypeScript(governanceLock),
+  data: "any",
+});
+
+const results = [];
+// For simplicity, we are gathering all cells in a single array. Note this might
+// be slow in case the number of cells grows quite big. You might want to use
+// a stream based solution to fetch only cells you need from the async iterator.
+for await (const cell of collector.collect()) {
+  results.push(cell);
+}
+return results;
+```
 
 ## Find Live NFT Cells by NFT ID
 
-## List All Current Live NFT Cells by Lock Script
+To find the live NFT cells by NFT ID:
+
+```javascript
+const collector = indexer.collector({
+  type: buildNftTypeScript(governanceLock),
+  data: nftId,
+});
+const results = [];
+// For simplicity, we are gathering all cells in a single array. Note this might
+// be slow in case the number of cells grows quite big. You might want to use
+// a stream based solution to fetch only cells you need from the async iterator.
+for await (const cell of collector.collect()) {
+  results.push(cell);
+}
+return results;
+```
+
+## List All Current Live NFT Cells by the Lock Script
+
+To list all live NFT cells by the `lock` script:
+
+```javascript
+    const collector = indexer.collector({
+      lock: lockScript,
+      type: buildNftTypeScript(governanceLock),
+    });
+    const results = [];
+    // For simplicity, we are gathering all cells in a single array. Note this might
+    // be slow in case the number of cells grows quite big. You might want to use
+    // a stream based solution to fetch only cells you need from the async iterator.
+    for await (const cell of collector.collect()) {
+      results.push(cell);
+    }
+    return results;
+```
 
 ## Transfer NFT Token from One User to Another User
 
 To transfer NFT Token from one user to another user:
 
-Step 1. Insert input and output cell for the specified NFT.
+**Step 1. Insert input and output cell for the specified NFT.**
 
 ```javascript
 let skeleton = TransactionSkeleton({ cellProvider: indexer });
@@ -217,7 +269,7 @@ let skeleton = TransactionSkeleton({ cellProvider: indexer });
     });
 ```
 
-Step 2. Add `fixedEntries` for the input and output NFT cells.
+**Step 2. Add `fixedEntries` for the input and output NFT cells.**
 
 ```javascript
   skeleton = skeleton.update("fixedEntries", (fixedEntries) => {
@@ -234,7 +286,7 @@ Step 2. Add `fixedEntries` for the input and output NFT cells.
   });
 ```
 
-Step 3. Include NFT `cell_deps`.
+**Step 3. Include NFT `cell_deps`.**
 
 ```javascript
 skeleton = skeleton.update("cellDeps", (cellDeps) => {
@@ -242,9 +294,9 @@ skeleton = skeleton.update("cellDeps", (cellDeps) => {
   });
 ```
 
-Step 4. Add a fee for the transaction.
+**Step 4. Add a fee for the transaction.**
 
-Note: For simplicity, the token sender will pay for the transaction fee. So the token sender must have spare CKB capacities in addition to the NFT token.
+**Note**: For simplicity, the token sender will pay for the transaction fee. So the token sender must have spare CKB capacities in addition to the NFT token.
 
 ```javascript
 skeleton = await common.payFee(
@@ -254,14 +306,20 @@ skeleton = await common.payFee(
 );
 ```
 
-Step 5. Generate messages that are required in transaction signing phase.
+**Step 5. Generate messages that are required in transaction signing phase.**
 
 ```javascript
  skeleton = common.prepareSigningEntries(skeleton, { config: CONFIG });
  return skeleton;
 ```
 
-Step 6. Get the signature from the user.
+**Step 6. Sign the transaction.**
+
+This example uses a secp256k1 tool to generate a signature based on the private key `0x29159d8bb4b27704b168fc7fae70ffebf82164ce432b3f6b4c904a116a969f19`.
+
+```javascript
+const signatures = ["0x1cb952fd224d1d14d07af621587e91a65ccb051d55ed1371b3b66d4fe169cf7758173882e4c02587cb54054d2de287cbb1fdc2fc21d848d7b320ee8c5826479901"];
+```
 
 Step 7. Seal the transaction with returned signatures.
 
