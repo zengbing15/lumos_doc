@@ -2,20 +2,28 @@
 id: commonscripts
 title: Common Scripts
 ---
-The common scripts on Nervos CKB are integrated in the `@ckb-lumos/common-scripts` package. With these scripts, 
+The common scripts on Nervos CKB are integrated in the `@ckb-lumos/common-scripts` package. 
+
+common, dao and sudt.
+
+The `common` script supports common transaction tasks such as to `transfer` capacity from `fromInfos` to an address. The `common` script uses locktime pool cells first by default. The `common` script also provides APIs to integrate new customized lock scripts. `pw-lock` shows how to integrate customized scripts.
+
+The `DAO` type script
+
+`sudt`  The `SUDT` type script
 
 | Script Name                   | Description                                                  |
 | ----------------------------- | ------------------------------------------------------------ |
 | anyone_can_pay                | The `ANYONE_CAN_PAY` type script                             |
-| common                        | The `common` script supports common transaction tasks such as to `transfer` capacity from `fromInfos` to an address. The `common` script uses locktime pool cells first by default. The `common` script also provides APIs to integrate new customized lock scripts. `pw-lock` shows how to integrate customized scripts. |
-| dao                           | The `DAO` type script                                        |
+|                               |                                                              |
+|                               |                                                              |
 | from_info                     | Lumos is designed to be able to treat multiple different wallets as a single unit |
 | helper                        |                                                              |
 | index                         |                                                              |
 | locktime_pool                 | The `locktime_pool`script includes `secp256k1_blake160_multisig` cells with locktime in lock `args` (the`args` total length is 28 bytes, the last 8 bytes is a `since` format locktime in BigUInt64LE encode) and `DAO` step2 cells. |
 | secp256k1_blake160            | The `secp256k1_blake` lock script                            |
 | `secp256k1_blake160_multisig` | The `secp256k1_blake160_multisig` lock script                |
-| `sudt`                        | The `SUDT` type script                                       |
+|                               |                                                              |
 
 ## Examples
 

@@ -6,6 +6,8 @@ The `@ckb-lumos/transaction-manager` package deals with one problem with UTXO ba
 
 Transaction Manager is a tool for managing uncommitted cells, you can `send_transaction` via this tool and get uncommitted outputs by `collector`.
 
+<img src="../../img/transaction manager.png" width="500"/>
+
 ## Examples
 
 ```javascript

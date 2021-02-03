@@ -13,7 +13,7 @@ The following prerequisites apply for using Lumos to develop CKB DApps:
 - Development Stacks
   - JavaScript runtime environment: NodeJS version 12+
   - Web application framework: Express.js is recommended.
-  - OS:  MacOS, Ubuntu Linux, or Windows 10 + WSL2 (Ubuntu)
+  - OS:  macOS, Ubuntu Linux, or Windows 10 + WSL2 (Ubuntu)
 
 ## Workflow
 
@@ -24,9 +24,7 @@ The basic steps for developing a CKB DApp are as follows:
 3. Create the node skeleton
 4. Set up the config manager
 5. Program common CKB tasks
-   - Check the current indexed tip
-   - Get the balance of an account
-   - Transfer CKB
+6. Troubleshooting
 
 ## Steps
 
@@ -42,16 +40,16 @@ To install and configure Nervos CKB:
 $ export TOP=$(pwd)
 # I'm testing this on a Linux machine, if you use other platforms, please adjust
 # this accordingly.
-$ curl -LO https://github.com/nervosnetwork/ckb/releases/download/v0.33.0/ckb_v0.33.0_x86_64-unknown-linux-gnu.tar.gz
-$ tar xzf ckb_v0.33.0_x86_64-unknown-linux-gnu.tar.gz
-$ export PATH=$PATH:$TOP/ckb_v0.33.0_x86_64-unknown-linux-gnu
+$ curl -LO https://github.com/nervosnetwork/ckb/releases/download/v0.39.0/ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
+$ tar xzf ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
+$ export PATH=$PATH:$TOP/ckb_v0.39.0_x86_64-unknown-linux-gnu
 ```
 
 **Step 2. Verify the binaries are working and check versions.**
 
 ```
 $ ckb -V
-ckb 0.33.0
+ckb 0.39.0
 $ ckb init -C devnet -c dev
 ```
 
@@ -105,7 +103,7 @@ $ ckb run -C devnet
 
 ```
 $ export TOP=$(pwd)
-$ export PATH=$PATH:$TOP/ckb_v0.33.0_x86_64-unknown-linux-gnu
+$ export PATH=$PATH:$TOP/ckb_v0.39.0_x86_64-unknown-linux-gnu
 $ ckb miner -C devnet
 ```
 
@@ -137,7 +135,7 @@ $ cd mydapp
 
 ```
 $ yarn init
-$ yarn add @ckb-lumos/indexer@0.14.1 @ckb-lumos/common-scripts@0.14.1
+$ yarn add @ckb-lumos/indexer@0.15.0 @ckb-lumos/common-scripts@0.15.0 @ckb-lumos/config-manager@0.15.0
 ```
 
 **Step 3. Install all dependencies.**
@@ -183,24 +181,21 @@ To start the Lumos indexer:
 
 ### Program Common CKB Tasks
 
-#### Check the Current Indexed Tip
+The DApps built with Lumos mainly deal with user queries and transaction requests, such as transferring capacity, deposits, withdrawals, and other operations of user assets.
 
-To check the current indexed tip:
+<!--The following flows of queries and transactions show the work process of these operations:-->
 
-```
-> await indexer.tip()
-{
-  block_number: "0x1aef6",
-  block_hash: "0x432451e23c26f45eaceeedcc261764d6485ea5c9a204ac55ad755bb8dec9a079"
-}
-```
+#### Query Flow
 
-#### Get the Balance of an Account
+1. The DApp uses the index database of cells to find all the live cells satisfying the query conditions.
+2. The DApp performs other related operations or calculations and returns the result to the user.
+
+**Example: Get the Balance of an Account**
 
 **Step 1. Find all the simple CKB cells for the user.**
 
 ```javascript
-const script = {
+const script: Script = {
   code_hash: "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
   hash_type: "type",
   args: "0xcbfbb9edb5838e2d61061c3fc69eaaa5fdbd3273"
@@ -217,40 +212,55 @@ for await (const cell of collector.collect()) {
 **Step 2. Add the capacity of these cells up and return the result as the balance.**
 
 ```javascript
-let balance = BigInt(0);
 return cells
   .map((cell) =>
     BigInt(
       cell.cell_output.capacity
     )
   )
-  .reduce((balance, capacity) => (balance = balance += capacity));
+  .reduce((balance, capacity) => balance + capacity, 0n);
 ```
 
-#### Transfer CKB from the Current Live Cells
+#### Transaction Flow
+
+1. Build a transaction skeleton.
+
+2. Add a fee for the transaction. **Note**: It is also possible to have someone other than the sender to pay the fee. 
+
+3. Prepare the signing entries: The signing entries are the data that the user's wallet needs to sign to provide valid witnesses for the input lock scripts. 
+
+4. Send the raw transaction to the client:  From the security perspective of a DApp, Lumos does not support built-in message signing. So the DApp needs to send the raw transaction <!--or the signing entries piece of the skeleton which contains the actual data to sign--> to the user wallet to acquire signatures. The raw transaction contains all the cells and dependencies for the action and the data that needs to be signed. 
+
+   After the client gets the skeleton, the client forwards the transaction skeleton to the wallet for signing. 
+
+5. Seal the transaction: The transaction with signatures is forwarded to the DApp. The DApp seals the transaction by adding the transaction signatures to the transaction structure. 
+
+6. Send this finalized transaction to the CKB network: The sealed transaction is then forwarded to the CKB network.
+
+   Upon successful receipt, the CKB network returns the transaction hash to the DApp. The transaction hash is sent back to the client such that the client can track the transactions.
+
+7. (Optional) Get the Transaction Status: A transaction can be in one of the three statuses: **pending**, **proposed** and **committed**.
+
+   A **pending** result means the node is aware of the transaction but the transaction is not confirmed yet. 
+
+   A **proposed** result means the node sees a transaction included in a block candidate that is not yet mined. 
+
+   A **committed** result means that the block involving the transaction has been mined and is officially on chain.
+
+<!-- img src="../../img/transaction flow.png" width="600"/> -->
+
+<!--Figure 2 Transaction Flow-->
+
+**Example: Transfer CKB from the Current Live Cells**
 
 To transfer CKB from the current set of live cells in response to a user request:
 
-**Step 1. Create a transaction skeleton and  add the transfer operation.**
+**Step 1. Create a transaction skeleton.**
 
 ```javascript
 import {sealTransaction, TransactionSkeleton } from "@ckb-lumos/helpers";
 import { common } from "@ckb-lumos/common-scripts";
 
-const tipHeader = {
-  compact_target: '0x20010000',
-  dao: '0x49bfb20771031d556c8480d47f2a290059f0ac7e383b6509006f4a772ed50200',
-  epoch: '0xa0006002b18',
-  hash: '0x432451e23c26f45eaceeedcc261764d6485ea5c9a204ac55ad755bb8dec9a079',
-  nonce: '0x8199548f8a5ac7a0f0caef1620f37b79',
-  number: '0x1aef6',
-  parent_hash: '0x63594a64108f19f6aed53d0dca9ab4075aac4379cb80b2097b0deac8fc16fd3b',
-  proposals_hash: '0x0000000000000000000000000000000000000000000000000000000000000000',
-  timestamp: '0x172f6b9a4cf',
-  transactions_root: '0x282dbadcd49f3e229d997875f37f4e4f19cb4f04fcf762e9639145aaa667b6f8',
-  uncles_hash: '0x0000000000000000000000000000000000000000000000000000000000000000',
-  version: '0x0'
-}
 const senderaddress = generateAddress(script);
 const recipient = "ckt1qyqx57xrsztnq7g5mlw6r998uyc2f5hm3vnsvgsaet";
 const amount = 100153459536n;
@@ -259,13 +269,12 @@ const txFee =  100000000n;
 let txSkeleton = TransactionSkeleton({
     cellProvider: indexer,
   });
-  txSkeleton = await common.transfer(
-    txSkeleton,
-    senderaddress,
-    recipient,
-    BigInt(amount),
-    tipHeader
-  );
+txSkeleton = await common.transfer(
+  txSkeleton,
+  senderaddress,
+  recipient,
+  BigInt(amount),
+);
 ```
 
 **Step 2. Add a fee for the transaction.**
@@ -275,15 +284,10 @@ let txSkeleton = TransactionSkeleton({
     txSkeleton,
     senderaddress,
     BigInt(txFee),
-    tipHeader
   );
 ```
 
-**Note**: It is also possible to have someone other than the sender to pay the fee.
-
 **Step 3. Prepare the signing entries.** 
-
-The signing entries are the data that the user's wallet needs to sign to provide valid witnesses for the input lock scripts. 
 
 To prepare the signing entries:
 
@@ -302,20 +306,22 @@ return res
 }
 });-->
 
-**Step 5. Sign the transaction.**
+**Step 4. Sign the transaction.**
 
-From the security perspective of a DApp, Lumos does not support built-in message signing.
+This example uses the HD wallet manager to generate a signature based on the private key `0x29159d8bb4b27704b168fc7fae70ffebf82164ce432b3f6b4c904a116a969f19`.
 
-For demonstration purpose, this example uses a secp256k1 tool to generate a signature based on the private key `0x29159d8bb4b27704b168fc7fae70ffebf82164ce432b3f6b4c904a116a969f19`.
-
-```
-const signatures = ["0x1cb952fd224d1d14d07af621587e91a65ccb051d55ed1371b3b66d4fe169cf7758173882e4c02587cb54054d2de287cbb1fdc2fc21d848d7b320ee8c5826479901"];
-```
-
-**Step 5. Seal the transaction with the signatures.**
+<!--["0x1cb952fd224d1d14d07af621587e91a65ccb051d55ed1371b3b66d4fe169cf7758173882e4c02587cb54054d2de287cbb1fdc2fc21d848d7b320ee8c5826479901"];-->
 
 ```javascript
-const tx = sealTransaction(txSkeleton, signatures);
+const {key} = require("@ckb-lumos/hd");
+const message = txSkeleton.get("signingEntries").get(0).message;
+const signature = key.signRecoverable(message, privateKey)
+```
+
+**Step 5. Seal the transaction with the `signature`.**
+
+```javascript
+const tx = sealTransaction(txSkeleton, signature);
 ```
 
 **Step 6. Send this finalized transaction to the CKB network.**
@@ -323,7 +329,7 @@ const tx = sealTransaction(txSkeleton, signatures);
 ```javascript
 const { RPC } = require("ckb-js-toolkit");
 const rpc = new RPC("http://127.0.0.1:8114");
-await rpc.send_transaction(tx);
+const txHash = await rpc.send_transaction(tx);
 '0x88536e8c25f5f8c89866dec6a5a1a6a72cccbe282963e4a7bfb5542b4c15d376'
 ```
 
@@ -333,12 +339,4 @@ await rpc.send_transaction(tx);
 const tx = await rpc.get_transaction(txHash);
 return tx.tx_status.status;
 ```
-
-A transaction can be in one of the three statuses: **pending**, **proposed** and **committed**.
-
-A **pending** result means the node is aware of the transaction but the transaction is not confirmed yet. 
-
-A **proposed** result means the node sees a transaction included in a block candidate that is not yet mined. 
-
-A **committed** result means that the block involving the transaction has been mined and is officially on chain.
 
