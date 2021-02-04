@@ -19,12 +19,13 @@ The following prerequisites apply for using Lumos to develop CKB DApps:
 
 The basic steps for developing a CKB DApp are as follows:
 
-1. Prepare the prerequisite skills and development stacks listed in [Prerequisites](../quickstart/getstarted#prerequisites)
-2. Install and configure Nervos CKB
-3. Create the node skeleton
-4. Set up the config manager
-5. Program common CKB tasks
-6. Troubleshooting
+1. Prepare the prerequisite skills and development stacks listed in [Prerequisites](../quickstart/getstarted#prerequisites).
+2. Install and configure Nervos CKB.
+3. Create the node skeleton.
+4. Set up the config manager.
+5. Start the Lumos indexer.
+6. Program common CKB tasks.
+7. Troubleshooting
 
 ## Steps
 
@@ -170,6 +171,8 @@ Type ".help" for more information.
 ### Start the Lumos Indexer
 
 The DApp that is built with Lumos must have an indexer configured and running.
+
+This example uses the RocksDB backed indexer.
 
 To start the Lumos indexer:
 
@@ -340,3 +343,24 @@ const tx = await rpc.get_transaction(txHash);
 return tx.tx_status.status;
 ```
 
+### Troubleshooting
+
+#### Recompile Native Modules for Electron Applications
+
+The Lumos indexer is based on the CKB indexer that is developed by Rust. To leverage the native Rust code without installing Rust, Lumos provides the Lumos indexer with a pre-built native module of the CKB indexer.
+
+For Electron applications, the native module needs to be recompiled. Because Electron has a different application binary interface (ABI) from a given Node.js binary that will cause errors for the Electron applications.
+
+<!--First, we do provide pre-built binaries linked with electron's node version.-->
+
+To fix or avoid the error: 
+
+Install npm dependencies in your Electron app to make sure the pre-built native modules compiled for Electron to be downloaded.
+
+```bash
+$ LUMOS_NODE_RUNTIME=electron npm i
+```
+
+You can also follow the [steps](https://neon-bindings.com/docs/electron-apps) in Neon's documentation to rebuild the modules. 
+
+Note: this workaround requires to install Rust on system.

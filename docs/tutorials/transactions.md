@@ -1,6 +1,6 @@
 ---
 id: transactions
-title: Transactions
+title: Managing Transactions
 ---
 The goal and core functionality of a DApp built with Lumos is to build transactions in response to user requests.
 

@@ -2,35 +2,82 @@
 id: indexer
 title: Lumos Indexer
 ---
-The `@ckb-lumos/indexer` package implements a CKB cell indexer that fulfills the [`Index-Query-Assemble`](https://docs.nervos.org/docs/reference/cell#index-query-assemble-pattern) pattern. <!--The DApps built with Lumos must have a configured and running indexer.-->
+<!--The `@ckb-lumos/indexer` package implements a CKB cell indexer that fulfills the [`Index-Query-Assemble`](https://docs.nervos.org/docs/reference/cell#index-query-assemble-pattern) pattern.--> <!--The DApps built with Lumos must have a configured and running indexer.-->
 
-**Stability and Performance**
+Lumos is designed based on the [`Index-Query-Assemble`](https://docs.nervos.org/docs/reference/cell#index-query-assemble-pattern) pattern. The Lumos indexer polls blocks from a CKB node, indexes them and stores the indexed data in a local database to provide optimal query.
 
-The Lumos indexer is based on a [Rust based native indexer](https://github.com/quake/ckb-indexer) for stability and performance.
+Dapps built with Lumos must have an indexer configured and running.
 
-**Source**
+Lumos provides two types of indexer:
 
-The indexer consumes from the following sources:
+- A RocksDB backed indexer: The RocksDB backed indexer is contained in the  `@ckb-lumos/indexer` package.
+- A SQL backed indexer: A separate package, the `@ckb-lumos/sql-indexer` package contains the SQL backed indexer. The SQL backed indexer is using the same interface as the RocksDB backed indexer. Now Lumos supports the SQL databases of the latest stable versions of PostgreSQL and MySQL.
 
-* Direct access of CKB's data dir via RocksDB's readonly or secondary mode;
-* Consistent queries of CKB's RPC.
+**Note**:  The usage for the SQL backed indexer is not fully verified. It is still in the experimental stage.
 
-**Database**
+<!--The Lumos indexer is based on the CKB indexer (a [Rust based native indexer](https://github.com/quake/ckb-indexer)) for stability and performance.-->
 
-The indexer supports to store the indexed data in either of the following storage options:
+<!-- Source-->
 
-* A local RocksDB directory
-* A remote SQL database. The supported databases now include the latest stable versions of PostgreSQL and MySQL. 
+<!--The indexer consumes from the following sources:-->
 
-**Note**: This package contains the RocksDB backed indexer. A [separate package](sqlindexer) , the `@ckb-lumos/sql-indexer` package contains the SQL backed indexer using the same interface. 
+<!--Direct access of CKB's data dir via RocksDB's readonly or secondary mode;-->
+
+<!--Consistent queries of CKB's RPC.-->
 
 ## Examples
 
-### Start Indexer
+### Use the RocksDB Backed Indexer
 
 ```javascript
 const { Indexer, CellCollector, TransactionCollector } = require("@ckb-lumos/indexer");
 const indexer = new Indexer("http://127.0.0.1:8114", "/tmp/indexed-data");
+indexer.startForever();
+```
+
+### Use the SQL Backed Indexer
+
+**Step 1. Create a PostgreSQL instance.**
+
+```
+$ docker run --name postgres -e POSTGRES_USER=user -e POSTGRES_DB=lumos -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres
+```
+
+**Step 2. Clone the Lumos repository to initialize the SQL database.**
+
+```
+$ cd $TOP
+$ git clone --recursive https://github.com/nervosnetwork/lumos
+$ cd lumos && git checkout v0.14.2-rc6
+$ yarn
+$ cd packages/sql-indexer
+$ cat << EOF > knexfile.js
+module.exports = {
+  development: {
+    client: 'postgresql',
+    connection: {
+      database: 'lumos',
+      user:     'user',
+      password: 'password'
+    },
+    pool: {
+      min: 2,
+      max: 10
+    },
+    migrations: {
+      tableName: 'knex_migrations'
+    }
+  }
+};
+EOF
+$ npx knex migrate:up
+```
+
+**Step 3. Start the SQL Indexer.**
+
+```
+const { Indexer, CellCollector, TransactionCollector } = require("@ckb-lumos/sql-indexer");
+const indexer = new Indexer("http://127.0.0.1:5432", "/tmp/indexed-data");
 indexer.startForever();
 ```
 
@@ -145,20 +192,4 @@ medianTimeEmitter.on("changed", (medianTime) => {
 });
 ```
 
-## Electron note
 
-One design goal of Lumos, is that even though we might leverage native Rust code to speed things up, you don't need to have Rust installed in your machine to use the framework. However, this goal hits a slight roadblock since electron have its own module versions.
-
-There are 2 paths to work around this issue:
-
-First, we do provide pre-built binaries linked with electron's node version. Use the following command to install npm dependencies in your Electron app:
-
-```bash
-$ LUMOS_NODE_RUNTIME=electron npm i
-```
-
-This will make sure that pre-built binaries compiled for Electron will be downloaded.
-
-Second, you can also follow the [steps](https://neon-bindings.com/docs/electron-apps) in Neon's documentation to rebuild the binaries. Note this path would require Rust being installed on your system for now.
-
-Note this issue is actually caused since we are still leveraging the old native node module solution. We are also evaluating other solutions, such as [N-API](https://medium.com/@atulanand94/beginners-guide-to-writing-nodejs-addons-using-c-and-n-api-node-addon-api-9b3b718a9a7f), which is based on a stable API, so there is no need to recompile everything for a different Node.js version. We do hope that in later versions, we can convert to N-API so there is not need to deal with inconsistent module versions.

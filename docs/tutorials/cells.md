@@ -1,6 +1,6 @@
 ---
 id: cells
-title: Cells
+title: Managing Cells
 ---
 A Cell is the most basic structure needed to represent a single piece of data in Nervos. The data contained in a Cell can take many forms, including CKBytes or tokens, code like Javascript, or even serialized data like JSON strings. 
 
@@ -193,5 +193,88 @@ for await (const cell of cellCollector.collect()) {
 }
 ```
 
-### 
+### Get Cell Minimal Capacity
+
+```javascript
+const { minimalCellCapacity, generateAddress, parseAddress } = require("@ckb-lumos/helpers")
+
+// Get cell minimal capacity.
+const result = minimalCellCapacity({
+  cell_output: {
+    capacity: "0x174876e800",
+    lock: {
+      args: "0x36c329ed630d6ce750712a477543672adab57f4c",
+      code_hash:
+        "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+      hash_type: "type",
+    },
+    type: null,
+  },
+  data: "0x",
+  block_hash: null,
+  block_number: null,
+  out_point: null,
+})
+
+// result will be 6100000000n shannons.
+```
+
+### Get the Address from a Lock Script
+
+```javascript
+// Use `generateAddress` to get address from lock script.
+const address = generateAddress({
+  code_hash:
+    "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+  hash_type: "type",
+  args: "0x36c329ed630d6ce750712a477543672adab57f4c",
+})
+
+// Then you will get mainnet address "ckb1qyqrdsefa43s6m882pcj53m4gdnj4k440axqdt9rtd"
+```
+
+### Generate Testnet Address from a Lock Script
+
+```javascript
+//you can generate testnet address by
+const { predefined } = require("@ckb-lumos/config-manager")
+
+const address = generateAddress({
+  code_hash:
+  "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+  hash_type: "type",
+  args: "0x36c329ed630d6ce750712a477543672adab57f4c",
+}, { config: predefined.AGGRON4 })
+
+// Will get testnet address "ckt1qyqrdsefa43s6m882pcj53m4gdnj4k440axqswmu83".
+```
+
+### Get Lock Script from an Address
+
+```javascript
+// Use `parseAddress` to get lock script from an address.
+const script = parseAddress("ckb1qyqrdsefa43s6m882pcj53m4gdnj4k440axqdt9rtd")
+```
+
+### Get Uncommitted Cells
+
+```javascript
+// generate a new `TransactionManager` instance and start.
+const TransactionManager = require("@ckb-lumos/transaction-manager")
+const { Indexer } = require("@ckb-lumos/indexer")
+transactionManager.start()
+
+// you can get uncommitted cells by `transactionManager.collector`.
+const collector = transactionManager.collector({ lock })
+for await (const cell of collector.collect()) {
+  console.log(cell)
+}
+```
+
+
+
+```javascript
+// now you send transaction via `transactionManager`.
+const txHash = await transactionManager.send_transaction(transaction)
+```
 
