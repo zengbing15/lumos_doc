@@ -1,8 +1,8 @@
 ---
-id: transactions
-title: Managing Transactions
+id: querytransactions
+title: Querying on Transactions
 ---
-The goal and core functionality of a DApp built with Lumos is to build transactions in response to user requests.
+## Data Structure
 
 A transaction includes the following fields:
 
@@ -12,9 +12,9 @@ A transaction includes the following fields:
 
 For more information about CKB transactions, see [Transaction](https://docs.nervos.org/docs/reference/transaction#docsNav) and [CKB RFC](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#44-transaction).
 
-## Operations
+## Examples
 
-### Query Transactions
+### Query Transactions Related to a Lock Script
 
 To query transactions related to a lock script:
 

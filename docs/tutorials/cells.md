@@ -1,15 +1,36 @@
 ---
 id: cells
-title: Managing Cells
+title: Querying on Cells
 ---
-A Cell is the most basic structure needed to represent a single piece of data in Nervos. The data contained in a Cell can take many forms, including CKBytes or tokens, code like Javascript, or even serialized data like JSON strings. 
+A Cell is the most basic structure that represents a single piece of data in Nervos. The data contained in a Cell can take many forms, including CKBytes, tokens, code like JavaScript code, or even serialized data like JSON strings.
 
-| Field       | Description                                                  |
-| ----------- | ------------------------------------------------------------ |
-| capacity    | <ul><li>The amount of CKB tokens stored in the cell. </li><li>The size limit on how much information the cell can store.</li></ul>The basic unit for `capacity` is `shannon`. A bigger unit `CKByte`, or just `CKB` is also used. 1 CKB equals `10**8` shannons. 1 CKB also means the cell that can store 1 byte of information. |
-| data        | State data stored in this cell.<br/>Note: The `data` field can be empty. The total bytes used by a cell (including data) must be less than or equal to the capacity of the cell. <br/>Depending on each DApp, the following value can be stored in the `data` field:<ul><li>Script code as explained in [Script](https://docs.nervos.org/docs/reference/script). </li><li>Token amount for User Defined Token cells.</li><li>Latest game stats for an on-chain fantasy game.</li></ul> |
-| lock script | The ownership of a cell.<br/>When a specified cell is used as an input cell in a transaction, the `lock script` included in the cell is executed for signature verification. If the `lock script` fails in the verification, the transaction will be rejected. |
-| type script | The script to be executed to validate the structure of both input cells and output cells included in a transaction.<br/>`type script` is typically used to validate DApp logic, such as creating UDTs. |
+## Data Structure
+
+A cell includes the following fields:
+
+- `capacity`
+
+  - The amount of CKB tokens stored in the cell. 
+  - The size limit on how much information the cell can store.
+
+  The basic unit for `capacity` is `shannon`. A bigger unit `CKByte`, or just `CKB` is also used. 1 CKB equals `10**8` shannons. 1 CKB also means the cell that can store 1 byte of information.
+
+- `data`: State data stored in this cell.
+
+  **Note**: The `data` field can be empty. The total bytes used by a cell (including data) must be less than or equal to the capacity of the cell. 
+
+  The following data can be stored in the `data` field:
+  - Script code as explained in [Script](https://docs.nervos.org/docs/reference/script). 
+  - Token amount for User Defined Token cells.
+  - The latest game states for an on-chain fantasy game.
+
+- `lock` script: The ownership of a cell.
+
+  When a specified cell is used as an input cell in a transaction, the `lock script` included in the cell is executed for signature verification. If the `lock script` fails in the verification, the transaction will be rejected.
+
+- `type` script: The script to be executed to validate the structure of both input cells and output cells included in a transaction.
+
+  `type` script is typically used to validate a DApp logic, such as creating UDTs.
 
 For more information about the cell model, see [Cell Data Structure](https://docs.nervos.org/docs/reference/cell) and [CKB RFC](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#42-cell).
 
@@ -256,7 +277,40 @@ const address = generateAddress({
 const script = parseAddress("ckb1qyqrdsefa43s6m882pcj53m4gdnj4k440axqdt9rtd")
 ```
 
+### Get the Balance of an Account
+
+**Step 1. Find all the simple CKB cells for the user.**
+
+```javascript
+const script: Script = {
+  code_hash: "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+  hash_type: "type",
+  args: "0xcbfbb9edb5838e2d61061c3fc69eaaa5fdbd3273"
+};
+
+const collector = indexer.collector({ lock: script, type: null });
+
+const cells: Cell[] = [];
+for await (const cell of collector.collect()) {
+  cells.push(cell);
+}
+```
+
+**Step 2. Add the capacity of these cells up and return the result as the balance.**
+
+```javascript
+return cells
+  .map((cell) =>
+    BigInt(
+      cell.cell_output.capacity
+    )
+  )
+  .reduce((balance, capacity) => balance + capacity, 0n);
+```
+
 ### Get Uncommitted Cells
+
+The transaction manager (`@ckb-lumos/transaction-manager`) is a tool for managing uncommitted cells, you can `send_transaction` via this tool and get uncommitted outputs by `collector`.
 
 ```javascript
 // generate a new `TransactionManager` instance and start.
@@ -271,10 +325,9 @@ for await (const cell of collector.collect()) {
 }
 ```
 
-
+### 
 
 ```javascript
-// now you send transaction via `transactionManager`.
-const txHash = await transactionManager.send_transaction(transaction)
+
 ```
 
