@@ -4,6 +4,8 @@ title: Install and Configure Nervos CKB
 ---
 If Nervos CKB is already installed, perform step 6 to start the CKB Node directly.
 
+## Steps
+
 To install and configure Nervos CKB:
 
 ### **Step 1. Download the latest CKB binary file from the CKB releases page on [GitHub](https://github.com/nervosnetwork/ckb/releases).**

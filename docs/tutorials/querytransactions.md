@@ -1,6 +1,6 @@
 ---
 id: querytransactions
-title: Querying on Transactions
+title: Query on Transactions
 ---
 ## Data Structure
 

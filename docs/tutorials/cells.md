@@ -1,6 +1,6 @@
 ---
 id: cells
-title: Querying on Cells
+title: Query on Cells
 ---
 A Cell is the most basic structure that represents a single piece of data in Nervos. The data contained in a Cell can take many forms, including CKBytes, tokens, code like JavaScript code, or even serialized data like JSON strings.
 

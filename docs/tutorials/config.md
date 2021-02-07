@@ -1,6 +1,6 @@
 ---
 id: config
-title: Config Manager Setup
+title: Set Up Config Manager
 ---
 The config manager deals with differences between chains, such as the mainnet, testnet, or numerous dev chains. Each chain is abstracted into an individual config file. 
 
