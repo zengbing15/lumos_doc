@@ -7,10 +7,25 @@ Simple User Defined Tokens (Simple UDT or SUDT) provides a way for DApp develope
 
 For more information about SUDT, see [RFC: Simple UDT Draft Spec](https://talk.nervos.org/t/rfc-simple-udt-draft-spec/4333).
 
+## Data Structure
+
+A SUDT cell contains the following fields:
+
+```
+data:
+    amount: uint128
+type:
+    code_hash: simple_udt type script
+    args: owner lock script hash (...)
+lock:
+    <user_defined>
+```
+
 ## Get SUDT Balance
 
 ```javascript
 import { getConfig } from "@ckb-lumos/config-manager";
+import { Cell, utils } from "@ckb-lumos/base";
 
 const { lockScript, sudtArgs } = params;
 
@@ -40,7 +55,6 @@ import {sudt, common} from "@ckb-lumos/common-scripts";
 const { sender, amount, txFee } = params;
 
   let txSkeleton = TransactionSkeleton({
-    // @ts-ignore
     cellProvider: indexer,
   });
 

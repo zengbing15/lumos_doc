@@ -7,11 +7,13 @@ Non Fungible Tokens (NFTs) are tokens that are not interchangeable or necessaril
 
 For more information, see the [RFC: CKB-NFT Draft Spec](https://talk.nervos.org/t/rfc-ckb-nft-draft-spec/4779).
 
-## Generate NFT Token
+In this tutorial, we are going to generate an NFT token, find all live NFT cells by NFT ID, list all live NFT cells by the lock script and transfer NFT token.
+
+## Generate NFT Tokens
 
 This example only supports gathering capacities from one single wallet.
 
-To generate NFT token:
+To generate NFT tokens:
 
 **Step 1. Insert a dummy NFT output cell.** 
 

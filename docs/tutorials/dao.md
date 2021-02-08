@@ -8,6 +8,22 @@ Holders can deposit their CKBytes into Nervos DAO at any time. Nervos DAO deposi
 
 For more information about Nervos DAO, see [Deposit and Withdraw in Nervos DAO](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0023-dao-deposit-withdraw/0023-dao-deposit-withdraw.md).
 
+## Overview
+
+Here is a summary of the steps to be taken to build our token:
+
+1. Installation requirements;
+2. Initialize a project using Truffle and OZ;
+3. Configure Truffle to connect to RSK testnet;
+4. Get a wallet with some testnet R-BTCs;
+5. Initialize the client side application;
+6. Add more configurations to Truffle;
+7. Create smart contract of the token and compile it;
+8. Create deploy instructions file in Truffle;
+9. Deploy a smart contract on RSK Testnet using Truffle;
+10. Create client side application;
+11. Interact with the smart contract.
+
 ## Deposit to DAO
 
 ```javascript

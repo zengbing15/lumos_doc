@@ -71,6 +71,18 @@ const indexer = new Indexer("http://127.0.0.1:5432", "/tmp/indexed-data");
 indexer.startForever();
 ```
 
+### Check the Current Indexed Tip
+
+To check the current indexed tip after the indexer is started:
+
+```
+> await indexer.tip()
+{
+  block_number: "0x29c",
+  block_hash: "0x3e44b571c82a09117231baee1939d38440d71f56de8bc600ac32b1dead9be46d"
+}
+```
+
 ### Install the Pre-built Native Module for Electron Applications
 
 The Lumos indexer is based on the CKB indexer that is developed by Rust. To leverage the native Rust code without installing Rust, Lumos provides the Lumos indexer with a pre-built native module of the CKB indexer.

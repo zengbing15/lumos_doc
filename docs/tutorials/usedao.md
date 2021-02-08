@@ -2,139 +2,64 @@
 id: usedao
 title: Integrate Nervos DAO with DApps by Using Lumos
 ---
+## Introduction
+
 Nervos DAO is a smart contract, with which users can interact the same way as any smart contract on CKB. One function of Nervos DAO is to provide an dilution counter-measure for CKByte holders. By deposit in Nervos DAO, holders get proportional secondary rewards, which guarantee their holding are only affected by hardcapped primary issuance as in Bitcoin.
 
 Holders can deposit their CKBytes into Nervos DAO at any time. Nervos DAO deposit is a time deposit with a minimum deposit period (counted in blocks). Holders can only withdraw after a full deposit period. If the holder does not withdraw at the end of the deposit period, those CKBytes should enter a new deposit period automatically, so holders' interaction with CKB could be minimized.
 
 For more information about Nervos DAO, see [RFC: Nervos DAO](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0023-dao-deposit-withdraw/0023-dao-deposit-withdraw.md).
 
-## Install and Configure Nervos CKB
+## Workflow
 
-```
-$ export TOP=$(pwd)
-$ curl -LO https://github.com/nervosnetwork/ckb/releases/download/v0.39.0/ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
-$ tar xzf ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
-$ export PATH=$PATH:$TOP/ckb_v0.39.0_x86_64-unknown-linux-gnu
-$ ckb -V
-ckb 0.39.0
-$ ckb init -C devnet -c dev
-$ ed devnet/specs/dev.toml <<EOF
-91d
-90a
-genesis_epoch_length = 10
-permanent_difficulty_in_dummy = true
-.
-wq
-EOF
-$ ed devnet/ckb-miner.toml <<EOF
-39s/5000/1000/
-wq
-EOF
-$ ed devnet/ckb.toml <<EOF
-143a
-[block_assembler]
-code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
-# private key: 0x29159d8bb4b27704b168fc7fae70ffebf82164ce432b3f6b4c904a116a969f19
-args = "0xcbfbb9edb5838e2d61061c3fc69eaaa5fdbd3273"
-hash_type = "type"
-message = "0x"
-.
-wq
-EOF
-$ ckb run -C devnet
-```
+Here is a summary of the steps to be taken to integrate Nervos DAO by using Lumos:
 
-Start the CKB miner in a different terminal.
+1. Prepare the prerequisite skills and development stacks.
+2. Initialize a project by using Lumos and other required application development frameworks.
+3. Set up the config manager.
+4. Set up the database.
+5. Deposit to DAO.
+6. Withdraw from Nervos DAO.
 
-```
-$ export TOP=$(pwd)
-$ export PATH=$PATH:$TOP/ckb_v0.39.0_x86_64-unknown-linux-gnu
-$ ckb miner -C devnet
-```
+For more information about the prerequisites in step 1, see [Prerequisites](../quickstart/prerequisites).
 
-## Create the Node Skeleton
+Step 2. to Step 5 are explained in detail in the sections in **Basic Operations**.
 
-Create the node skeleton and install all dependencies.
+## Steps
 
-```
-$ mkdir mydapp
-$ cd mydapp
-$ yarn init
-$ yarn add @ckb-lumos/indexer@0.15.0 @ckb-lumos/common-scripts@0.15.0 @ckb-lumos/config-manager@0.15.0
-$ yarn install
-```
+### Install and Configure Nervos CKB
 
-Enable async/await for the node shell.
+To install and configure Nervos CKB, perform the following steps following the instructions in the [Install and Configure Nervos CKB](../tutorials/installckb) section:
 
-```
-$ node --experimental-repl-await
-Welcome to Node.js v12.16.2.
-Type ".help" for more information.
->
-```
+1. Download the latest CKB binary file from the CKB releases page on [GitHub](https://github.com/nervosnetwork/ckb/releases).
+2. Verify the binaries are working and check versions.
+3. Modify the chain config to skip difficulty adjustment, and set all epoch to contain 10 blocks.
+4. Modify miner config to generate a new block every second.
+5. Use a specific private key as the wallet used in miner.
+6. Start the CKB node with the dev chain.
+7. Start the CKB miner in a different terminal.
 
-## Set Up the Config Manager
+### Initialize a Node project
 
-This tutorial uses the pre-defined configurations to set up the config manager.
+To Initialize a project by using Lumos and other required application development frameworks, perform the following steps according to the instructions in the [Initialize a Node Project](../tutorials/createnode) section:
 
-```
-$ LUMOS_CONFIG_NAME=LINA node --experimental-repl-await
-Welcome to Node.js v12.16.2.
-Type ".help" for more information.
-> const { initializeConfig, getConfig } = require("@ckb-lumos/config-manager");
-> initializeConfig();
-> getConfig();
-{
-  PREFIX: 'ckb',
-  SCRIPTS: {
-    SECP256K1_BLAKE160: {
-      CODE_HASH: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-      HASH_TYPE: 'type',
-      TX_HASH: '0x71a7ba8fc96349fea0ed3a5c47992e3b4084b031a42264a018e0072e8172e46c',
-      INDEX: '0x0',
-      DEP_TYPE: 'dep_group',
-      SHORT_ID: 0
-    },
-    SECP256K1_BLAKE160_MULTISIG: {
-      CODE_HASH: '0x5c5069eb0857efc65e1bca0c07df34c31663b3622fd3876c876320fc9634e2a8',
-      HASH_TYPE: 'type',
-      TX_HASH: '0x71a7ba8fc96349fea0ed3a5c47992e3b4084b031a42264a018e0072e8172e46c',
-      INDEX: '0x1',
-      DEP_TYPE: 'dep_group',
-      SHORT_ID: 1
-    },
-    DAO: {
-      CODE_HASH: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
-      HASH_TYPE: 'type',
-      TX_HASH: '0xe2fb199810d49a4d8beec56718ba2593b665db9d52299a0f9e6e75416d73ff5c',
-      INDEX: '0x2',
-      DEP_TYPE: 'code'
-    }
-  }
-}
-```
+1. Create a new directory for the application and navigate into it.
+2. Create a `package.json` file for the application.
+3. Add required packages as dependencies for the application.
+4. Install all dependencies.
+5. Enable async/await for the node shell.
 
-## Set Up the Database
+### Set Up the Config Manager
 
-This tutorial uses the RocksDB database.
+Choose pre-defined configurations or a local configuration file to set up the config manager.
 
-```
-const { Indexer, CellCollector, TransactionCollector } = require("@ckb-lumos/indexer");
-const indexer = new Indexer("http://127.0.0.1:8114", "/tmp/indexed-data");
-indexer.startForever();
-```
+For more information, see [Set Up the Config Manager](../tutorials/config).
 
-Check the current indexed tip with the following code snippet:
+### Set Up the Database
 
-```
-> await indexer.tip()
-{
-  block_number: "0x29c",
-  block_hash: "0x3e44b571c82a09117231baee1939d38440d71f56de8bc600ac32b1dead9be46d"
-}
-```
+Choose RocksDB or SQL as the database and start the indexer according to the instructions in [Set Up the Database](../tutorials/database).
 
-## Deposit to DAO
+### Deposit to DAO
 
 ```javascript
 > // In practice, you might already have the address at your hand, here we just
@@ -199,9 +124,9 @@ Check the current indexed tip with the following code snippet:
 ]
 ```
 
-## Withdraw from Nervos DAO
+### Withdraw from Nervos DAO
 
-Step1. List all deposited Nervos DAO cells for an address:
+Step1. List all deposited Nervos DAO cells for an address.
 
 ```javascript
 > for await (const cell of dao.listDaoCells(indexer, address, "deposit")) { console.log(cell); }
@@ -229,7 +154,7 @@ Step1. List all deposited Nervos DAO cells for an address:
 }
 ```
 
-Step 2. Locate the cell we just deposited to Nervos DAO and withdraw it from Nervos DAO:
+Step 2. Locate the cell we just deposited to Nervos DAO and withdraw it from Nervos DAO.
 
 ```javascript
 > // First, we will need to locate the cell. In a real dapp this is most likely
