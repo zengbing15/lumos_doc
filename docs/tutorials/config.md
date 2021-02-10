@@ -27,7 +27,7 @@ Pre-defined configurations include:
 
 ```
 $ LUMOS_CONFIG_NAME=LINA node --experimental-repl-await
-Welcome to Node.js v12.16.2.
+Welcome to Node.js v14.0.0.
 Type ".help" for more information.
 > const { initializeConfig, getConfig } = require("@ckb-lumos/config-manager");
 > initializeConfig();
@@ -102,7 +102,7 @@ $ cat <<EOF > config.json
 }
 EOF
 $ LUMOS_CONFIG_FILE="config.json" node --experimental-repl-await
-Welcome to Node.js v12.16.2.
+Welcome to Node.js v14.0.0.
 Type ".help" for more information.
 > const { initializeConfig, getConfig } = require("@ckb-lumos/config-manager");
 > initializeConfig();

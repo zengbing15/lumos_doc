@@ -15,11 +15,12 @@ For more information about Nervos DAO, see [RFC: Nervos DAO](https://github.com/
 Here is a summary of the steps to be taken to integrate Nervos DAO by using Lumos:
 
 1. Prepare the prerequisite skills and development stacks.
-2. Initialize a project by using Lumos and other required application development frameworks.
-3. Set up the config manager.
-4. Set up the database.
-5. Deposit to DAO.
-6. Withdraw from Nervos DAO.
+2. Install and configure Nervos CKB.
+3. Initialize a Node project by using Lumos and other required application development frameworks.
+4. Set up the config manager.
+5. Set up the database.
+6. Deposit to DAO.
+7. Withdraw from Nervos DAO.
 
 For more information about the prerequisites in step 1, see [Prerequisites](../quickstart/prerequisites).
 
@@ -33,11 +34,12 @@ To install and configure Nervos CKB, perform the following steps following the i
 
 1. Download the latest CKB binary file from the CKB releases page on [GitHub](https://github.com/nervosnetwork/ckb/releases).
 2. Verify the binaries are working and check versions.
-3. Modify the chain config to skip difficulty adjustment, and set all epoch to contain 10 blocks.
-4. Modify miner config to generate a new block every second.
-5. Use a specific private key as the wallet used in miner.
-6. Start the CKB node with the dev chain.
-7. Start the CKB miner in a different terminal.
+3. Initialize the development or testnet blockchain.
+4. Create a new account.
+5. Adjust the parameters to shorten the block interval.
+6. Specify the args (public key)  in the `block_assembler` section for receiving mining rewards.
+7.  Start the CKB node with the dev chain.
+8. Start the CKB miner in a different terminal.
 
 ### Initialize a Node project
 
@@ -46,28 +48,101 @@ To Initialize a project by using Lumos and other required application developmen
 1. Create a new directory for the application and navigate into it.
 2. Create a `package.json` file for the application.
 3. Add required packages as dependencies for the application.
-4. Install all dependencies.
-5. Enable async/await for the node shell.
+
+```shell
+$ mkdir mydapp
+$ cd mydapp
+$ yarn init
+yarn init v1.22.10
+question name (mydapp):
+question version (1.0.0):
+question description:
+question entry point (index.js):
+question repository url:
+question author:
+question license (MIT):
+question private:
+success Saved package.json
+Done in 284.49s.
+$ yarn add @ckb-lumos/indexer@0.15.0 @ckb-lumos/common-scripts@0.15.0 @ckb-lumos/config-manager@0.15.0
+...
+```
 
 ### Set Up the Config Manager
 
 Choose pre-defined configurations or a local configuration file to set up the config manager.
 
-For more information, see [Set Up the Config Manager](../tutorials/config).
+The following example uses pre-defined configurations of the testnet (AGGRON4). For more information, see [Set Up the Config Manager](../tutorials/config).
 
-### Set Up the Database
+```shell
+$ LUMOS_CONFIG_NAME=AGGRON4
+$ node --experimental-repl-await
+> const { initializeConfig, getConfig } = require("@ckb-lumos/config-manager");
+> initializeConfig();
+> getConfig();
+{
+  PREFIX: 'ckt',
+  SCRIPTS: {
+    SECP256K1_BLAKE160: {
+      CODE_HASH: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+      HASH_TYPE: 'type',
+      TX_HASH: '0xf8de3bb47d055cdf460d93a2a6e1b05f7432f9777c8c474abf4eec1d4aee5d37',
+      INDEX: '0x0',
+      DEP_TYPE: 'dep_group',
+      SHORT_ID: 0
+    },
+    SECP256K1_BLAKE160_MULTISIG: {
+      CODE_HASH: '0x5c5069eb0857efc65e1bca0c07df34c31663b3622fd3876c876320fc9634e2a8',
+      HASH_TYPE: 'type',
+      TX_HASH: '0xf8de3bb47d055cdf460d93a2a6e1b05f7432f9777c8c474abf4eec1d4aee5d37',
+      INDEX: '0x1',
+      DEP_TYPE: 'dep_group',
+      SHORT_ID: 1
+    },
+    DAO: {
+      CODE_HASH: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
+      HASH_TYPE: 'type',
+      TX_HASH: '0x8f8c79eb6671709633fe6a46de93c0fedc9c1b8a6527a18d3983879542635c9f',
+      INDEX: '0x2',
+      DEP_TYPE: 'code'
+    },
+    SUDT: {
+      CODE_HASH: '0xc5e5dcf215925f7ef4dfaf5f4b4f105bc321c02776d6e7d52a1db3fcd9d011a4',
+      HASH_TYPE: 'type',
+      TX_HASH: '0xe12877ebd2c3c364dc46c5c992bcfaf4fee33fa13eebdf82c591fc9825aab769',
+      INDEX: '0x0',
+      DEP_TYPE: 'code'
+    },
+    ANYONE_CAN_PAY: {
+      CODE_HASH: '0x3419a1c09eb2567f6552ee7a8ecffd64155cffe0f1796e6e61ec088d740c1356',
+      HASH_TYPE: 'type',
+      TX_HASH: '0xec26b0f85ed839ece5f11c4c4e837ec359f5adc4420410f6453b1f6b60fb96a6',
+      INDEX: '0x0',
+      DEP_TYPE: 'dep_group'
+    }
+  }
+}
+```
 
-Choose RocksDB or SQL as the database and start the indexer according to the instructions in [Set Up the Database](../tutorials/database).
+<!--Set Up the Database-->
+
+<!--Choose RocksDB or SQL as the database and start the indexer according to the instructions in [Set Up the Database](../tutorials/database).-->
+
+### Start the Indexer
+
+```
+> const {Indexer} = require("@ckb-lumos/indexer");
+> const indexer = new Indexer("http://127.0.0.1:8114", "./indexed-data");
+> indexer.startForever();
+```
 
 ### Deposit to DAO
 
 ```javascript
-> // In practice, you might already have the address at your hand, here we just
-> // want to demonstrate how this works.
 > const script = {
   code_hash: "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
   hash_type: "type",
-  args: "0xcbfbb9edb5838e2d61061c3fc69eaaa5fdbd3273"
+  args: "0x570522962937be077fe9286b70495f1c8b4bb8c2"
 };
 > const {generateAddress, parseAddress, createTransactionFromSkeleton,
   sealTransaction, TransactionSkeleton } = require("@ckb-lumos/helpers");

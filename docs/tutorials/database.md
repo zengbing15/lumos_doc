@@ -1,6 +1,6 @@
 ---
 id: database
-title: Set Up the Database
+title: Set Up the SQL Database
 ---
 Lumos is designed based on the [`Index-Query-Assemble`](https://docs.nervos.org/docs/reference/cell#index-query-assemble-pattern) pattern. The Lumos indexer polls blocks from a CKB node, indexes them and stores the indexed data in a local database to provide optimal query.
 
@@ -15,27 +15,17 @@ The Lumos indexer supports two types of databases:
 
 <!--Note this issue is actually caused since we are still leveraging the old native node module solution. We are also evaluating other solutions, such as [N-API](https://medium.com/@atulanand94/beginners-guide-to-writing-nodejs-addons-using-c-and-n-api-node-addon-api-9b3b718a9a7f), which is based on a stable API, so there is no need to recompile everything for a different Node.js version. We do hope that in later versions, we can convert to N-API so there is not need to deal with inconsistent module versions.-->
 
-## Operations
-
-### Set Up the RocksDB Database
-
-```javascript
-const { Indexer, CellCollector, TransactionCollector } = require("@ckb-lumos/indexer");
-const indexer = new Indexer("http://127.0.0.1:8114", "/tmp/indexed-data");
-indexer.startForever();
-```
-
 ### Set Up the SQL Database
 
 **Step 1. Create a PostgreSQL instance.**
 
-```
+```shell
 $ docker run --name postgres -e POSTGRES_USER=user -e POSTGRES_DB=lumos -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres
 ```
 
 **Step 2. Clone the Lumos repository to initialize the SQL database.**
 
-```
+```shell
 $ cd $TOP
 $ git clone --recursive https://github.com/nervosnetwork/lumos
 $ cd lumos && git checkout v0.14.2-rc6
@@ -63,23 +53,18 @@ EOF
 $ npx knex migrate:up
 ```
 
-**Step 3. Start the SQL Indexer.**
-
-```
-const { Indexer, CellCollector, TransactionCollector } = require("@ckb-lumos/sql-indexer");
-const indexer = new Indexer("http://127.0.0.1:5432", "/tmp/indexed-data");
-indexer.startForever();
-```
-
 ### Check the Current Indexed Tip
 
 To check the current indexed tip after the indexer is started:
 
 ```
+> const { Indexer, CellCollector, TransactionCollector } = require("@ckb-lumos/sql-indexer");
+> const indexer = new Indexer("http://127.0.0.1:5432", "/tmp/indexed-data");
+> indexer.startForever();
 > await indexer.tip()
 {
-  block_number: "0x29c",
-  block_hash: "0x3e44b571c82a09117231baee1939d38440d71f56de8bc600ac32b1dead9be46d"
+  block_number: '0x0',
+  block_hash: '0x120ab9abd48e3b82f93b88eba8c50a0e1304cc2fffb5573fb14b56c6348f2305'
 }
 ```
 
@@ -91,7 +76,7 @@ The Lumos indexer is based on the CKB indexer that is developed by Rust. To leve
 
 <!--First, we do provide pre-built binaries linked with electron's node version.-->
 
-To install the pre-built native module of the CKB indexer that is compiled for Electron: 
+To install the pre-built native module of the CKB indexer for Electro applications: 
 
 <!--Install npm dependencies in your Electron app to make sure the pre-built native modules compiled for Electron to be downloaded.-->
 
