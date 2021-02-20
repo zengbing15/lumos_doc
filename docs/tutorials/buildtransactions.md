@@ -1,8 +1,22 @@
 ---
 id: buildtransactions
-title: Build Transactions
+title: Assemble Transactions
 ---
 The goal and core functionality of a DApp built with Lumos is to build transactions in response to user requests.
+
+CKB programming model is flexible but it significantly complicates transaction assembling. This includes the following hurdles:
+
+- Different scripts used in transaction inputs will require separate message generation, and also separate signing steps.
+- Some cells might require special argument setup in witness, due to type script validation rules.
+- Coordination might be required, since both lock script and type script in a cell might require arguments in the same witness construct.
+
+## Transaction Skeleton
+
+Lumos provides `TransactionSkeleton`  that simplifies transaction assembling. Each transaction skeleton corresponds to an action, and will be built into a single transaction that is ready to be submitted to CKB. `TransactionSkeleton` supports transaction assembling with the following conveniences:
+
+- A well designed component must be able to query and include cells automatically to provide capacities required by the transaction.
+- Individual script logic must be managed and respected by the general transaction skeleton.
+- Scripts sharing the same behavior must be managed together in a unified interface. Developers can rely on abstractions instead of catering for every single detail.
 
 ## Workflow
 

@@ -8,27 +8,27 @@ Lumos is designed based on the [`Index-Query-Assemble`](https://docs.nervos.org/
 
 The Lumos indexer supports two types of databases:
 
-- The RocksDB database: The RocksDB backed indexer is contained in the  `@ckb-lumos/indexer` package.
-- The SQL database: The Lumos indexer supports the SQL database of the latest stable versions of PostgreSQL and MySQL. A separate package, the `@ckb-lumos/sql-indexer` package contains the SQL backed indexer. The SQL backed indexer is using the same interface as the RocksDB backed indexer. 
+- The RocksDB database: The RocksDB backed indexer is contained in the  `@ckb-lumos/indexer` package. After the `@ckb-lumos/indexer` package is installed, the RocksDB backed indexer can be used directly.
+- The SQL database: The Lumos indexer supports the SQL database of the latest stable versions of PostgreSQL and MySQL. A separate package, the `@ckb-lumos/sql-indexer` package contains the SQL backed indexer. Specific SQL database settings are required before using the SQL backed indexer. 
 
 **Note**:  The usage for the SQL backed indexer is not fully verified. It is still in the experimental stage.
 
 <!--Note this issue is actually caused since we are still leveraging the old native node module solution. We are also evaluating other solutions, such as [N-API](https://medium.com/@atulanand94/beginners-guide-to-writing-nodejs-addons-using-c-and-n-api-node-addon-api-9b3b718a9a7f), which is based on a stable API, so there is no need to recompile everything for a different Node.js version. We do hope that in later versions, we can convert to N-API so there is not need to deal with inconsistent module versions.-->
 
-### Set Up the SQL Database
+## Steps
 
-**Step 1. Create a PostgreSQL instance.**
+### Step 1. Create a PostgreSQL instance.
 
 ```shell
 $ docker run --name postgres -e POSTGRES_USER=user -e POSTGRES_DB=lumos -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres
 ```
 
-**Step 2. Clone the Lumos repository to initialize the SQL database.**
+### Step 2. Clone the Lumos repository to initialize the SQL database.
 
 ```shell
 $ cd $TOP
 $ git clone --recursive https://github.com/nervosnetwork/lumos
-$ cd lumos && git checkout v0.14.2-rc6
+$ cd lumos && git checkout v0.15.0
 $ yarn
 $ cd packages/sql-indexer
 $ cat << EOF > knexfile.js
@@ -37,7 +37,7 @@ module.exports = {
     client: 'postgresql',
     connection: {
       database: 'lumos',
-      user:     'user',
+      user:     'postgres',
       password: 'password'
     },
     pool: {
@@ -53,7 +53,7 @@ EOF
 $ npx knex migrate:up
 ```
 
-### Check the Current Indexed Tip
+### Step 3. Check the Current Indexed Tip
 
 To check the current indexed tip after the indexer is started:
 
@@ -76,7 +76,7 @@ The Lumos indexer is based on the CKB indexer that is developed by Rust. To leve
 
 <!--First, we do provide pre-built binaries linked with electron's node version.-->
 
-To install the pre-built native module of the CKB indexer for Electro applications: 
+To install the pre-built native module of the CKB indexer for Electron applications: 
 
 <!--Install npm dependencies in your Electron app to make sure the pre-built native modules compiled for Electron to be downloaded.-->
 

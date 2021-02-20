@@ -1,4 +1,5 @@
 ---
+
 id: usedao
 title: Integrate Nervos DAO with DApps by Using Lumos
 ---
@@ -10,50 +11,52 @@ Holders can deposit their CKBytes into Nervos DAO at any time. Nervos DAO deposi
 
 For more information about Nervos DAO, see [RFC: Nervos DAO](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0023-dao-deposit-withdraw/0023-dao-deposit-withdraw.md).
 
-## Workflow
+<!--Workflow-->
 
-Here is a summary of the steps to be taken to integrate Nervos DAO by using Lumos:
+<!--Here is a summary of the steps to be taken to integrate Nervos DAO by using Lumos:-->
 
-1. Prepare the prerequisite skills and development stacks.
-2. Install and configure Nervos CKB.
-3. Initialize a Node project by using Lumos and other required application development frameworks.
-4. Set up the config manager.
-5. Set up the database.
-6. Deposit to DAO.
-7. Withdraw from Nervos DAO.
+<!--Prepare the prerequisite skills and development stacks.-->
 
-For more information about the prerequisites in step 1, see [Prerequisites](../quickstart/prerequisites).
+<!--Install and configure Nervos CKB.-->
 
-Step 2. to Step 5 are explained in detail in the sections in **Basic Operations**.
+<!--Initialize a Node project by using Lumos and other required application development frameworks.-->
+
+<!--Set up the config manager.-->
+
+<!--Set up the database.-->
+
+<!--Deposit to DAO.-->
+
+<!--Withdraw from Nervos DAO.-->
+
+<!--For more information about the prerequisites in step 1, see [Prerequisites](../quickstart/prerequisites).-->
+
+<!--Step 2. to Step 5 are explained in detail in the sections in **Basic Operations**.-->
 
 ## Steps
 
-### Install and Configure Nervos CKB
+### Install and Configure a CKB DEV Blockchain
 
-To install and configure Nervos CKB, perform the following steps following the instructions in the [Install and Configure Nervos CKB](../tutorials/installckb) section:
+In a terminal <terminal 1>, perform the following steps to install and configure a CKB DEV blockchain:
 
 1. Download the latest CKB binary file from the CKB releases page on [GitHub](https://github.com/nervosnetwork/ckb/releases).
 2. Verify the binaries are working and check versions.
-3. Initialize the development or testnet blockchain.
-4. Create a new account.
+3. Initialize the local development blockchain.
 5. Adjust the parameters to shorten the block interval.
-6. Specify the args (public key)  in the `block_assembler` section for receiving mining rewards.
-7.  Start the CKB node with the dev chain.
-8. Start the CKB miner in a different terminal.
+5. Start the CKB node.
 
-### Initialize a Node project
+ For more information about installing and configuring a CKB DEV blockchain, see the instructions in the [Install and Configure a CKB DEV Blockchain](../tutorials/installckb) guide.
 
-To Initialize a project by using Lumos and other required application development frameworks, perform the following steps according to the instructions in the [Initialize a Node Project](../tutorials/createnode) section:
+### Add Lumos Packages for a Node Project
 
-1. Create a new directory for the application and navigate into it.
-2. Create a `package.json` file for the application.
-3. Add required packages as dependencies for the application.
+To add Lumos packages for a node project in a new terminal <terminal 2>:
 
 ```shell
+//<terminal 2>
 $ mkdir mydapp
 $ cd mydapp
 $ yarn init
-yarn init v1.22.10
+yarn init v1.22.5
 question name (mydapp):
 question version (1.0.0):
 question description:
@@ -63,65 +66,54 @@ question author:
 question license (MIT):
 question private:
 success Saved package.json
-Done in 284.49s.
+Done in 44.49s.
 $ yarn add @ckb-lumos/indexer@0.15.0 @ckb-lumos/common-scripts@0.15.0 @ckb-lumos/config-manager@0.15.0
 ...
 ```
 
 ### Set Up the Config Manager
 
-Choose pre-defined configurations or a local configuration file to set up the config manager.
+The dev chain must use a local configuration file to set up the config manager. For more information, see [Set Up the Config Manager](../tutorials/config).
 
-The following example uses pre-defined configurations of the testnet (AGGRON4). For more information, see [Set Up the Config Manager](../tutorials/config).
+To set up the config manager:
 
 ```shell
-$ LUMOS_CONFIG_NAME=AGGRON4
-$ node --experimental-repl-await
-> const { initializeConfig, getConfig } = require("@ckb-lumos/config-manager");
-> initializeConfig();
-> getConfig();
+// <terminal 2>
+$ cat <<EOF > config.json
 {
-  PREFIX: 'ckt',
-  SCRIPTS: {
-    SECP256K1_BLAKE160: {
-      CODE_HASH: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-      HASH_TYPE: 'type',
-      TX_HASH: '0xf8de3bb47d055cdf460d93a2a6e1b05f7432f9777c8c474abf4eec1d4aee5d37',
-      INDEX: '0x0',
-      DEP_TYPE: 'dep_group',
-      SHORT_ID: 0
+  "PREFIX": "ckt",
+  "SCRIPTS": {
+    "SECP256K1_BLAKE160": {
+      "CODE_HASH": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+      "HASH_TYPE": "type",
+      "TX_HASH": "0xace5ea83c478bb866edf122ff862085789158f5cbff155b7bb5f13058555b708",
+      "INDEX": "0x0",
+      "DEP_TYPE": "dep_group",
+      "SHORT_ID": 0
     },
-    SECP256K1_BLAKE160_MULTISIG: {
-      CODE_HASH: '0x5c5069eb0857efc65e1bca0c07df34c31663b3622fd3876c876320fc9634e2a8',
-      HASH_TYPE: 'type',
-      TX_HASH: '0xf8de3bb47d055cdf460d93a2a6e1b05f7432f9777c8c474abf4eec1d4aee5d37',
-      INDEX: '0x1',
-      DEP_TYPE: 'dep_group',
-      SHORT_ID: 1
+    "SECP256K1_BLAKE160_MULTISIG": {
+      "CODE_HASH": "0x5c5069eb0857efc65e1bca0c07df34c31663b3622fd3876c876320fc9634e2a8",
+      "HASH_TYPE": "type",
+      "TX_HASH": "0xace5ea83c478bb866edf122ff862085789158f5cbff155b7bb5f13058555b708",
+      "INDEX": "0x1",
+      "DEP_TYPE": "dep_group",
+      "SHORT_ID": 1
     },
-    DAO: {
-      CODE_HASH: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
-      HASH_TYPE: 'type',
-      TX_HASH: '0x8f8c79eb6671709633fe6a46de93c0fedc9c1b8a6527a18d3983879542635c9f',
-      INDEX: '0x2',
-      DEP_TYPE: 'code'
-    },
-    SUDT: {
-      CODE_HASH: '0xc5e5dcf215925f7ef4dfaf5f4b4f105bc321c02776d6e7d52a1db3fcd9d011a4',
-      HASH_TYPE: 'type',
-      TX_HASH: '0xe12877ebd2c3c364dc46c5c992bcfaf4fee33fa13eebdf82c591fc9825aab769',
-      INDEX: '0x0',
-      DEP_TYPE: 'code'
-    },
-    ANYONE_CAN_PAY: {
-      CODE_HASH: '0x3419a1c09eb2567f6552ee7a8ecffd64155cffe0f1796e6e61ec088d740c1356',
-      HASH_TYPE: 'type',
-      TX_HASH: '0xec26b0f85ed839ece5f11c4c4e837ec359f5adc4420410f6453b1f6b60fb96a6',
-      INDEX: '0x0',
-      DEP_TYPE: 'dep_group'
+    "DAO": {
+      "CODE_HASH": "0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e",
+      "HASH_TYPE": "type",
+      "TX_HASH": "0xa563884b3686078ec7e7677a5f86449b15cf2693f3c1241766c6996f206cc541",
+      "INDEX": "0x2",
+      "DEP_TYPE": "code"
     }
   }
 }
+EOF
+$ LUMOS_CONFIG_FILE="config.json" node --experimental-repl-await
+Welcome to Node.js v14.15.0.
+Type ".help" for more information.
+> const { initializeConfig, getConfig } = require("@ckb-lumos/config-manager");
+> initializeConfig();
 ```
 
 <!--Set Up the Database-->
@@ -130,62 +122,185 @@ $ node --experimental-repl-await
 
 ### Start the Indexer
 
-```
+```shell
+// <terminal 2>
 > const {Indexer} = require("@ckb-lumos/indexer");
 > const indexer = new Indexer("http://127.0.0.1:8114", "./indexed-data");
 > indexer.startForever();
 ```
 
+### Create an Account for Transactions.
+
+Step 1. Create a specific private key for the account. The private key is also used for signing transactions. 
+
+**Note**: The private key generated in this example is used for development purposes in the Lumos guides. Do not use the private key in other places. 
+
+```shell
+// <terminal 2>
+> const { mnemonic, ExtendedPrivateKey } = require("@ckb-lumos/hd");
+> const m = mnemonic.generateMnemonic();
+> const seed = mnemonic.mnemonicToSeedSync(m);
+> const extendedPrivateKey = ExtendedPrivateKey.fromSeed(seed);
+> console.log(extendedPrivateKey);
+ExtendedPrivateKey {
+  privateKey: '0x8a4cb53f641ee8df90cf5bc5204574744657a091dfe41c98069aa4e41ed9c86b',
+  chainCode: '0x9824361e4c7293e8cc4174d8d1fa37cf175630c96d323f84884292a0ede202cd'
+}
+```
+
+Step 2. Open a new terminal <terminal 3> and import the private key to create the account.
+
+```shell
+//<terminal 3>
+$ echo 0x8a4cb53f641ee8df90cf5bc5204574744657a091dfe41c98069aa4e41ed9c86b > pk
+$ export TOP=$(pwd)
+$ export PATH=$PATH:$TOP/ckb_v0.40.0-rc1_x86_64-unknown-centos-gnu
+$ ckb-cli account import --privkey-path pk
+Password:
+address:
+  mainnet: ckb1qyqv6dfjmelhmrej2g5ju2d4994xkd462d5sqwfdxt
+  testnet: ckt1qyqv6dfjmelhmrej2g5ju2d4994xkd462d5sathj2h
+lock_arg: 0xcd3532de7f7d8f3252292e29b5296a6b36ba5369
+```
+
+Step 3. Specify the `args` in the `block_assembler` section in ckb.toml with `lock_arg` for receiving mining rewards.
+
+```shell
+//<terminal 3>
+$ ed devnet/ckb.toml <<EOF
+143a
+[block_assembler]
+code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+args = "0xcd3532de7f7d8f3252292e29b5296a6b36ba5369"
+hash_type = "type"
+message = "0x"
+.
+wq
+EOF
+```
+
+Step 4. Restart the CKB node in <terminal 1> and start the CKB miner in a different terminal <terminal 4>.
+
+```shell
+// <terminal 4>
+$ export TOP=$(pwd)
+$ export PATH=$PATH:$TOP/ckb_v0.40.0-rc1_x86_64-unknown-centos-gnu
+$ ckb miner -C devnet
+```
+
+Step 5. Check the capacity of the account by using the testnet address in <terminal 3>.
+
+```shell
+//<terminal 3>
+$ ckb-cli wallet get-capacity --address "ckt1qyqv6dfjmelhmrej2g5ju2d4994xkd462d5sathj2h"
+immature: 8039065.13953246 (CKB)
+total: 38186544.69769654 (CKB)
+```
+
 ### Deposit to DAO
 
+To deposit to Nervos DAO:
+
+Step 1. Create a transaction skeleton.
+
+The following example uses `generateAddress` from the helpers component with lock script to get the address. The same address can be used as the `fromInfo` and `toAddress`  for the deposit transaction. The deposited cells are frozen after the deposit operation.
+
 ```javascript
+// <terminal 2>
 > const script = {
   code_hash: "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
   hash_type: "type",
-  args: "0x570522962937be077fe9286b70495f1c8b4bb8c2"
+  args: "0xcd3532de7f7d8f3252292e29b5296a6b36ba5369"
 };
-> const {generateAddress, parseAddress, createTransactionFromSkeleton,
-  sealTransaction, TransactionSkeleton } = require("@ckb-lumos/helpers");
+> const {generateAddress, createTransactionFromSkeleton, sealTransaction, TransactionSkeleton } = require("@ckb-lumos/helpers");
 > const address = generateAddress(script);
-
-> // Now let's create the actual skeleton, and deposit CKBytes into the skeleton
 > let skeleton = TransactionSkeleton({ cellProvider: indexer });
 > const { secp256k1Blake160, dao } = require("@ckb-lumos/common-scripts");
-
-> // Using utility provided in common-scripts, let's deposit 1000 CKBytes into
-> // the skeleton. We will introduce common-scripts separately below. Here we are
-> // using the same address as from and to, but this does not have to be the case
-> // everywhere.
 > skeleton = await dao.deposit(skeleton, address, address, 100000000000n);
+```
 
-> // createTransactionFromSkeleton is designed to build a final transaction, but
-> // there is nothing stopping you from using it to peek into the current skeleton.
+createTransactionFromSkeleton can be used to build a final transaction. It can also be used to view the current skeleton.
+
+```
 > console.log(JSON.stringify(createTransactionFromSkeleton(skeleton), null, 2));
+{
+  "version": "0x0",
+  "cell_deps": [
+    {
+      "out_point": {
+        "tx_hash": "0xa563884b3686078ec7e7677a5f86449b15cf2693f3c1241766c6996f206cc541",
+        "index": "0x2"
+      },
+      "dep_type": "code"
+    },
+    {
+      "out_point": {
+        "tx_hash": "0xace5ea83c478bb866edf122ff862085789158f5cbff155b7bb5f13058555b708",
+        "index": "0x0"
+      },
+      "dep_type": "dep_group"
+    }
+  ],
+  "header_deps": [],
+  "inputs": [
+    {
+      "since": "0x0",
+      "previous_output": {
+        "tx_hash": "0xdb44f7c8ff0b97abfaf33665131fc95abe3b3ae5244d371431a4c5abfd547ccc",
+        "index": "0x0"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "capacity": "0x174876e800",
+      "lock": {
+        "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+        "hash_type": "type",
+        "args": "0xcd3532de7f7d8f3252292e29b5296a6b36ba5369"
+      },
+      "type": {
+        "code_hash": "0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e",
+        "hash_type": "type",
+        "args": "0x"
+      }
+    },
+    {
+      "capacity": "0x1230577b333f",
+      "lock": {
+        "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+        "hash_type": "type",
+        "args": "0xcd3532de7f7d8f3252292e29b5296a6b36ba5369"
+      }
+    }
+  ],
+  "outputs_data": [
+    "0x0000000000000000",
+    "0x"
+  ],
+  "witnesses": [
+    "0x55000000100000005500000055000000410000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+  ]
+}
+```
 
-> // But this transaction is not yet complete, we still need 2 parts:
-> // * Transaction fee is not taken into consideration
-> // * The transaction is not signed yet
-> // Let's take a look at them separately.
+Step 2. Add a fee for the transaction.
 
-> // First, since we are using the default secp256k1-blake160 lock script, an
-> // existing module in common-scripts can be leveraged to incur transaction
-> // fee. Here we are using the same address to provide 1 CKByte as transaction
-> // fee.
+First, because we are using the default secp256k1-blake160 lock script, an existing module in common-scripts can be leveraged to incur transaction fee. Here we are using the same address to provide 1 CKByte as transaction fee.
+
+> // If you checked the transaction skeleton after incurring fees. You will notice that it only has one input. This might raise a question: if NervoDAO deposit consumes one input cell, transaction fee requires a different input cell, shouldn't there be 2 input cells with 3 output cells(a deposited cell, and 2 change cell)? The trick here, is that common-scripts is smart enough to figure out that the 2 actions here use the same address. Hence it just rewrite the change cell generated in the NervosDAO deposit action to pay enough transaction fee.
+
+```javascript
+// <terminal 2>
 > skeleton = await secp256k1Blake160.payFee(skeleton, address, 100000000n);
-
-> // If you checked the transaction skeleton after incurring fees. You will
-> // notice that it only has one input. This might raise a question: if NervoDAO
-> // deposit consumes one input cell, transaction fee requires a different input
-> // cell, shouldn't there be 2 input cells with 3 output cells(a deposited cell,
-> // and 2 change cell)? The trick here, is that common-scripts is smart enough
-> // to figure out that the 2 actions here use the same address. Hence it just
-> // rewrite the change cell generated in the NervosDAO deposit action to pay
-> // enough transaction fee.
 > createTransactionFromSkeleton(skeleton).inputs.length;
 1
+```
 
-> // Now the transaction is more or less complete, we can start generate messages
-> // used for signing.
+Step 3. Prepare the signing entries.
+
+```javascript
+// <terminal 2>
 > skeleton = secp256k1Blake160.prepareSigningEntries(skeleton);
 > // This method actually loops through the skeleton, and create `signingEntries`
 > // that are using the default secp256k1-blake160 lock script:
@@ -194,9 +309,52 @@ $ node --experimental-repl-await
   {
     type: 'witness_args_lock',
     index: 0,
-    message: '0x40811fd6ed74b9042f603dc7f2f577da7ebe0e05175d349dbb5c539b1111b83f'
+    message: '0xccf2e1edfd9523b3c4c1b91d77f30025cdff1fb5373e8e0df4dec86cc51f7735'
   }
 ]
+```
+
+Step 4. Sign the transaction with the private key by using the HD wallet manager.
+
+```javascript
+// <terminal 2>
+> const {key} = require("@ckb-lumos/hd");
+> const privateKey = "0x8a4cb53f641ee8df90cf5bc5204574744657a091dfe41c98069aa4e41ed9c86b";
+> const message = skeleton.get("signingEntries").get(0).message;
+> const signature = key.signRecoverable(message, privateKey);
+> console.log(signature);
+0x81a6d8ff2c581db3819e7ef8da2b88995eaca8d45f11353e814017e01859f1d61fd75287e86e37a697ed097b1bfc580d192438433b1bef7f7ca83346d9828e5d01
+```
+
+Step 5. Seal the transaction.
+
+```javascript
+// <terminal 2>
+> const signatures = ["0x81a6d8ff2c581db3819e7ef8da2b88995eaca8d45f11353e814017e01859f1d61fd75287e86e37a697ed097b1bfc580d192438433b1bef7f7ca83346d9828e5d01"];
+> const tx = sealTransaction(skeleton, signatures);
+```
+
+Step 6. Send this finalized transaction to the CKB network
+
+```javascript
+// <terminal 2>
+> const { RPC } = require("ckb-js-toolkit");
+> const rpc = new RPC("http://127.0.0.1:8114");
+> await rpc.send_transaction(tx);
+'0x67babe1a6d64473360c2d3417b715744542d8527590ffc4a088b5f17dbcd181d'
+```
+
+Step 7. Check the capacity of the account by using the testnet address in <terminal 3>.
+
+The deposited 1000 CKB appears in the result.
+
+```shell
+//<terminal 3>
+$ ckb-cli wallet get-capacity --address "ckt1qyqv6dfjmelhmrej2g5ju2d4994xkd462d5sathj2h"
+dao: 1000.0 (CKB)
+free: 464300332.92941572 (CKB)
+immature: 8033296.18878644 (CKB)
+total: 464301332.92941572 (CKB)
 ```
 
 ### Withdraw from Nervos DAO
@@ -204,6 +362,7 @@ $ node --experimental-repl-await
 Step1. List all deposited Nervos DAO cells for an address.
 
 ```javascript
+// <terminal 2>
 > for await (const cell of dao.listDaoCells(indexer, address, "deposit")) { console.log(cell); }
 {
   cell_output: {
@@ -211,7 +370,7 @@ Step1. List all deposited Nervos DAO cells for an address.
     lock: {
       code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
       hash_type: 'type',
-      args: '0xcbfbb9edb5838e2d61061c3fc69eaaa5fdbd3273'
+      args: '0xcd3532de7f7d8f3252292e29b5296a6b36ba5369'
     },
     type: {
       code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
@@ -220,11 +379,11 @@ Step1. List all deposited Nervos DAO cells for an address.
     }
   },
   out_point: {
-    tx_hash: '0x88536e8c25f5f8c89866dec6a5a1a6a72cccbe282963e4a7bfb5542b4c15d376',
+    tx_hash: '0x67babe1a6d64473360c2d3417b715744542d8527590ffc4a088b5f17dbcd181d',
     index: '0x0'
   },
-  block_hash: '0xa1ec7dc291774bc0fc229efba4a162c099a8d88ffa7ae2fa410cc574e0701ced',
-  block_number: '0x196',
+  block_hash: '0x800e14d6831c7e5048f08ca01e83b6bf3aa0f389a076ff21e57eb2de13e36e1d',
+  block_number: '0x601',
   data: '0x0000000000000000'
 }
 ```
@@ -248,14 +407,19 @@ Step 2. Locate the cell we just deposited to Nervos DAO and withdraw it from Ner
   {
     type: 'witness_args_lock',
     index: 0,
-    message: '0x24370c5cedc03c34ae0a00a10d9e62324bce07e8d155c839ff10991d73684c34'
+    message: '0xbb80f31714ec22b2ea5bab709b572005a3a8b0b0c853ca42b58d327c53e3f517'
   }
 ]
+
+> const message2 = "0xbb80f31714ec22b2ea5bab709b572005a3a8b0b0c853ca42b58d327c53e3f517";
+> const signature2 = key.signRecoverable(message2, privateKey);
+> console.log(signature2);
+0xcbc5bd9cd5a0ac0e9cb47551186dd1e746e5bbf89bde727801e4cb5e19e180281af475863a8313e88d09c1917554810929f9e50a1b9e7df26749d56d0137f5d001
 > // After we signed the message, we can get the signature:
-> const signatures2 = ["0x5aed4480c82844506fefc1d92dd18422a123b8e880018ea4cfa7f95891c4781e6578facedd765676831cf3cca04492ec3ec3885ac8d0b6d90cb6c1d6f99e6ffb01"];
+> const signatures2 = ["0xcbc5bd9cd5a0ac0e9cb47551186dd1e746e5bbf89bde727801e4cb5e19e180281af475863a8313e88d09c1917554810929f9e50a1b9e7df26749d56d0137f5d001"];
 > // Now we can seal and send the transaction
 > const tx2 = sealTransaction(skeleton, signatures2);
 > await rpc.send_transaction(tx2);
-'0xe411eb6a3cf4f659461cc7a9df9ff95a72b9624bf850b9ccad0c4d7f2ab444f6'   
+'0x21151cc478b629926edcad2483e7694c2e187aa7e215b53d15ef0cf152401a89'   
 ```
 

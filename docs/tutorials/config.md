@@ -1,33 +1,41 @@
 ---
 id: config
-title: Set Up Config Manager
+title: Set Up the Config Manager
 ---
-The config manager deals with differences between chains, such as the mainnet, testnet, or numerous dev chains. Each chain is abstracted into an individual config file. 
+## Config Manager
 
-When a config file is loaded, the config manager handles the chain specific logic that saves corresponding coding effort for configuration management.
+The config manager deals with differences between chains, such as the mainnet, testnet, or numerous DEV chains. Each chain is abstracted into an individual configuration file. 
 
-The config manager supports the node app to boot with a specific chain configuration, so other parts in Lumos can consult the configuration manager directly for information.
+When a configuration file is loaded, the config manager handles the chain specific logic that saves corresponding coding effort for configuration management.
+
+The config manager supports the node DApp to boot with a specific chain configuration. All the other components in Lumos can leverage the configuration from the configuration manager directly.
 
 There are two options for setting up the config manager:
 
-- Setup the config manager using pre-defined configurations specified by the `LUMOS_CONFIG_NAME` variable.
-- Setup the configuration manager via a local config file.
+- For a mainnet or testnet node: Setup the config manager by using pre-defined configurations that is specified by the `LUMOS_CONFIG_NAME` variable.
+- For a CKB DEV blockchain: Setup the configuration manager by using a local config file that is specified by the `LUMOS_CONFIG_FILE` variable.
 
-## Setup the Config Manager using Pre-defined Configurations
+## Prerequisites
 
-Pre-defined configurations include:
+The following prerequisites apply for setting up the config manager:
+
+- The CKB node is started.
+
+## Set Up the Config Manager by Using Pre-defined Configurations
+
+When running a mainnet or testnet node, choose corresponding pre-defined configurations for setting up the config manager:
 
 - `LINA`: mainnet configurations
 
 - `AGGRON4`: testnet configurations 
 
-  **Note**: When the `AGGRON4` testnet network is reset, Lumos is upgraded with new testnet configurations.
+  **Note**: If the `AGGRON4` testnet network is reset, Lumos can upgrade with new testnet configurations.
 
 **Example**:
 
 ```
 $ LUMOS_CONFIG_NAME=LINA node --experimental-repl-await
-Welcome to Node.js v14.0.0.
+Welcome to Node.js v12.19.1.
 Type ".help" for more information.
 > const { initializeConfig, getConfig } = require("@ckb-lumos/config-manager");
 > initializeConfig();
@@ -62,11 +70,13 @@ Type ".help" for more information.
 }
 ```
 
-## Setup the Configuration Manager through a Local Config File
+## Set Up the Config Manager by Using a Local Config File
 
-- The `LUMOS_CONFIG_FILE` variable can be set pointing to a config file from that Lumos reads the configurations.  
+When running a CKB DEV blockchain, use a local configuration file for setting up the config manager.
 
-- If the `LUMOS_CONFIG_FILE` variable is not set, Lumos reads configurations from the `config.json` file in the current directory.
+The `LUMOS_CONFIG_FILE` variable can be set pointing to a configuration file. Lumos reads the configurations from that configuration file.  
+
+If the `LUMOS_CONFIG_FILE` variable is not set, Lumos reads configurations from the `config.json` file in the current directory.
 
 **Example**:
 

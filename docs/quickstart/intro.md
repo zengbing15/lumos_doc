@@ -53,7 +53,7 @@ The components can be classified into several groups according to their features
 
 - Communication
   
-- **RPC**: The RPC component (`@ckb-lumos/rpc`) interacts with the CKB network, communicating block and transaction information with CKB nodes.
+  - **RPC**: The RPC component (`@ckb-lumos/rpc`) interacts with the CKB network, communicating block and transaction information with CKB nodes.
   
 - Other Functions
   - **HD cache manager**: The HD cache manager (`@ckb-lumos/hd-cache`) builds a memory cache for derived addresses and live cells of these addresses. It supports query functions, such as querying the balance of an HD wallet.
