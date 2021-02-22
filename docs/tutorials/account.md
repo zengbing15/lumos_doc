@@ -1,14 +1,14 @@
 ---
-id: key
-title: Create an Extended Private Key
+id: createaccount
+title: Create an Account for CKB Transactions
 ---
-Steps
-
 This step generates a new account that can be used for developing and testing operations.
 
-To import create an extended private key:
+## Steps
 
-Step 1. 
+To import create a new account :
+
+Step 1. Create an extended private key by using the HD wallet manager.
 
 ```
 > const { mnemonic, ExtendedPrivateKey } = require("@ckb-lumos/hd");
@@ -22,5 +22,48 @@ ExtendedPrivateKey {
 }
 ```
 
-<!--The `testnet` address of the account can be used for [claiming free **Testnet CKBytes**](https://faucet.nervos.org/).--><!--The `lock_arg` of the account can be used for receiving mining rewards.--><!--$ ckb-cli account import --privkey-path pk1--><!-- Password:--><!-- address:--><!--mainnet: ckb1qyqwkrfx5hvkgvenxj0n6k795pnepv9avtxs78drxj--><!--testnet: ckt1qyqwkrfx5hvkgvenxj0n6k795pnepv9avtxsrznu2w--><!--lock_arg: 0xeb0d26a5d9643333349f3d5bc5a06790b0bd62cd--><!--Check the balance of the account by using ckb-cli:--><!--CKB> wallet get-capacity --address "ckt1qyqwkrfx5hvkgvenxj0n6k795pnepv9avtxsrznu2w"--><!--immature: 8029036.69499957 (CKB)--><!--total: 787543313.59805864 (CKB)-->
+Step 2. Open a new terminal and import the private key to create a new account.
+
+```
+$ echo 0x8a4cb53f641ee8df90cf5bc5204574744657a091dfe41c98069aa4e41ed9c86b > pk
+$ export TOP=$(pwd)
+$ export PATH=$PATH:$TOP/ckb_v0.40.0-rc1_x86_64-unknown-centos-gnu
+$ ckb-cli account import --privkey-path pk
+Password:
+address:
+  mainnet: ckb1qyqv6dfjmelhmrej2g5ju2d4994xkd462d5sqwfdxt
+  testnet: ckt1qyqv6dfjmelhmrej2g5ju2d4994xkd462d5sathj2h
+lock_arg: 0xcd3532de7f7d8f3252292e29b5296a6b36ba5369
+```
+
+Step 3. Specify the `args` in the `block_assembler` section in ckb.toml with `lock_arg` for receiving mining rewards.
+
+```
+$ ed devnet/ckb.toml <<EOF
+143a
+[block_assembler]
+code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+args = "0xcd3532de7f7d8f3252292e29b5296a6b36ba5369"
+hash_type = "type"
+message = "0x"
+.
+wq
+EOF
+```
+
+Step 4. Restart the CKB node and start the CKB miner in a different terminal.
+
+```
+$ export TOP=$(pwd)
+$ export PATH=$PATH:$TOP/ckb_v0.40.0-rc1_x86_64-unknown-centos-gnu
+$ ckb miner -C devnet
+```
+
+Step 5. Check the capacity of the account by using the testnet address.
+
+```
+$ ckb-cli wallet get-capacity --address "ckt1qyqv6dfjmelhmrej2g5ju2d4994xkd462d5sathj2h"
+immature: 8039065.13953246 (CKB)
+total: 38186544.69769654 (CKB)
+```
 

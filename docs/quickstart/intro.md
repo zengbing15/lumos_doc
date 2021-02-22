@@ -29,7 +29,7 @@ The fundamental components, such as the **Lumos indexer**, **common scripts** an
 
 <!--The **HD cache manager** and the **HD wallet manager** components provide the functions that consolidate the strength of the Lumos framework.-->
 
-<img src="../../img/CKB dapp with Lumos.png" width="600"/>
+<img src="../../../img/CKB dapp with Lumos.png" width="600"/>
 
 Figure 1 Architecture of a CKB DApp Built with Lumos
 
