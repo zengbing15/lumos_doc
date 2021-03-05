@@ -34,6 +34,20 @@ A cell includes the following fields:
 
 For more information about the cell model, see [Cell Data Structure](https://docs.nervos.org/docs/reference/cell) and [CKB RFC](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#42-cell).
 
+### Example
+
+```
+{
+  "capacity": "0x19995d0ccf",
+  "lock": {
+    "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+    "args": "0x0a486fb8f6fe60f76f001d6372da41be91172259",
+    "hash_type": "type"
+  },
+  "type": null
+}
+```
+
 ## Operations
 
 ### Query Existing Cells

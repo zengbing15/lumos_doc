@@ -1,7 +1,7 @@
 ---
 
 id: usedao
-title: Integrate Nervos DAO with DApps by Using Lumos
+title: Integrate Nervos DAO with DApps
 ---
 ## Introduction
 
