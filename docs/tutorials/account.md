@@ -58,6 +58,8 @@ lock_hash: 0x17323019e0ad96fbe450622a6bd059cc839b93fa2dcccfe3db55af991fd6b260
 
 - If you are running a **DEV blockchain**, specify the `args` in the `block_assembler` section in ckb.toml with the `lock_arg` of the account for receiving mining rewards. 
 
+  This step is to set up the miner for receive mining rewards (CKB capacity) that can be used for developing and testing purpose. 
+
   ```
   $ ed devnet/ckb.toml <<EOF
   143a
@@ -71,7 +73,9 @@ lock_hash: 0x17323019e0ad96fbe450622a6bd059cc839b93fa2dcccfe3db55af991fd6b260
   EOF
   ```
 
-  Then restart the CKB node and start the CKB miner in a different terminal.
+  Then restart the CKB node.
+
+  Start the CKB miner in a different terminal.
 
   ```
   $ export TOP=$(pwd)

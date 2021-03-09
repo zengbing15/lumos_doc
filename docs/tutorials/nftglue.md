@@ -1,90 +1,226 @@
 ---
 id: nftglue
-title: Integrating NFT Script on CKB
+title: Integrating NFT on CKB DEV Chain
 ---
 ## Introduction
 
-Non Fungible Tokens (NFTs) are tokens that are not interchangeable or necessarily of equal value, even if they are within the same token class. This includes digital collectibles, game items, and records of ownership of physical assets.
+Non Fungible Tokens (NFTs) are tokens that are not interchangeable or necessarily of equal value, even if they are within the same token class. This includes digital collectibles, game items, and records of ownership of physical assets. 
 
-For more information, see the [RFC: CKB-NFT Draft Spec](https://talk.nervos.org/t/rfc-ckb-nft-draft-spec/4779).
+The integration of NFT on CKB mainly includes the following two parts:
 
-This tutorial includes two parts:
+- Deploy the NFT script on chain.
+- Operate on NFT tokens.
 
-- Deploy the NFT script on DEV chain.
-- Operate on NFT tokens by using Lumos.
+## A Code Example: DApps on CKB Workshop Code
 
-A [Video Walkthrough](https://www.youtube.com/watch?v=7ob-WL1eWrQ) is also provided for an overview of the architecture and code walkthrough. 
+A code example, [DApps on CKB Workshop Code](https://github.com/nervosnetwork/dapps-on-ckb-workshop-code), is provided for the demonstration of integrating NFT on CKB DEV chain. 
 
-## Environment and Tools
+The example includes two separate projects, nft-validator and nft-glue.
 
-- OS: Ubuntu 20.04.2
-- NodeJS  (v14.15.5)
+- The **nft-validator** is a Rust based on-chain script validator project for supporting NFT tokens on CKB. [Capsule](https://github.com/nervosnetwork/capsule) is leveraged to simplify the script development. [Slides](https://docs.google.com/presentation/d/1pl5DtkaoHceC2zZ_OTosXAr98cr80D-8D_5iVEptecY/edit?usp=sharing) and a [video](https://www.youtube.com/watch?v=NcN3NiBuJbo) and  are provided for an overview of the architecture and code walkthrough for the nft-validator project. 
+- The **nft-glue** is a separate project in the example that provides operations on NFT tokens with the support of Lumos. [Slides](https://docs.google.com/presentation/d/1fQKyOrkN8I61a1ZGXCgRczi6T_zWH0aN-IA2SFpdCU4/edit?usp=sharing) and a [video](https://www.youtube.com/watch?v=7ob-WL1eWrQ) are provided for an overview of the architecture and code walkthrough of the nft-glue project. 
+
+Walking through this example requires the knowledge on CKB scripts and the NFT script.
+
+For more information about CKB scripts, see [Script](https://docs.nervos.org/docs/reference/script).
+
+For more information about the NFT script, see the [RFC: CKB-NFT Draft Spec](https://talk.nervos.org/t/rfc-ckb-nft-draft-spec/4779).
+
+## Environment
+
+- OS: Ubuntu 20.04.2 with KDE Plasma GUI. For more information about the installation of the KDE plasma GUI, see [How to Install a Desktop (GUI) on An Ubuntu Server](https://phoenixnap.com/kb/how-to-install-a-gui-on-ubuntu).
+- NodeJS  (v14.16.0)
 - Yarn (1.22.5)
 - GCC and make
 - TypeScript version 3.8.3
 
 ## Deploy the NFT Script on DEV Chain
 
-### **Step 1. Install and configure a DEV blockchain.**
+### **Step 1. Install and run a CKB Node on DEV chain.**
 
-This example uses CKB (v0.40.0).
+The following example installs and runs the CKB version [0.39.0](https://github.com/nervosnetwork/ckb/releases/tag/v0.39.0) on DEV chain manually.
 
-For more information, see [Install and Configure a CKB DEV Blockchain](http://localhost:3000/lumos_doc/docs/tutorials/installckb).
+To install and run a CKB node on DEV chain manually:
 
-### **Step 2. Install Docker on Ubuntu system and manage Docker as a non-root user.**
-
-For more information, see [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/) and [Manage Docker as a non-root user](https://docs.docker.com/engine/install/linux-postinstall/).
-
-### **Step 3. Install Capsule.** 
-
-[The pre-built tools](https://github.com/nervosnetwork/capsule/releases/tag/v0.1.3) of Capsule can be downloaded for the installation.
-
-This example uses capsule_v0.1.3_x86_64-linux.tar.gz for Ubuntu system.
-
-**Note**: Some versions of Capsule are incompatible with this example. Version **0.1.3** is verified and recommended.
-
-```
-$ curl -LO https://github.com/nervosnetwork/capsule/releases/download/v0.1.3/capsule_v0.1.3_x86_64-linux.tar.gz
-$ tar xzf capsule_v0.1.3_x86_64-linux.tar.gz
-```
-
-### **Step 4. Add ckb-cli and Capsule to the PATH environment variable.**
-
-To add the variable, add the lines `export PATH=$PATH:/<path to the file>` to the end of the **~/.bashrc** file for Bash shell.
-
-For example:
-
-- ckb-cli: `export PATH=$PATH:/home/username/ckb_v0.40.0_x86_64-unknown-linux-gnu`
-
-- Capsule: `export PATH=$PATH:/home/username/capsule_v0.1.3_x86_64-linux`
-
-The folder /home/username/ckb_v0.40.0_x86_64-unknown-linux-gnu contains the ckb tools installed in **step 1**.
-
-The folder /home/username/capsule_v0.1.3_x86_64-linux contains the Capsule tools installed in **step 2**.
-
-**Note**: The current user must have permissions to execute ckb-cli and Capsule. 
-
-### **Step 5. Check the Capsule installation.**
-
-```
-$ capsule check
-------------------------------
-docker  installed
-ckb-cli installed v0.40.0
-------------------------------
+```shell
+$ export TOP=$(pwd)
+$ curl -LO https://github.com/nervosnetwork/ckb/releases/download/v0.39.0/ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
+$ tar xzf ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
+$ export PATH=$PATH:$TOP/ckb_v0.39.0_x86_64-unknown-linux-gnu
+$ ckb -V
+ckb 0.39.0
+$ ckb init -C devnet -c dev
+WARN: mining feature is disabled because of lacking the block assembler config options
+Initialized CKB directory in devnet
+create specs/dev.toml
+create ckb.toml
+create ckb-miner.toml
+create default.db-options
+$ ckb run -C devnet
 ```
 
-### **Step 6. Download the example code.**
+For more information, see [Install a CKB Node on DEV Chain Manually](../tutorials/installckb#install-a-ckb-node-on-dev-chain-manually).
+
+### Step 2. Create an account by using the HD wallet manager.
+
+To create an account by using the HD wallet manager:
+
+- Install the Lumos packages.
+
+  ```
+  $ mkdir mydapp
+  $ cd mydapp
+  $ yarn init
+  $ yarn add @ckb-lumos/indexer@0.15.0 @ckb-lumos/common-scripts@0.15.0 @ckb-lumos/config-manager@0.15.0 @ckb-lumos/hd@0.15.0
+  ```
+
+- Set up the Config Manager for the DEV chain.
+
+  ```
+  $ cat <<EOF > config.json
+  {
+    "PREFIX": "ckt",
+    "SCRIPTS": {
+      "SECP256K1_BLAKE160": {
+        "CODE_HASH": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+        "HASH_TYPE": "type",
+        "TX_HASH": "0xace5ea83c478bb866edf122ff862085789158f5cbff155b7bb5f13058555b708",
+        "INDEX": "0x0",
+        "DEP_TYPE": "dep_group",
+        "SHORT_ID": 0
+      },
+      "SECP256K1_BLAKE160_MULTISIG": {
+        "CODE_HASH": "0x5c5069eb0857efc65e1bca0c07df34c31663b3622fd3876c876320fc9634e2a8",
+        "HASH_TYPE": "type",
+        "TX_HASH": "0xace5ea83c478bb866edf122ff862085789158f5cbff155b7bb5f13058555b708",
+        "INDEX": "0x1",
+        "DEP_TYPE": "dep_group",
+        "SHORT_ID": 1
+      },
+      "DAO": {
+        "CODE_HASH": "0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e",
+        "HASH_TYPE": "type",
+        "TX_HASH": "0xa563884b3686078ec7e7677a5f86449b15cf2693f3c1241766c6996f206cc541",
+        "INDEX": "0x2",
+        "DEP_TYPE": "code"
+      }
+    }
+  }
+  EOF
+  $ LUMOS_CONFIG_FILE="config.json" node --experimental-repl-await
+  Welcome to Node.js v14.16.0.
+  Type ".help" for more information.
+  > const { initializeConfig, getConfig } = require("@ckb-lumos/config-manager");
+  > initializeConfig();
+  ```
+
+- Create an extended private key for the account by using the HD wallet manager.
+
+  ```
+  > const { mnemonic, ExtendedPrivateKey } = require("@ckb-lumos/hd");
+  > const m = mnemonic.generateMnemonic();
+  > const seed = mnemonic.mnemonicToSeedSync(m);
+  > const extendedPrivateKey = ExtendedPrivateKey.fromSeed(seed);
+  > console.log(extendedPrivateKey);
+  ExtendedPrivateKey {
+    privateKey: '0xc09f61958adda1e8cf5b336ee310552d57a9d084c7e544ee1f28770102507453',
+    chainCode: '0x8c03d4a46622ad63cb482df6e8d4de5313bfb798134e970bcd372786ff5dd891'
+  }
+  ```
+
+- Import the private key by using ckb-cli. 
+
+  This step creates the account with the private key on the DEV chain.
+
+  To import the private key by using ckb-cli:
+
+  ```
+  $ cd ckb_v0.39.0_x86_64-unknown-linux-gnu
+  $ echo 0xc09f61958adda1e8cf5b336ee310552d57a9d084c7e544ee1f28770102507453 > pk
+  $ ckb-cli account import --privkey-path pk
+  Password:
+  address:
+    mainnet: ckb1qyqfsh757xdy5vahah474juhhy287kp7jdxqguzvxj
+    testnet: ckt1qyqfsh757xdy5vahah474juhhy287kp7jdxq4eun2w
+  lock_arg: 0x985fd4f19a4a33b7edebeacb97b9147f583e934c
+  ```
+
+- Get CKB capacity for the account by specifying the `args` in the `block_assembler` section in ckb.toml with the `lock_arg` of the account.
+
+  ```
+  $ ed devnet/ckb.toml <<EOF
+  143a
+  [block_assembler]
+  code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+  args = "0x985fd4f19a4a33b7edebeacb97b9147f583e934c"
+  hash_type = "type"
+  message = "0x"
+  .
+  wq
+  EOF
+  ```
+
+### Step 3. Install Docker on Ubuntu and manage Docker as a non-root user.
+
+1. To install Docker engine on **Ubuntu**, see the Docker documentations of [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/).
+2. To manage Docker as a non-root user, see the Docker documentations of [Manage Docker as a non-root user](https://docs.docker.com/engine/install/linux-postinstall/).
+
+### Step 4. Install Capsule. 
+
+Capsule is the tool for building deploying scripts (contracts) on Nervos CKB. The Capsule tool can be installed from source or the pre-built installer.
+
+The following example installs Capsule on Ubuntu by using the [pre-built installer](https://github.com/nervosnetwork/capsule/releases/tag/v0.1.3) of Capsule. For more information about installation from source, see the [Readme](https://github.com/nervosnetwork/capsule) of Capsule.
+
+To install Capsule by using the pre-built installer:
+
+- Download the pre-built installer of capsule_v0.1.3_x86_64-linux.tar.gz.
+
+  **Note**: Some versions of Capsule are incompatible with the NFT integration code example in this guide. Version **0.1.3** is verified and recommended for walking through this NFT integration example.
+
+  ```shell
+  $ curl -LO https://github.com/nervosnetwork/capsule/releases/download/v0.1.3/capsule_v0.1.3_x86_64-linux.tar.gz
+  $ tar xzf capsule_v0.1.3_x86_64-linux.tar.gz
+  ```
+
+- Add ckb-cli and Capsule to the PATH environment variable.
+
+  To add the PATH variables, add the lines `export PATH=$PATH:/<path to the file>` of ckb-cli and Capsule to the end of the **~/.bashrc** file for Bash shell.
+
+  For example:
+
+  - ckb-cli: `export PATH=$PATH:/home/username/ckb_v0.39.0_x86_64-unknown-linux-gnu`
+
+    The folder /home/username/ckb_v0.40.0_x86_64-unknown-linux-gnu contains the ckb tools installed in **step 1**.
+
+  - Capsule: `export PATH=$PATH:/home/username/capsule_v0.1.3_x86_64-linux`
+
+    The folder /home/username/capsule_v0.1.3_x86_64-linux contains the Capsule tools installed in **step 2**.
+
+  **Note**: The current user must have permissions to run ckb-cli and Capsule. If the execution of ckb-cli or Capsule requires sudo commands, that may cause issues during the deployment process.
+
+- Check the Capsule installation.
+
+  ```
+  $ capsule check
+  ------------------------------
+  docker  installed
+  ckb-cli installed v0.40.0
+  ------------------------------
+  ```
+
+### Step 5. Download the example code.
 
 ```
 $ git clone https://github.com/nervosnetwork/dapps-on-ckb-workshop-code.git
 ```
 
-### **Step 7. Build the NFT script.**
+### Step 6. Build the NFT script.
 
-The generated script binary is located in the `dapps-on-ckb-workshop-code/nft-validator/build/debug` folder.
+This step compiles and generates the NFT source script to an RISC-V binary program into the `dapps-on-ckb-workshop-code/nft-validator/build/debug` folder.
 
-```
+To build the NFT script:
+
+```shell
 $ cd dapps-on-ckb-workshop-code/nft-validator
 $ capsule build
 Building contract nft-validator
@@ -106,91 +242,91 @@ Building contract nft-validator
 Done
 ```
 
-### Step 8. Deploy the script.
+### Step 7. Deploy the script.
 
-**Note**: The CKB node must be running before deploying the NFT script.
+**Note**: The CKB node must start running before the deployment of the NFT script.
 
 If the node is not started, run `ckb run -C devnet` in another terminal to start the node.
 
 To deploy the NFT script:
 
-- Update the `[lock]` field in the nft-validator/`deployment.toml` file with your lock script.
+- Update the `[lock]` section in the nft-validator/`deployment.toml` file with the `lock_arg`  "0x985fd4f19a4a33b7edebeacb97b9147f583e934c" of the account created in step 2.
 
-```
-# [[cells]]
-# name = "my_cell"
-# enable_type_id = false
-# location = { file = "build/release/my_cell" }
-
-# # Dep group cells
-# [[dep_groups]]
-# name = "my_dep_group"
-# cells = [
-#   "my_cell",
-#   "secp256k1_data"
-# ]
-
-# # Replace with your own lock if you want to unlock deployed cells.
-# # The deployment code_hash is secp256k1 lock
-[lock]
-code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
-args = "the address that you can unlock in the dev chain"
-hash_type = "type"
-```
+  ```shell
+  # [[cells]]
+  # name = "my_cell"
+  # enable_type_id = false
+  # location = { file = "build/release/my_cell" }
+  
+  # # Dep group cells
+  # [[dep_groups]]
+  # name = "my_dep_group"
+  # cells = [
+  #   "my_cell",
+  #   "secp256k1_data"
+  # ]
+  
+  # # Replace with your own lock if you want to unlock deployed cells.
+  # # The deployment code_hash is secp256k1 lock
+  [lock]
+  code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+  args = "0x985fd4f19a4a33b7edebeacb97b9147f583e934c"
+  hash_type = "type"
+  ```
 
 - Generate the release binary.
 
-```
-$ capsule build --release
-Building contract nft-validator
-   Compiling cc v1.0.58
-   Compiling cfg-if v0.1.10
-   Compiling buddy-alloc v0.3.0
-   Compiling blake2b-ref v0.1.0
-   Compiling molecule v0.6.0
-   Compiling ckb-allocator v0.1.1
-   Compiling ckb-standalone-types v0.0.1-pre.1
-   Compiling ckb-std v0.4.1
-   Compiling nft-validator v0.1.0 (/code/contracts/nft-validator)
-    Finished release [optimized] target(s) in 17.31s
-Done
-```
+  ```shell
+  $ capsule build --release
+  Building contract nft-validator
+     Compiling cc v1.0.58
+     Compiling cfg-if v0.1.10
+     Compiling buddy-alloc v0.3.0
+     Compiling blake2b-ref v0.1.0
+     Compiling molecule v0.6.0
+     Compiling ckb-allocator v0.1.1
+     Compiling ckb-standalone-types v0.0.1-pre.1
+     Compiling ckb-std v0.4.1
+     Compiling nft-validator v0.1.0 (/code/contracts/nft-validator)
+      Finished release [optimized] target(s) in 17.31s
+  Done
+  ```
 
-- Deploy the NFT script to DEV chain by using the `capsule deploy --address <the deployer's address>` command.
+- Deploy the NFT binary program to the DEV chain by using the `capsule deploy --address <the testnet address of the account created in step 2>` command.
 
-  For details about creating accounts with CKB capacities for developing and testing purpose, see [Create an Account for CKB Transactions](http://localhost:3000/lumos_doc/docs/tutorials/createaccount).
-
-**Note**: Remember the `data_hash` and `tx_hash` that will be used in later operations.
-
-```
-$ capsule deploy --address ckt1qyqfsh757xdy5vahah474juhhy287kp7jdxq4eun2w
-Deployment plan:
----
-migrated_capacity: 0.0 (CKB)
-new_occupied_capacity: 33669.0 (CKB)
-txs_fee_capacity: 0.0001 (CKB)
-total_occupied_capacity: 33669.0 (CKB)
-recipe:
-  cells:
-    - name: nft
-      index: 0
-      tx_hash: 0xd6ae484f45a6bc40a558db60e2b55d8621a4db1e20e6196e2bed01a1234ee34f
-      occupied_capacity: 33669.0 (CKB)
-      data_hash: 0xcd26ace6d4a532c005b6af13196a912bfed399007584dc6a256c72d8bac0fde2
-      type_id: ~
-  dep_groups: []
-Confirm deployment? (Yes/No)
-y
-Password: 
-send cell_tx d6ae484f45a6bc40a558db60e2b55d8621a4db1e20e6196e2bed01a1234ee34f
-Deployment complete
-```
+  A cell is created with the binary program as cell data on the DEV chain. Transactions on NFT tokens reference the cell by cell deps, and use the NFT script in the transactions.
+  
+  **Note**: Remember the `data_hash` and `tx_hash` that will be used in later NFT operations.
+  
+  ```shell
+  $ capsule deploy --address ckt1qyqfsh757xdy5vahah474juhhy287kp7jdxq4eun2w
+  Deployment plan:
+  ---
+  migrated_capacity: 0.0 (CKB)
+  new_occupied_capacity: 33669.0 (CKB)
+  txs_fee_capacity: 0.0001 (CKB)
+  total_occupied_capacity: 33669.0 (CKB)
+  recipe:
+    cells:
+      - name: nft
+        index: 0
+        tx_hash: 0xd6ae484f45a6bc40a558db60e2b55d8621a4db1e20e6196e2bed01a1234ee34f
+        occupied_capacity: 33669.0 (CKB)
+        data_hash: 0xcd26ace6d4a532c005b6af13196a912bfed399007584dc6a256c72d8bac0fde2
+        type_id: ~
+    dep_groups: []
+  Confirm deployment? (Yes/No)
+  y
+  Password: 
+  send cell_tx d6ae484f45a6bc40a558db60e2b55d8621a4db1e20e6196e2bed01a1234ee34f
+  Deployment complete
+  ```
 
 ## Operate on NFT Tokens by Using Lumos
 
 After the NFT script is deployed on DEV chain, perform the following steps to interact with and operate on NFT tokens by using Lumos.
 
-### Step 1. Install dependencies.
+### Step 1. Install dependencies in the nft-glue project.
 
 ```
 $ cd dapps-on-ckb-workshop-code/nft-glue
@@ -609,5 +745,4 @@ console.log("success!",txhash);
 ```
 $ tsc
 $ node lib/index.js
-
 ```
