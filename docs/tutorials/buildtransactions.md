@@ -2,9 +2,9 @@
 id: buildtransactions
 title: Assemble Transactions
 ---
-<!--The goal and core functionality of a DApp built with Lumos is to build transactions in response to user requests.-->
+<!--The goal and core functionality of a DApp built with Lumos is to build transactions in response to user requests.CKB programming model is flexible but it significantly complicates transaction assembling. -->
 
-CKB programming model is flexible but it significantly complicates transaction assembling. Lumos provides `TransactionSkeleton`  that simplifies transaction assembling. 
+Lumos provides the `TransactionSkeleton` interface that significantly simplifies transaction assembling. 
 
 <!--Different scripts used in transaction inputs will require separate message generation, and also separate signing steps.--><!--Some cells might require special argument setup in witness, due to type script validation rules.--><!--Coordination might be required, since both lock script and type script in a cell might require arguments in the same witness construct.-->
 
@@ -44,7 +44,7 @@ Each transaction skeleton corresponds to an action, and will be built into a sin
 
 7. (Optional) The DApp gets the transaction status.
 
-   A transaction can be in one of the three statuses the following status:
+   A transaction can be in one of the following status:
 
    - A **pending** result means the node is aware of the transaction but the transaction is not confirmed yet. 
    - A **proposed** result means the node sees a transaction included in a block candidate that is not yet mined. 

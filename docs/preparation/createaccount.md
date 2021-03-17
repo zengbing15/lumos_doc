@@ -2,7 +2,16 @@
 id: createaccount
 title: Create an Account
 ---
-CKB accounts are required for development and testing purposes. 
+A CKB account is represented as a collection of live cells locked by a lock script. The ID of the account is the lock script args.
+
+The following elements of an account are useful during the development:
+
+- Private key
+- Lock script args
+- Address
+- CKB capacity
+
+This guide will prepare a CKB account with CKB capacity that is required during the development process.
 
 The following methods are described in this guide:
 
@@ -10,6 +19,7 @@ The following methods are described in this guide:
 - Get the private key of the account.
 - Get CKB capacity for the account.
 - Check the capacity of the account.
+- Deposit CKB to DAO.
 
 ## Prerequisites 
 
@@ -22,19 +32,28 @@ The following prerequisites apply for creating an account by using ckb-cli:
 
 ### Step 1. Create an account by using ckb-cli.
 
-When the CKB node is installed by using the pre-built installer package, ckb-cli is available and can be used to create an account. For more information about the installation of a CKB node, see [Installation Options](../preparation/installckb#installation-options).
+When the CKB node is installed by using the pre-built installer package, ckb-cli is available and can be used to create an account. For more information about the installation of a CKB node, see [Install a CKB Node](../preparation/installckb).
 
 ```shell
+$ export TOP=$(pwd)
+$ export PATH=$PATH:$TOP/ckb_v0.39.0_x86_64-unknown-linux-gnu
 $ ckb-cli account new
 Your new account is locked with a password. Please give a password. Do not forget this password.
 Password: 
 Repeat password: 
-address:
-  mainnet: ckb1qyqzz2az9emgl7runavw3tul22gd4qs5ueqs68fy9e
-  testnet: ckt1qyqzz2az9emgl7runavw3tul22gd4qs5ueqs8zhmf9
-lock_arg: 0x212ba22e768ff87c9f58e8af9f5290da8214e641
-lock_hash: 0x85aa4381b04366e88a10fb9519db99b0993bea7ee0ce67c099e5b627538cd212
 ```
+<details><summary>CLICK ME</summary>
+<p>
+
+```shell
+address:
+  mainnet: ckb1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qxe85u4
+  testnet: ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
+lock_arg: 0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e
+lock_hash: 0xf6ea009a4829de7aeecd75f3ae6bcdbaacf7328074ae52a48456a8793a4b1cca
+```
+</p>
+</details>
 
 ### Step 2. Get the private key of the account.
 
@@ -43,55 +62,78 @@ Sometimes private keys are required in the development or testing process.
 To get the private key of the account:
 
 ```
-$ ckb-cli account export --extended-privkey-path wallet --lock-arg 0x212ba22e768ff87c9f58e8af9f5290da8214e641
+$ ckb-cli account export --extended-privkey-path wallet --lock-arg 0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e
 Password: 
+```
+<details><summary>CLICK ME</summary>
+<p>
+
+```shell
 message: "Success exported account as extended privkey to: \"wallet\", please use this file carefully"
 ```
+</p>
+</details>
 
 The extended private key is exported to the wallet file. The first line in the file is the private key of the account. The second line is the chain code.
 
 ### Step 3. Get CKB Capacity for the Account
 
-To get CKB capacity for an account on **DEV chain**, specify the account as the miner for receiving mining rewards.
+The process for getting CKB capacity is different for the accounts on different networks (chains). 
 
-- If the CKB node is installed by Tippy, specify **Block Assembler Lock Arg** in the Edit Chain form with the `lock_arg` of the account.
+- To get CKB capacity for an account on **DEV chain**, specify the account just created as the miner for receiving mining rewards.
+  - If the CKB node is installed by using the pre-built installer, specify the `args` in the `block_assembler` section in ckb.toml with the `lock_arg` of the account.
 
-- If the CKB node is installed manually, specify the `args` in the `block_assembler` section in ckb.toml with the `lock_arg` of the account.
+    ```
+    $ ed devnet/ckb.toml <<EOF
+    143a
+    [block_assembler]
+    code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+    args = "0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e"
+    hash_type = "type"
+    message = "0x"
+    .
+    wq
+    EOF
+    ```
 
-  ```shell
-  $ ed devnet/ckb.toml <<EOF
-  143a
-  [block_assembler]
-  code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
-  args = "0x212ba22e768ff87c9f58e8af9f5290da8214e641"
-  hash_type = "type"
-  message = "0x"
-  .
-  wq
-  EOF
-  ```
+    After the miner is specified, restart the CKB node and start the CKB miner.
 
-After the miner is specified, restart the CKB node and start the CKB miner.
+    To start the CKB miner:
 
-To start the CKB miner:
+    ```
+    $ export TOP=$(pwd)
+    $ export PATH=$PATH:$TOP/ckb_v0.40.0_x86_64-unknown-linux-gnu.tar.gz
+    $ ckb miner -C devnet
+    ```
 
-```shell
-$ export TOP=$(pwd)
-$ export PATH=$PATH:$TOP/ckb_v0.40.0_x86_64-unknown-linux-gnu.tar.gz
-$ ckb miner -C devnet
-```
+  - If the CKB node is installed by Tippy, specify **Block Assembler Lock Arg** in the Edit Chain form with the `lock_arg` of the account.
 
-To get CKB capacity for an account on **Testnet**, go to https://faucet.nervos.org and paste the Testnet address of the account in the address inputbox, then click the **Claim** button.
+    After the miner is specified, restart the CKB node and start the CKB miner in the Tippy dashboard.
 
-50,000 CKB can be claimed for each Testnet address from the [faucet](https://faucet.nervos.org/) per 24 hours. 
+- To get CKB capacity for an account on **Testnet**, go to https://faucet.nervos.org and paste the Testnet address of the account in the address inputbox, then click the **Claim** button.
+
+  50,000 CKB can be claimed for each Testnet address from the [faucet](https://faucet.nervos.org/) per 24 hours. 
 
 ### Step 4. Check the Capacity of the Account
 
 To check the capacity of the account, execute the `ckb-cli wallet get-capacity --address <the Testnet address of the account>` command as follows:
 
 ```shell
-$ ckb-cli wallet get-capacity --address "ckt1qyqzz2az9emgl7runavw3tul22gd4qs5ueqs8zhmf9"
-immature: 8039065.13953246 (CKB)
-total: 38186544.69769654 (CKB)
+$ ckb-cli wallet get-capacity --address "ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf"
+immature: 8039446.8758295 (CKB)
+total: 10451302.54823011 (CKB)
+```
+
+### Step 5. Deposit CKB to DAO
+
+```shell
+$ ckb-cli dao deposit --from-account 0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e --tx-fee 0.1 --capacity 200
+Password:
+0x4a08e1609cd2f85ba33b4edf3c40ced779150925796ccea1441cad2b0a95395c
+$ ckb-cli wallet get-capacity --address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
+dao: 200.0 (CKB)
+free: 37784393.96564889 (CKB)
+immature: 8039070.66628093 (CKB)
+total: 37784593.96564889 (CKB)
 ```
 

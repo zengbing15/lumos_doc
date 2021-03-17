@@ -2,8 +2,6 @@
 id: managekeys
 title: Manage Keys
 ---
-<!--A CKB account is represented as a collection of cells of a lock script. At the preparation step, we have created an account by using ckb-cli.-->
-
 Lumos also provides the functions to create private and public keys.
 
 The following methods are described in this guide:
@@ -39,8 +37,8 @@ console.log(extendedPrivateKey);
 
 ```shell
 ExtendedPrivateKey {
-  privateKey: '0xf2a91b1410f7308631b89603262448ba515cddac1ffe250265551c82fff3eb3a',
-  chainCode: '0x7922fb7c888bc3509b1fee6bc0e792ff766dd04efb095ced05af62f63dde9a32'
+  privateKey: '0x0bd29e73cb36399a5e4071153ae927248c914a402a2de91e8eb609c5256a907f',
+  chainCode: '0x2a37938ba7904529f4ab19456feeae9aa4f0dae6b066b4e52d51f49684f8f392'
 }
 ```
 </p>
@@ -52,6 +50,14 @@ ExtendedPrivateKey {
 const publickey = extendedPrivateKey.toExtendedPublicKey().publicKey;
 console.log("The public key is", publickey);
 ```
+<details><summary>CLICK ME</summary>
+<p>
+
+```shell
+The public key is 0x028ce047ab13c66822d10801a9dfffb62b6059798f3d87abd33a5665bb4a7c0346
+```
+</p>
+</details>
 
 ### Generate Addresses from the Public Key
 
@@ -62,17 +68,11 @@ import {
     AddressType as Type,
     pubkeyToAddress,
   } from "@nervosnetwork/ckb-sdk-utils";
-import { utils } from "@ckb-lumos/base";
-const { computeScriptHash } = utils;
-import { parseAddress } from "@ckb-lumos/helpers";
-import { getConfig, initializeConfig } from "@ckb-lumos/config-manager";
 
+import { initializeConfig } from "@ckb-lumos/config-manager";
 env.LUMOS_CONFIG_FILE = env.LUMOS_CONFIG_FILE || "./config.json";
 initializeConfig();
 
-const publickey = extendedPrivateKey.toExtendedPublicKey().publicKey;
-console.log("The public key is", publickey);
-  
 export const publicKeyAddress = (
   publicKey: string,
  ) => {
@@ -93,24 +93,51 @@ const mainnetaddress = publicKeyAddress(pubKey)[0];
 const testnetaddress = publicKeyAddress(pubKey)[1];
 console.log("The mainnet address is", publicKeyAddress(pubKey)[0]);
 console.log("The testnet address is", publicKeyAddress(pubKey)[1]);
-const lockScript = parseAddress(mainnetaddress);
-const lockHash = computeScriptHash(lockScript);
-console.log("The lockScript is ", lockScript, ".\nThe lockHash is", lockHash);
 ```
 
 <details><summary>CLICK ME</summary>
 <p>
 
 ```shell
-The public key is 0x02963f88be6c4163a68abf0539facdfc2a77064c6091f618953a230caeacf5237e
-The mainnet address is ckb1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qxe85u4
-The testnet address is ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
+The mainnet address is ckb1qyq2rulujdgjn2r8dsl4xk500mj4qgs32rhqk8yxru
+The testnet address is ckt1qyq2rulujdgjn2r8dsl4xk500mj4qgs32rhqtz6e0q
+```
+</p>
+</details>
+
+### Generate the Lock Script
+
+```typescript title="/mydapp/src/managekey.ts"
+import { parseAddress } from "@ckb-lumos/helpers";
+const lockScript = parseAddress(mainnetaddress);
+console.log("The lockScript is ", lockScript);
+```
+<details><summary>CLICK ME</summary>
+<p>
+
+```shell
 The lockScript is  {
   code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
   hash_type: 'type',
-  args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
+  args: '0xa1f3fc935129a8676c3f535a8f7ee550221150ee'
 }
-The lockHash is 0xf6ea009a4829de7aeecd75f3ae6bcdbaacf7328074ae52a48456a8793a4b1cca
+```
+</p>
+</details>
+
+### Generate the Lock Hash
+
+```typescript title="/mydapp/src/managekey.ts"
+import { utils } from "@ckb-lumos/base";
+const { computeScriptHash } = utils;
+const lockHash = computeScriptHash(lockScript);
+console.log("The lockHash is", lockHash);
+```
+<details><summary>CLICK ME</summary>
+<p>
+
+```shell
+The lockHash is 0xee975e19f18318afb708d49567e6f9e652a0d58cd18043f4c85be2a81351a0ac
 ```
 </p>
 </details>
