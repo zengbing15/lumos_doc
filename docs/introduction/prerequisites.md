@@ -12,7 +12,7 @@ The following prerequisites apply for using Lumos to develop CKB DApps:
 - **Development Stacks**
   - Operating System:  All major platforms, including Linux, Windows and macOS.
 
-  - JavaScript runtime environment: [NodeJS](https://nodejs.org/en/download/) LTS Version
+  - JavaScript runtime environment: [Node.js](https://nodejs.org/en/download/) LTS Version
 
   - JavaScript package manager: Yarn or npm
 

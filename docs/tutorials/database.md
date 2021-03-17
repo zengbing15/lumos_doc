@@ -1,6 +1,6 @@
 ---
 id: database
-title: Set Up the SQL Database
+title: Set Up the Database
 ---
 Lumos is designed based on the [`Index-Query-Assemble`](https://docs.nervos.org/docs/reference/cell#index-query-assemble-pattern) pattern. The Lumos indexer polls blocks from a CKB node, indexes them and stores the indexed data in a local database to provide optimal query.
 
@@ -15,7 +15,27 @@ The Lumos indexer supports two types of databases:
 
 <!--Note this issue is actually caused since we are still leveraging the old native node module solution. We are also evaluating other solutions, such as [N-API](https://medium.com/@atulanand94/beginners-guide-to-writing-nodejs-addons-using-c-and-n-api-node-addon-api-9b3b718a9a7f), which is based on a stable API, so there is no need to recompile everything for a different Node.js version. We do hope that in later versions, we can convert to N-API so there is not need to deal with inconsistent module versions.-->
 
-## Steps
+## Set Up the RocksDB Database
+
+### Step 1. Install the indexer package as the dependency for the project.
+
+```shell
+$ cd mydapp
+$ yarn add @ckb-lumos/indexer
+```
+
+### Step 2. Start the indexer.
+
+The following example starts the RocksDB backed indexer. The default RPC URL of the local CKB node is http://127.0.0.1:8114. 
+
+```typescript title="mydapp/src/index.ts"
+import { Indexer } from "@ckb-lumos/indexer";
+const CKB_RPC = "http://127.0.0.1:8114";
+const INDEXER = new Indexer(CKB_RPC, "./indexed-data");
+INDEXER.startForever();
+```
+
+## Set Up the SQL Database
 
 ### Step 1. Create a PostgreSQL instance.
 
@@ -68,7 +88,7 @@ To check the current indexed tip after the indexer is started:
 }
 ```
 
-### Install the Pre-built Native Module for Electron Applications
+## Install the Pre-built Native Module for Electron Applications
 
 The Lumos indexer is based on the CKB indexer that is developed by Rust. To leverage the native Rust code without installing Rust, Lumos provides the Lumos indexer with a pre-built native module of the CKB indexer.
 

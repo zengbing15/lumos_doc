@@ -45,7 +45,7 @@ In a terminal <terminal 1>, perform the following steps to install and configure
 5. Adjust the parameters to shorten the block interval.
 5. Start the CKB node.
 
-For more information about installing and configuring a CKB DEV blockchain, see the instructions in the [Install and Configure a CKB DEV Blockchain](../tutorials/installckb) guide.
+For more information about installing and configuring a CKB DEV blockchain, see the instructions in the [Install and Configure a CKB DEV Blockchain](../preparation/installckb) guide.
 
 ### Add Lumos Packages for a Node Project
 

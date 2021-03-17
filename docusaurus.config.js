@@ -8,6 +8,7 @@ module.exports = {
   favicon: 'img/favicon.png',
   organizationName: 'xying21', // Usually your GitHub org/user name.
   projectName: 'lumos_doc', // Usually your repo name.
+  themes: ['@docusaurus/theme-live-codeblock'],
   themeConfig: {
     navbar: {
       title: 'Lumos Documentation',
@@ -17,7 +18,7 @@ module.exports = {
       },
       items: [
         {
-          to: 'docs/quickstart/intro',
+          to: 'docs/introduction/intro',
           activeBasePath: 'docs',
           label: 'Docs',
           position: 'left',
