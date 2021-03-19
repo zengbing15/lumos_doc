@@ -6,14 +6,17 @@ A CKB account is represented as a collection of live cells locked by a lock scri
 
 The following elements of an account are useful during the development:
 
-- Private key
-- Lock script args
 - Address
+
+- Lock script args
+
+- Private key
+
 - CKB capacity
 
-This guide will prepare a CKB account with CKB capacity that is required during the development process.
+  **Note**: To perform transaction actions like transferring CKB to other accounts, generating tokens, the account must have enough CKB capacity. The minimum CKB capacity requirement is 61 CKB (6100000000n) for one common transaction, and 102 CKB (10200000000n) for a DAO deposit transaction.
 
-The following methods are described in this guide:
+The following methods are described in this guide to prepare CKB accounts with CKB capacity that are required during the development process:
 
 - Create an account by using ckb-cli. 
 - Get the private key of the account.

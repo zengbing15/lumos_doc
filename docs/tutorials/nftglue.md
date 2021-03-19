@@ -2,60 +2,27 @@
 id: integratenft
 title: DApps on CKB Workshop Code
 ---
-A code example, [DApps on CKB Workshop Code](https://github.com/nervosnetwork/dapps-on-ckb-workshop-code), is provided for the demonstration of integrating NFT on CKB. 
+A code example, [DApps on CKB Workshop Code](https://github.com/nervosnetwork/dapps-on-ckb-workshop-code), is provided for the demonstration of integrating NFT on CKB. For more information about CKB NFT, see the [RFC: CKB-NFT Draft Spec](https://talk.nervos.org/t/rfc-ckb-nft-draft-spec/4779).
 
-The example integrates NFT on CKB mainly by the following two steps:
+The example includes the following two separate projects:
 
-- Deploy the NFT script (contract) on chain with the **nft-validator** project.
-- Operate on NFT tokens with the **nft-glue** project.
+- **nft-validator**: The **nft-validator** is a Rust based on-chain script validator project for supporting NFT tokens on CKB. [Capsule](https://github.com/nervosnetwork/capsule) is leveraged to simplify the script development.
 
-Walking through this example requires the knowledge on CKB scripts and CKB NFT.
+- **nft-glue**: The **nft-glue** is a separate project in the code example. It provides operations on NFT tokens with the support of Lumos. [Slides](https://docs.google.com/presentation/d/1fQKyOrkN8I61a1ZGXCgRczi6T_zWH0aN-IA2SFpdCU4/edit?usp=sharing) and a [video](https://www.youtube.com/watch?v=7ob-WL1eWrQ) are provided for an overview of the architecture and code walkthrough of the nft-glue project. 
 
-### NFT
+  The `index.ts` file under the nft-glue project includes the following operations:
 
-Non Fungible Tokens (NFTs) are tokens that are not interchangeable or necessarily of equal value, even if they are within the same token class. This includes digital collectibles, game items, and records of ownership of physical assets. 
+  - Generate NFT tokens.
+  - List all live NFT cells.
+  - Transfer NFT tokens from one user to another user.
 
-#### CKB NFT Data Structure
-
-An NFT instance is a cell with a type script that references an NFT definition. 
-
-*NFT Token Instance: Cell Schema + NFT Semantics*
-
-```
-data:
-  id: 32_bytes
-  type:
-    code_hash: NFT Definition Cell Hash
-    type_hash: code | type
-    args: governance_lock_hash, [other args], *
-  lock: <user_lock>
-```
-
-For more information about CKB NFT, see the [RFC: CKB-NFT Draft Spec](https://talk.nervos.org/t/rfc-ckb-nft-draft-spec/4779).
-
-### nft-validator
-
-The **nft-validator** is a Rust based on-chain script validator project for supporting NFT tokens on CKB. [Capsule](https://github.com/nervosnetwork/capsule) is leveraged to simplify the script development.
-
-<!--The file main.rs under nft-validator/contracts/nft-validator/src is the NFT script written in Rust.-->
-
-### nft-glue
-
-The **nft-glue** is a separate project in the code example. It provides operations on NFT tokens with the support of Lumos. [Slides](https://docs.google.com/presentation/d/1fQKyOrkN8I61a1ZGXCgRczi6T_zWH0aN-IA2SFpdCU4/edit?usp=sharing) and a [video](https://www.youtube.com/watch?v=7ob-WL1eWrQ) are provided for an overview of the architecture and code walkthrough of the nft-glue project. 
-
-The `index.ts` file under the nft-glue project includes the following operations:
-
-- Generate NFT tokens.
-- List all live NFT cells.
-- Transfer NFT tokens from one user to another user.
-
-#### Generate NFT Tokens
+**Generate NFT Tokens**
 
 The generateNftToken() function can be used to generate NFT tokens (cells).
 
 The function firstly inserts a dummy NFT output cell. The dummy cell is exactly the same as a normal cell, except that it uses all zeros as NFT ID. 
 
-```javascript
+```typescript title="nft-glue/src/index.ts"
   let skeleton = TransactionSkeleton({ cellProvider: INDEXER });
 
   skeleton = skeleton.update("outputs", (outputs) => {
@@ -80,7 +47,7 @@ Lumos is designed to generate smaller transactions for optimizations of a normal
 
 Because NFT requires special output cell and stable input cell. To avoid further optimizations altering those fields, `fixedEntries` can be used to mark the fields as fixed.
 
-```javascript
+```typescript title="nft-glue/src/index.ts"
   skeleton = skeleton.update("fixedEntries", (fixedEntries) => {
     return fixedEntries.push(
       {
@@ -93,13 +60,13 @@ Because NFT requires special output cell and stable input cell. To avoid further
 
 Lumos is used to provide input cells that accommodate the capacities required by the output cell. .
 
-```javascript
+```typescript title="nft-glue/src/index.ts"
   skeleton = await secp256k1Blake160.injectCapacity(skeleton, 0, fromAddress);
 ```
 
 The following code snippet generates the correct NFT ID based on the first input cell and fill the NFT ID in the NFT output cell. 
 
-```javascript
+```typescript title="nft-glue/src/index.ts"
 const { CKBHasher } = utils;  
 const hasher = new CKBHasher();
   const inputCell = skeleton.get("inputs")!.get(0)!;
@@ -123,7 +90,7 @@ const hasher = new CKBHasher();
 
 The first input cell requires to be fixed because it is used to generate NFT ID. The following code snippet marks the first input cell as fixed.
 
-```javascript
+```typescript title="nft-glue/src/index.ts"
   skeleton = skeleton.update("fixedEntries", (fixedEntries) => {
     return fixedEntries.push(
       {
@@ -136,7 +103,7 @@ The first input cell requires to be fixed because it is used to generate NFT ID.
 
 Because the output cell references the NFT script, the NFT cell dep needs to be included. The `tx_hash` and `index` of the NFT script cell must be defined in the nft-glue/config.json file.
 
-```javascript
+```typescript title="nft-glue/src/index.ts"
 import { getConfig, initializeConfig } from "@ckb-lumos/config-manager";
 export const CONFIG = getConfig();
 
@@ -161,7 +128,7 @@ skeleton = skeleton.update("cellDeps", (cellDeps) => {
 
 Lumos also provides methods in the common-scripts package to inject fee. The common script is used in the following code snippet to add fee for this transaction.
 
-```javascript
+```typescript title="nft-glue/src/index.ts"
 // For simplicity, we hardcode 0.1 CKB as transaction fee here.
 const FEE = BigInt(1*10**8); 
 skeleton = await common.payFee(skeleton, [fromAddress], FEE);
@@ -169,17 +136,17 @@ skeleton = await common.payFee(skeleton, [fromAddress], FEE);
 
 The common.prepareSigningEntries function generates messages that are required in transaction signing phase.
 
-```typescript
+```typescript title="nft-glue/src/index.ts"
 skeleton = common.prepareSigningEntries(skeleton, { config: CONFIG });
 ```
 
-#### List All Live NFT Cells
+**List All Live NFT Cells**
 
 Live NFT cells are the cells with the requested NFT type script.
 
 For simplicity, the function gathers all cells in a single array. The number of cells may impact the execution performance. 
 
-```javascript
+```typescript title="nft-glue/src/index.ts"
 export async function listNftTokens(
   governanceLock: Script
 ): Promise<Array<Cell>> {
@@ -195,7 +162,7 @@ export async function listNftTokens(
 }
 ```
 
-#### Transfer NFT Tokens from One User to Another User
+**Transfer NFT Tokens from One User to Another User**
 
 The transferNftToken() function transfers NFT tokens from one user to another user.
 
@@ -203,7 +170,7 @@ For simplicity, the original token sender will pay for the transaction fee. This
 
 The following code snippet inserts the input and output cells from the NFT cell into the transaction skeleton.
 
-```javascript
+```typescript title="nft-glue/src/index.ts"
 let skeleton = TransactionSkeleton({ cellProvider: indexer });
   
   skeleton = skeleton
@@ -226,7 +193,7 @@ let skeleton = TransactionSkeleton({ cellProvider: indexer });
 
 For extra safety, mark the input and output NFT cells as `fixedEntries` .
 
-```javascript
+```typescript title="nft-glue/src/index.ts"
   skeleton = skeleton.update("fixedEntries", (fixedEntries) => {
     return fixedEntries.push(
       {
@@ -243,7 +210,7 @@ For extra safety, mark the input and output NFT cells as `fixedEntries` .
 
 Because the output cell references the NFT script, the NFT cell dep needs to be included. 
 
-```javascript
+```typescript title="nft-glue/src/index.ts"
 skeleton = skeleton.update("cellDeps", (cellDeps) => {
     return cellDeps.push(buildNftCellDep());
   });
@@ -251,7 +218,7 @@ skeleton = skeleton.update("cellDeps", (cellDeps) => {
 
 For simplicity, the token sender will pay for the transaction fee. So the token sender must have spare CKB capacities in addition to the NFT token.
 
-```javascript
+```typescript title="nft-glue/src/index.ts"
 skeleton = await common.payFee(
   skeleton,
   [generateAddress(nftCell.cell_output.lock)],
@@ -261,18 +228,18 @@ skeleton = await common.payFee(
 
 The common.prepareSigningEntries() function generates messages that are required in transaction signing phase.
 
-```javascript
+```typescript title="nft-glue/src/index.ts"
  skeleton = common.prepareSigningEntries(skeleton, { config: CONFIG });
  return skeleton;
 ```
 
-#### Sign and Send Transaction Skeleton
+**Sign and Send Transaction Skeleton**
 
 The signAndSendTransactionSkeleton() function signs the prepared transaction skeleton, for example, the returned result of generateNftToken() or transferNftToken() and send the signed transaction skeleton to the CKB node.
 
 **Note**: The signing function is just for demonstration and simplicity in this code example. The signing function is separate from Lumos related functions because Lumos do not manage private keys unless absolutely requested. Developers can use a service that handle private keys when developing DApps.
 
-```typescript
+```typescript title="nft-glue/src/index.ts"
 export async function signAndSendTransactionSkeleton(
   skeleton: TransactionSkeletonType,
   privateKey: HexString
@@ -304,90 +271,24 @@ export async function signAndSendTransactionSkeleton(
 - Yarn (1.22.5)
 - GCC and make
 - TypeScript version 3.8.3
+- CKB version v0.39.0
+
+## Prerequisites
+
+The following prerequisites apply for this example:
+
+- The CKB node is running on DEV chain.
 
 ## Steps
 
 ### Deploy the NFT Script on DEV Chain
 
-#### **Step 1. Install and run a CKB node on DEV chain.**
-
-The following example installs and runs the CKB version [0.39.0](https://github.com/nervosnetwork/ckb/releases/tag/v0.39.0) on DEV chain manually.
-
-To install and run a CKB node on DEV chain manually:
-
-```shell
-$ export TOP=$(pwd)
-$ curl -LO https://github.com/nervosnetwork/ckb/releases/download/v0.39.0/ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
-$ tar xzf ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
-$ export PATH=$PATH:$TOP/ckb_v0.39.0_x86_64-unknown-linux-gnu
-$ ckb -V
-ckb 0.39.0
-$ ckb init -C devnet -c dev
-WARN: mining feature is disabled because of lacking the block assembler config options
-Initialized CKB directory in devnet
-create specs/dev.toml
-create ckb.toml
-create ckb-miner.toml
-create default.db-options
-$ ckb run -C devnet
-```
-
-For more information, see [Install a CKB Node on DEV Chain Manually](../preparation/installckb#install-a-ckb-node-on-dev-chain-manually).
-
-#### **Step 2. Create an account by using ckb-cli.**
-
-To create an account by using ckb-cli:
-
-- Create an account and export the private key for the account.
-
-  ```
-  $ export TOP=$(pwd)
-  $ export PATH=$PATH:$TOP/ckb_v0.39.0_x86_64-unknown-linux-gnu
-  $ ckb-cli account new
-  Your new account is locked with a password. Please give a password. Do not forget this password.
-  Password: 
-  Repeat password: 
-  address:
-    mainnet: ckb1qyqzz2az9emgl7runavw3tul22gd4qs5ueqs68fy9e
-    testnet: ckt1qyqzz2az9emgl7runavw3tul22gd4qs5ueqs8zhmf9
-  lock_arg: 0x212ba22e768ff87c9f58e8af9f5290da8214e641
-  lock_hash: 0x85aa4381b04366e88a10fb9519db99b0993bea7ee0ce67c099e5b627538cd212
-  $ ckb-cli account export --extended-privkey-path wallet --lock-arg 0x212ba22e768ff87c9f58e8af9f5290da8214e641
-  Password: 
-  message: "Success exported account as extended privkey to: \"wallet\", please use this file carefully"
-  ```
-
-- Get CKB capacity by specifying the `args` in the `block_assembler` section in ckb.toml with the `lock_arg` of the account.
-
-  **Note**: The following example is based on the condition that the CKB node is installed manually. The process of getting capacity for an account is different when the CKB node is installed by using Tippy.
-
-  ```shell
-  $ ed devnet/ckb.toml <<EOF
-  143a
-  [block_assembler]
-  code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
-  args = "0x212ba22e768ff87c9f58e8af9f5290da8214e641"
-  hash_type = "type"
-  message = "0x"
-  .
-  wq
-  EOF
-  ```
-
-- Restart the CKB node and start the miner.
-
-  ```shell
-  $ export TOP=$(pwd)
-  $ export PATH=$PATH:$TOP/ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
-  $ ckb miner -C devnet
-  ```
-
-#### **Step 3. Install Docker on Ubuntu and manage Docker as a non-root user.**
+#### **Step 1. Install Docker on Ubuntu and manage Docker as a non-root user.**
 
 1. To install Docker engine on **Ubuntu**, see the Docker documentations of [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/).
 2. To manage Docker as a non-root user, see the Docker documentations of [Manage Docker as a non-root user](https://docs.docker.com/engine/install/linux-postinstall/).
 
-#### **Step 4. Install Capsule.** 
+#### **Step 2. Install Capsule.** 
 
 Capsule is the tool for building deploying scripts (contracts) on Nervos CKB. The Capsule tool can be installed from source or the pre-built installer.
 
@@ -422,21 +323,28 @@ To install Capsule by using the pre-built installer:
 
 - Check the Capsule installation.
 
-  ```
+  ```shell
   $ capsule check
+  ```
+  <details><summary>CLICK ME</summary>
+  <p>
+  
+  ```shell
   ------------------------------
   docker  installed
   ckb-cli installed v0.39.0
   ------------------------------
   ```
+  </p>
+  </details>
 
-#### **Step 5. Download the example code.**
+#### **Step 3. Download the example code.**
 
 ```
 $ git clone https://github.com/nervosnetwork/dapps-on-ckb-workshop-code.git
 ```
 
-#### **Step 6. Build the NFT script.**
+#### **Step 4. Build the NFT script.**
 
 This step compiles and generates the NFT source script to an RISC-V binary program into the `dapps-on-ckb-workshop-code/nft-validator/build/debug` folder.
 
@@ -445,6 +353,10 @@ To build the NFT script:
 ```shell
 $ cd dapps-on-ckb-workshop-code/nft-validator
 $ capsule build
+```
+<details><summary>CLICK ME</summary>
+<p>
+```shell
 Building contract nft-validator
  Downloading crates ...
   Downloaded ckb-allocator v0.1.1
@@ -464,7 +376,10 @@ Building contract nft-validator
 Done
 ```
 
-#### **Step 7. Deploy the script.**
+</p>
+</details>
+
+#### **Step 5. Deploy the script.**
 
 **Note**: The CKB node must start running before the deployment of the NFT script.
 
@@ -472,9 +387,9 @@ If the node is not started, run `ckb run -C devnet` in a terminal to start the n
 
 To deploy the NFT script:
 
-- Update the `[lock]` section in the nft-validator/`deployment.toml` file with the `lock_arg`  "0x212ba22e768ff87c9f58e8af9f5290da8214e641" of the account created in step 2.
+- Update the `[lock]` section in the nft-validator/`deployment.toml` file with the `lock_arg`  "0x212ba22e768ff87c9f58e8af9f5290da8214e641" of the account created in preparation phase. For more information about creating an account, see [Create an Account](../preparation/createaccount).
 
-  ```shell
+  ```toml title="nft-validator/deployment.toml"
   # [[cells]]
   # name = "my_cell"
   # enable_type_id = false
@@ -500,6 +415,12 @@ To deploy the NFT script:
 
   ```shell
   $ capsule build --release
+  ```
+
+  <details><summary>CLICK ME</summary>
+  <p>
+
+  ```shell
   Building contract nft-validator
      Compiling cc v1.0.58
      Compiling cfg-if v0.1.10
@@ -514,6 +435,9 @@ To deploy the NFT script:
   Done
   ```
 
+  </p>
+  </details>
+
 - Deploy the NFT binary program to DEV chain by using the `capsule deploy --address <the testnet address of the account created in step 2>` command.
 
   A cell is created with the binary program as cell data on the DEV chain. Transactions on NFT tokens reference the cell by cell deps, and use the NFT script in the transactions.
@@ -522,6 +446,12 @@ To deploy the NFT script:
   
   ```shell
   $ capsule deploy --address ckt1qyqzz2az9emgl7runavw3tul22gd4qs5ueqs8zhmf9
+  ```
+  
+  <details><summary>CLICK ME</summary>
+  <p>
+  
+  ```shell
   Create directory "/home/xy/dapp/nft-validator/migrations/dev"
   Deployment plan:
   ---
@@ -544,6 +474,9 @@ To deploy the NFT script:
   send cell_tx f60675098165131a1d44d75ea0377af34895878d33420ee271b5c10ba7a8e954
   Deployment complete
   ```
+  
+  </p>
+  </details>
 
 ### Operate on NFT Tokens by Using Lumos
 
@@ -554,6 +487,12 @@ After the NFT script is deployed on DEV chain, perform the following steps to in
 ```
 $ cd dapps-on-ckb-workshop-code/nft-glue
 $ yarn install
+```
+
+<details><summary>CLICK ME</summary>
+<p>
+
+```shell
 yarn install v1.22.5
 [1/4] Resolving packages...
 [2/4] Fetching packages...
@@ -561,6 +500,9 @@ yarn install v1.22.5
 [4/4] Building fresh packages...
 Done in 13.02s.
 ```
+
+</p>
+</details>
 
 #### **Step 2. Update the config.json file.**
 
@@ -570,7 +512,7 @@ To update the config.json file, add the NFT configuration for the NFT script und
 
 `TX_HASH` is the `tx_hash` from the deployment recipe.
 
-```
+```json title="nft-glue/config.json"
 	,
     "NFT": {
       "CODE_HASH": "0x790420c4244a42e732f8065c275b541695a66c7348f885bb3d9b52d83b279115",

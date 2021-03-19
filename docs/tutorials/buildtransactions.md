@@ -54,90 +54,126 @@ Each transaction skeleton corresponds to an action, and will be built into a sin
 
 ### Transfer CKB in a Common Transaction
 
+**Note:** The Anyone-Can-Pay script must be available on the chain. The script is already available in production on Mainnet and Testnet. For DEV chain, copy a dummy script into the config.json file under the root of the DApp project.
+
 To transfer CKB in a common transaction:
 
 **Step 1. Create a transaction skeleton.**
 
-```typescript
-import {sealTransaction, TransactionSkeleton } from "@ckb-lumos/helpers";
+```typescript title="mydapp/src/buildTxs.ts"
+import {INDEXER} from "./index";
+import { sealTransaction, TransactionSkeleton, TransactionSkeletonType } from "@ckb-lumos/helpers";
 import { common } from "@ckb-lumos/common-scripts";
- 
-const senderaddress = generateAddress(script);
-const recipient = "ckt1qyqx57xrsztnq7g5mlw6r998uyc2f5hm3vnsvgsaet";
-const amount = 100153459536n;
-const txFee =  100000000n;
+import { ALICE,BOB } from "./addresses";
+const senderaddress = ALICE.ADDRESS;
+const recipient = BOB.ADDRESS;
+const amount = 20000000000n;
+const txFee =  10000000n;
+const privatekey = ALICE.PRIVATE_KEY;
 
-let txSkeleton = TransactionSkeleton({
-  cellProvider: indexer,
-});
-txSkeleton = await common.transfer(
-txSkeleton,
-senderaddress,
-recipient,
-BigInt(amount),
-);
+let skeleton:TransactionSkeletonType = TransactionSkeleton({cellProvider: INDEXER});
+
+skeleton = await common.transfer(
+    skeleton,
+    [sender],
+    recipient,
+    BigInt(amount),
+    undefined,
+    undefined
+    );
 ```
 
-**Step 2. Add a fee for the transaction.**
+**Step 2. Add the fee for the transaction.**
 
-```typescript
-txSkeleton = await common.payFee(
-  txSkeleton,
-  senderaddress,
-  BigInt(txFee),
-);
+```typescript title="mydapp/src/buildTxs.ts"
+skeleton = await common.payFee(
+   skeleton,
+   [sender],
+   BigInt(txFee),
+)
 ```
 
 **Step 3. Prepare the signing entries.** 
 
-To prepare the signing entries:
-
-```typescript
-txSkeleton = common.prepareSigningEntries(txSkeleton);
+```typescript title="mydapp/src/buildTxs.ts"
+skeleton = common.prepareSigningEntries(skeleton);
 ```
-
-<!--**Step 4. Return the transaction skeleton to the client.**-->
-
-<!--const routes = express.Router();--> <!--routes.post("/build-transfer", async (req: any, res) => {try {//const txSkeleton = await buildTransferCkbTx(req.body); return res .status(200) .json(JSON.stringify({ params: req.body, txSkeleton })); } catch (error) {return res.status(500).json({ error: error.message }); } });-->
 
 **Step 4. Sign the transaction.**
 
-For simplicity and demonstration, this example uses the HD wallet manager to generate a signature based on the private key 0x29159d8bb4b27704b168fc7fae70ffebf82164ce432b3f6b4c904a116a969f19.
+Lumos does not support built-in message signing. The DApp needs to send the raw transaction to the user wallet to acquire signatures. For simplicity and demonstration, this example uses the ecdsaSign function to generate the signatures for signing the transaction.
 
-<!--["0x1cb952fd224d1d14d07af621587e91a65ccb051d55ed1371b3b66d4fe169cf7758173882e4c02587cb54054d2de287cbb1fdc2fc21d848d7b320ee8c5826479901"];-->
+```typescript title="mydapp/src/buildTxs.ts"
+import { HexString } from "@ckb-lumos/base";
+import { ecdsaSign } from "secp256k1";
+async function signtransaction(txskeleton:TransactionSkeletonType):Promise<HexString[]>{
+    const signatures = txskeleton
+    .get("signingEntries")
+    .map(({ message }) => {
+      const o = ecdsaSign(
+        new Uint8Array(new Reader(message).toArrayBuffer()),
+        new Uint8Array(new Reader(privatekey).toArrayBuffer())
+      );
+      const signature = new Uint8Array(65);
+      signature.set(o.signature, 0);
+      signature.set([o.recid], 64);
+      return new Reader(signature.buffer).serializeJson();
+    })
+    .toArray();
+    return signatures;
+}
+console.log("signatures:",signatures);
+```
+
+<details><summary>CLICK ME</summary>
+<p>
 
 ```
+[  
+'0x4f73f26e51bee76d89edb74aee20e6fb2f8c670881f087aba04be80d7bd05117579d2bcfea3618d55473504e06586c10eecb76169d2ef0849c72e50a2f5d2b9500'
+]
+```
+</p>
+</details>
+
+
+Another simple method is to use the HD wallet manager to generate a signature based on the private key of the account.
+
+```typescript
 const {key} = require("@ckb-lumos/hd");
-const message = txSkeleton.get("signingEntries").get(0).message;
-const signature = key.signRecoverable(message, privateKey)
+const message = skeleton.get("signingEntries").get(0).message;
+const signatures = key.signRecoverable(message, privateKey)
 ```
 
 **Step 5. Seal the transaction with the signature.**
 
-```
-const tx = sealTransaction(txSkeleton, signature);
+```typescript title="mydapp/src/buildTxs.ts"
+const tx = sealTransaction(txSkeleton, signatures);
 ```
 
 **Step 6. Send this finalized transaction to the CKB network.**
 
-```typescript
+```typescript title="mydapp/src/buildTxs.ts"
 import { RPC } from "ckb-js-toolkit";
 const rpc = new RPC("http://127.0.0.1:8114");
-const hash = await rpc.send_transaction(tx);
+const hash = await rpc.send_transaction(skeleton);
 console.log(hash);
 ```
 
-Result
+<details><summary>CLICK ME</summary>
+<p>
 
 ```shell
-'0x88536e8c25f5f8c89866dec6a5a1a6a72cccbe282963e4a7bfb5542b4c15d376'
+'0x9a501e405653219aa8022132158820231aa5ecaff91c970b18d10fbad5ccc178'
 ```
+</p>
+</details>
 
 **Step 7. (Optional) Get the Transaction Status.**
 
-```
-const tx = await rpc.get_transaction(txHash);
-return tx.tx_status.status; 
+```typescript title="mydapp/src/buildTxs.ts"
+const txWithStatus= await rpc.get_transaction(hash);
+console.log("Transaction status is:",txWithStatus.tx_status.status); 
 ```
 
 ### Deposit to DAO
@@ -146,26 +182,24 @@ To deposit to Nervos DAO:
 
 **Step 1. Create a transaction skeleton.**
 
-The following example uses `generateAddress` from the helpers component with lock script to get the address. The same address can be used as the `fromInfo` and `toAddress`  for the deposit transaction. The deposited cells are frozen after the deposit operation.
+The following example uses the same address as the `fromInfo` and `toAddress`  for the deposit transaction. The deposited cells are frozen after the deposit operation.
 
-```javascript
-// <terminal 2>
-> const script = {
-  code_hash: "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
-  hash_type: "type",
-  args: "0xcd3532de7f7d8f3252292e29b5296a6b36ba5369"
-};
-> const {generateAddress, createTransactionFromSkeleton, sealTransaction, TransactionSkeleton } = require("@ckb-lumos/helpers");
-> const address = generateAddress(script);
-> let skeleton = TransactionSkeleton({ cellProvider: indexer });
-> const { secp256k1Blake160, dao } = require("@ckb-lumos/common-scripts");
-> skeleton = await dao.deposit(skeleton, address, address, 100000000000n);
+```typescript title="mydapp/src/buildTxs.ts"
+let skeleton:TransactionSkeletonType = TransactionSkeleton({cellProvider: INDEXER});
+skeleton = await dao.deposit(skeleton,sender,sender,BigInt(amount));
 ```
 
-createTransactionFromSkeleton can be used to build a final transaction. It can also be used to view the current skeleton.
+`createTransactionFromSkeleton` can be used to build a final transaction. It can also be used to view the current skeleton.
 
+```typescript title="mydapp/src/buildTxs.ts"
+import { createTransactionFromSkeleton } from "@ckb-lumos/helpers";
+console.log(JSON.stringify(createTransactionFromSkeleton(skeleton), null, 2));
 ```
-> console.log(JSON.stringify(createTransactionFromSkeleton(skeleton), null, 2));
+
+<details><summary>CLICK ME</summary>
+<p>
+
+```shell
 {
   "version": "0x0",
   "cell_deps": [
@@ -189,18 +223,18 @@ createTransactionFromSkeleton can be used to build a final transaction. It can a
     {
       "since": "0x0",
       "previous_output": {
-        "tx_hash": "0xdb44f7c8ff0b97abfaf33665131fc95abe3b3ae5244d371431a4c5abfd547ccc",
+        "tx_hash": "0x4eefc0b5a9c155978440b52b7874959e47cbb54823a1aac78d0319848eedcb2a",
         "index": "0x0"
       }
     }
   ],
   "outputs": [
     {
-      "capacity": "0x174876e800",
+      "capacity": "0x4a817c800",
       "lock": {
         "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
         "hash_type": "type",
-        "args": "0xcd3532de7f7d8f3252292e29b5296a6b36ba5369"
+        "args": "0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e"
       },
       "type": {
         "code_hash": "0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e",
@@ -209,11 +243,11 @@ createTransactionFromSkeleton can be used to build a final transaction. It can a
       }
     },
     {
-      "capacity": "0x1230577b333f",
+      "capacity": "0x1242f27ab8aa",
       "lock": {
         "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
         "hash_type": "type",
-        "args": "0xcd3532de7f7d8f3252292e29b5296a6b36ba5369"
+        "args": "0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e"
       }
     }
   ],
@@ -226,79 +260,91 @@ createTransactionFromSkeleton can be used to build a final transaction. It can a
   ]
 }
 ```
+</p>
+</details>
 
 **Step 2. Add a fee for the transaction.**
 
-First, because we are using the default secp256k1-blake160 lock script, an existing module in common-scripts can be leveraged to incur transaction fee. Here we are using the same address to provide 1 CKByte as transaction fee.
+The following example uses an existing module, the secp256k1-blake160 lock script in common-scripts to build the transaction for the paying transaction fee action. In the example, the sender provides 0.1 CKB as the transaction fee.
 
-> // If you checked the transaction skeleton after incurring fees. You will notice that it only has one input. This might raise a question: if NervoDAO deposit consumes one input cell, transaction fee requires a different input cell, shouldn't there be 2 input cells with 3 output cells(a deposited cell, and 2 change cell)? The trick here, is that common-scripts is smart enough to figure out that the 2 actions here use the same address. Hence it just rewrite the change cell generated in the NervosDAO deposit action to pay enough transaction fee.
+> The deposit action and the paying transaction fee action are using the same address (the sender address). If you checked the transaction skeleton after incurring fees, you can notice that the transaction skeleton has only one input for the two actions. Lumos can intelligently rewrite the change cells generated in the deposit action to pay enough transaction fee. 
 
-```javascript
-// <terminal 2>
-> skeleton = await secp256k1Blake160.payFee(skeleton, address, 100000000n);
-> createTransactionFromSkeleton(skeleton).inputs.length;
-1
+```typescript title="mydapp/src/buildTxs.ts"
+const txFee =  10000000n;
+skeleton = await secp256k1Blake160.payFee(skeleton,sender,BigInt(txFee));
+console.log(createTransactionFromSkeleton(skeleton).inputs.length);
 ```
 
 **Step 3. Prepare the signing entries.**
 
+This example loops through the skeleton, and creates `signingEntries` by using the default secp256k1-blake160 lock script.
+
 ```javascript
-// <terminal 2>
-> skeleton = secp256k1Blake160.prepareSigningEntries(skeleton);
-> // This method actually loops through the skeleton, and create `signingEntries`
-> // that are using the default secp256k1-blake160 lock script:
-> skeleton.get("signingEntries").toArray();
-[
-  {
-    type: 'witness_args_lock',
-    index: 0,
-    message: '0xccf2e1edfd9523b3c4c1b91d77f30025cdff1fb5373e8e0df4dec86cc51f7735'
-  }
-]
+skeleton = secp256k1Blake160.prepareSigningEntries(skeleton);
 ```
 
 **Step 4. Sign the transaction with the private key by using the HD wallet manager.**
 
-```javascript
-// <terminal 2>
-> const {key} = require("@ckb-lumos/hd");
-> const privateKey = "0x8a4cb53f641ee8df90cf5bc5204574744657a091dfe41c98069aa4e41ed9c86b";
-> const message = skeleton.get("signingEntries").get(0).message;
-> const signature = key.signRecoverable(message, privateKey);
-> console.log(signature);
-0x81a6d8ff2c581db3819e7ef8da2b88995eaca8d45f11353e814017e01859f1d61fd75287e86e37a697ed097b1bfc580d192438433b1bef7f7ca83346d9828e5d01
+```typescript title="mydapp/src/buildTxs.ts"
+import {key} from "@ckb-lumos/hd";
+const privatekey = ALICE.PRIVATE_KEY;
+const message = skeleton.get("signingEntries").get(0).message;
+const signature = key.signRecoverable(message, privateKey);
 ```
+
+<details><summary>CLICK ME</summary>
+<p>
+
+```shell
+signingEntries: [
+  {
+    type: 'witness_args_lock',
+    index: 0,
+    message: '0x15412513e78a45a183818a370f318de44176e016aa90b2cd459cc1688040a77b'
+  }
+]
+```
+</p>
+</details>
 
 **Step 5. Seal the transaction.**
 
-```javascript
-// <terminal 2>
-> const signatures = ["0x81a6d8ff2c581db3819e7ef8da2b88995eaca8d45f11353e814017e01859f1d61fd75287e86e37a697ed097b1bfc580d192438433b1bef7f7ca83346d9828e5d01"];
-> const tx = sealTransaction(skeleton, signatures);
+```typescript title="mydapp/src/buildTxs.ts"
+const depsittx = sealTransaction(depositSkeleton, [depositSig]);
 ```
 
 **Step 6. Send this finalized transaction to the CKB network**
 
-```javascript
-// <terminal 2>
-> const { RPC } = require("ckb-js-toolkit");
-> const rpc = new RPC("http://127.0.0.1:8114");
-> await rpc.send_transaction(tx);
-'0x67babe1a6d64473360c2d3417b715744542d8527590ffc4a088b5f17dbcd181d'
+```typescript title="mydapp/src/buildTxs.ts"
+const deposithash = await rpc.send_transaction(depsittx);
+console.log("The deposit transaction hash is",deposithash)
 ```
-
-**Step 7. Check the capacity of the account by using the testnet address in <terminal 3>.**
-
-The deposited 1000 CKB appears in the result.
+<details><summary>CLICK ME</summary>
+<p>
 
 ```shell
-//<terminal 3>
-$ ckb-cli wallet get-capacity --address "ckt1qyqv6dfjmelhmrej2g5ju2d4994xkd462d5sathj2h"
-dao: 1000.0 (CKB)
-free: 464300332.92941572 (CKB)
-immature: 8033296.18878644 (CKB)
-total: 464301332.92941572 (CKB)
+The deposit transaction hash is 0x655bac89e443db42d48644f9fd89ddee70691f8e39ee4635c313375e8b2e6c0a
 ```
+</p>
+</details>
+
+**Step 7. Check the capacity of the account by using the Testnet address.**
+
+```shell
+$ ckb-cli wallet get-capacity --address "ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf"
+```
+The deposited 200 CKB appears in the result.
+<details><summary>CLICK ME</summary>
+<p>
+
+```shell
+dao: 200.0 (CKB)
+free: 35571260.54369496 (CKB)
+immature: 8039101.70646172 (CKB)
+total: 35571660.54369496 (CKB)
+```
+</p>
+</details>
 
 ### Withdraw from Nervos DAO
 
