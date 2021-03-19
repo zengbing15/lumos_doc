@@ -81,7 +81,7 @@ Type ".help" for more information.
 ### Step 6. Start the server.
 
 ```shell
-> const {ADDRESS,querycells,buildTXs,querytransactions} = require(".");
+> const {accounts,querycells,buildTXs,querytransactions} = require(".");
 ```
 
 <details><summary>CLICK ME</summary>
@@ -100,12 +100,11 @@ The server is started.
 Get the information of the two accounts that are required for later queries and transactions.
 
 ```shell
-> const alice = ADDRESS.ALICE;
-> const bob = ADDRESS.BOB;
+> const alice = accounts.ALICE;
+> const bob = accounts.BOB;
 > const {parseAddress}=require("@ckb-lumos/helpers");
-> const script1= parseAddress(alice.ADDRESS);
-> const script2= parseAddress(bob.ADDRESS);
-> const privatekey1=alice.PRIVATE_KEY;
+> const script1 = parseAddress(alice.ADDRESS);
+> const script2 = parseAddress(bob.ADDRESS);
 > console.log(script1);
 ```
 
@@ -158,25 +157,60 @@ Get the balance information of Bob.
 </p>
 </details>
 
-Build the common transaction.
+Build the common transaction. The buildCommonTx() function performs the following actions: 
+
+- Create a new Transaction Skeleton.
+- common.transfer: Transfer action
+- common.payFee: Add pay fee for the transaction
+- common.prepareSigningEntries: Prepare signing entries.
 
 ```shell
 > const txskeleton = await buildTXs.buildCommonTx(alice.ADDRESS, bob.ADDRESS,20000000000n,10000000n);
+```
+
+```shell
 > const message = txskeleton.get("signingEntries").get(0)?.message;
 > console.log(message);
 0x7b9f14c93c1105213ab437f157460aa93963babff4cb03553e7dde6e72cbaf19
+```
+
+Sign the transaction.
+
+```shell
+> const privatekey1 = alice.PRIVATE_KEY;
 > const Sig = key.signRecoverable(message, privatekey1);
 > console.log(Sig);
 0x709026a75b82aca580d758c62eceaa9982b81057146a6c0205db3ee7b5581e3201d3ccd5845ea6d25b9b977f98f7c1c74efe4c38292b654d03fa2d037fa0777b01
-> const transaction = sealTransaction(txskeleton, [Sig]);
+```
+
+Seal the transaction.
+
+```
+> const {sealTransaction}=require("@ckb-lumos/helpers");
+> const tx = sealTransaction(txskeleton, [Sig]);
+```
+
+Send the transaction.
+
+```
 > const {RPC}=require("@ckb-lumos/rpc");
 > const rpc = new RPC("http://127.0.0.1:8114");
-> const hash = await rpc.send_transaction(transaction);
+> const hash = await rpc.send_transaction(tx);
 > console.log(hash);
 0xe332fb6efba38e16b8fd20a4f47d5fffcf8fcac0c863b0eb30ef75067847936d
+```
+
+Check the transaction status.
+
+```
 > const txWithStatus= await rpc.get_transaction(hash);
 > console.log(txWithStatus.tx_status.status);
 committed
+```
+
+Check the new balance of Bob.
+
+```
 > const newbalance = querycells.getBalancebyLock(script2);
 > The balance of the account is 380000000000n
 ```
@@ -184,6 +218,8 @@ committed
 ### Step 8. Deposit to DAO
 
 ### Step 9. Withdraw from DAO
+
+
 
 ```shell
 > const depositcells = buildTXs.listDAOCells(alice.ADDRESS,"deposit");
@@ -474,7 +510,7 @@ List the DAO cells of the celltype withdraw for the address ckt1qyq8uqrxpw9tzg4u
 </p>
 </details>
 
-
+Unlock the withdraw cell.
 
 ```shell
 const withdrawcell={
@@ -501,6 +537,7 @@ const withdrawcell={
 ... };
 > const unlockskeleton = await buildTXs.unlockWithdraw(depositcell,withdrawcell,alice.ADDRESS,alice.ADDRESS,10000000n);
 ```
+**Note**: The withdraw cell can only be successfully unlocked after the lock period of the cell passed. Otherwise this function would throw an error. The lock period is 180 epoches.
 
 <details><summary>CLICK ME</summary>
 <p>
