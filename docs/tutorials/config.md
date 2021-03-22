@@ -34,6 +34,8 @@ For the DApp to connect a *Mainnet* or *Testnet* node, choose corresponding pre-
 
 The following example sets up the config manager for a CKB **Mainnet** node by specifying the variable <code>LUMOS_CONFIG_NAME</code> with <b>LINA</b>. You can specify the variable with <b>AGGRON4</b> for a CKB **Testnet** node.
 
+Example:
+
 ```typescript title="/mydapp/src/index.ts"
 import { env } from "process";
 import { getConfig, initializeConfig } from "@ckb-lumos/config-manager";
@@ -52,9 +54,9 @@ The `LUMOS_CONFIG_FILE` variable can be set pointing to a configuration file. Lu
 
 The following example sets up the config manager for a CKB node on **DEV chain**.
 
-### Step 1. Prepare the config.json file.
+Step 1. Prepare the config.json file in the DApp root directory, for example, hellolumos/config.json.
 
-```json title="mydapp/config.json"
+```json title="hellolumos/config.json"
 {
   "PREFIX": "ckt",
   "SCRIPTS": {
@@ -85,9 +87,9 @@ The following example sets up the config manager for a CKB node on **DEV chain**
 }
 ```
 
-### Step 2. Set up the config manager in the DApp code as follows.
+Step 2. Set up the config manager in the DApp as follows.
 
-```typescript title="mydapp/src/index.ts"
+```typescript title="hellolumos/src/index.ts"
 import { env } from "process";
 import { getConfig, initializeConfig } from "@ckb-lumos/config-manager";
 env.LUMOS_CONFIG_FILE = env.LUMOS_CONFIG_FILE || "./config.json";

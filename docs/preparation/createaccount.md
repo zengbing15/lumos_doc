@@ -1,28 +1,25 @@
 ---
 id: createaccount
-title: Create an Account
+title: Create Accounts
 ---
 A CKB account is represented as a collection of live cells locked by a lock script. The ID of the account is the lock script args.
 
-The following elements of an account are useful during the development:
+The following elements of an account are useful during the DApp development:
 
-- Address
 
-- Lock script args
+| Element     | Description                                                  |
+| ------------ | ------------------------------------------------------------ |
+| Lock&nbsp;script<br/> | The lock script consists of three key parameters, including *code_hash*, *hash_type* and *args*.<br/>Example:<br/>{<br/>code_hash:<br/>&nbsp;'0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',<br/> hash_type:&nbsp;'type',<br/>args: '0x82be41cf167110e6c00e79009a3fd4d9abe8c65a'<br/>} |
+| Address      | CKB address packages lock script into a single line, verifiable, and human read friendly format.<br/>Example:<br/>ckt1qyqg90jpeut8zy8xcq88jqy68l2dn2lgcedqd7ye7n |
+| Private&nbsp;key | A string of letters and numbers that is used to prove ownership of cryptocurrency or digital assets, allowing them to be sent to other payment addresses. A private key is normally stored in a wallet.<br/>A private key must be kept secret at all times. A private key works similarly to a key to a safe containing your cryptocurrency. Anyone with the key has the ability to open the safe and take the contents. |
+| CKB&nbsp;capacity | The total CKB capacity of the live cells of an account.<br/>**Note**: If an account wants to perform transaction actions like transferring CKB to other accounts, generating tokens, the account must have enough CKB capacity. The minimum CKB capacity requirement is 61 CKB (6100000000n) for one common transaction, and 102 CKB (10200000000n) for a DAO deposit transaction. |
 
-- Private key
-
-- CKB capacity
-
-  **Note**: To perform transaction actions like transferring CKB to other accounts, generating tokens, the account must have enough CKB capacity. The minimum CKB capacity requirement is 61 CKB (6100000000n) for one common transaction, and 102 CKB (10200000000n) for a DAO deposit transaction.
-
-The following methods are described in this guide to prepare CKB accounts with CKB capacity that are required during the development process:
+The following methods are described in this guide to prepare CKB accounts for the DApp development:
 
 - Create an account by using ckb-cli. 
-- Get the private key of the account.
-- Get CKB capacity for the account.
-- Check the capacity of the account.
-- Deposit CKB to DAO.
+- Get the private key of an account.
+- Get CKB capacity for an account.
+- Check the capacity of an account.
 
 ## Prerequisites 
 
@@ -35,7 +32,7 @@ The following prerequisites apply for creating an account by using ckb-cli:
 
 ### Step 1. Create an account by using ckb-cli.
 
-When the CKB node is installed by using the pre-built installer package, ckb-cli is available and can be used to create an account. For more information about the installation of a CKB node, see [Install a CKB Node](../preparation/installckb).
+ckb-cli is available in the CKB pre-built installer package. For more information, see [Install a CKB Node by Using the Pre-built Installer Package](../preparation/installckb#install-a-ckb-node-by-using-the-pre-built-installer-package).
 
 ```shell
 $ export TOP=$(pwd)
@@ -58,11 +55,9 @@ lock_hash: 0xf6ea009a4829de7aeecd75f3ae6bcdbaacf7328074ae52a48456a8793a4b1cca
 </p>
 </details>
 
-### Step 2. Get the private key of the account.
+### Step 2. Get the private key of an account.
 
-Sometimes private keys are required in the development or testing process.
-
-To get the private key of the account:
+To get the private key of an account:
 
 ```
 $ ckb-cli account export --extended-privkey-path wallet --lock-arg 0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e
@@ -79,11 +74,11 @@ message: "Success exported account as extended privkey to: \"wallet\", please us
 
 The extended private key is exported to the wallet file. The first line in the file is the private key of the account. The second line is the chain code.
 
-### Step 3. Get CKB Capacity for the Account
+### Step 3. Get CKB Capacity for an Account
 
 The process for getting CKB capacity is different for the accounts on different networks (chains). 
 
-- To get CKB capacity for an account on **DEV chain**, specify the account just created as the miner for receiving mining rewards.
+- To get CKB capacity for an account on **DEV chain**, specify the account as the miner for receiving mining rewards.
   - If the CKB node is installed by using the pre-built installer, specify the `args` in the `block_assembler` section in ckb.toml with the `lock_arg` of the account.
 
     ```

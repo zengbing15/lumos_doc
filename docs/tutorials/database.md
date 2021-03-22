@@ -17,6 +17,11 @@ The Lumos indexer supports two types of databases:
 
 ## Set Up the RocksDB Database
 
+The following prerequisites apply for setting up the RocksDB database:
+
+- Node.js and Yarn are installed.
+- Dependencies for build tools are installed.
+
 ### Step 1. Install the indexer package as the dependency for the project.
 
 ```shell
@@ -36,6 +41,12 @@ INDEXER.startForever();
 ```
 
 ## Set Up the SQL Database
+
+The following prerequisites apply for setting up the SQL database:
+
+- Node.js and Yarn are installed.
+- Dependencies for build tools are installed.
+- Docker is installed. For more information about Docker installation, see [Install Docker Engine](https://docs.docker.com/engine/install/).
 
 ### Step 1. Create a PostgreSQL instance.
 
@@ -57,7 +68,7 @@ module.exports = {
     client: 'postgresql',
     connection: {
       database: 'lumos',
-      user:     'postgres',
+      user:     'user',
       password: 'password'
     },
     pool: {

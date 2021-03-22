@@ -2,20 +2,14 @@
 id: hellolumos
 title: Hello Lumos
 ---
-The Hello Lumos example is designed to serve as the starting point for learning the usage of Lumos. This guide will walk you through the example step by step. The full code of the example can be found in the github repository.
+The Hello Lumos example is built by using Lumos and is designed to serve as the starting point for learning Lumos.
 
-The example provides the following functional examples:
+It includes the following functional examples:
 
 - Query cells or transactions from the blockchain.
 - Build, sign, send, and track transactions.
 
-## Prerequisites
-
-The following prerequisites apply for going through the Hello Lumos example:
-
-- The development environment is set up.
-- The CKB node is running.
-- A CKB account is created with enough CKB capacity.
+This guide will walk you through a common transaction example step by step. For more information about the basic usage of Lumos, see the guides under **Basics**. The full code of the example can be found here.
 
 ## Environment
 
@@ -23,14 +17,178 @@ The following examples are verified on Ubuntu 20.04.2.
 
 ## Steps
 
-### **Step 1. Download the Hello Lumos example.**
+### Set up the development Environment.
+
+Step 1. Install Node.js.
+
+```
+curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
+sudo apt install nodejs
+```
+
+Step 2. Install Yarn.
+
+```
+npm install --global yarn
+```
+
+Step 3. Install Dependencies for node-gyp.
+
+```
+$ sudo apt update
+$ sudo apt install build-essential
+```
+
+For more information, see [Set Up the Development Environment](../preparation/setupsystem).
+
+### Install and run a CKB Node on DEV chain by using the CKB pre-built installer package.
+
+Step 1. Download the CKB Pre-built Installer Package.
+
+```shell
+$ export TOP=$(pwd)
+$ curl -LO https://github.com/nervosnetwork/ckb/releases/download/v0.39.0/ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
+$ tar xzf ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
+$ export PATH=$PATH:$TOP/ckb_v0.39.0_x86_64-unknown-linux-gnu
+```
+
+Step 2. Initialize the CKB node on the DEV blockchain.
+
+```shell
+$ ckb init -C devnet -c dev
+```
+
+Step 3. Modify `genesis_epoch_length` and `permanent_difficulty_in_dummy` in the /ckb_v0.39.0_x86_64-unknown-linux-gnu/specs/**dev.toml** file.
+
+```shell
+$ ed devnet/specs/dev.toml <<EOF
+91d
+90a
+genesis_epoch_length = 10  # The unit of meansurement is "block".
+permanent_difficulty_in_dummy = true
+.
+wq
+EOF
+```
+
+Step 4. Modify the `value` parameter under the `miner.workers` section in the **ckb-miner.toml** file.
+
+```shell
+$ ed devnet/specs/dev.toml <<EOF
+91d
+90a
+genesis_epoch_length = 10  # The unit of meansurement is "block".
+permanent_difficulty_in_dummy = true
+.
+wq
+EOF
+```
+
+Step 5. Start the CKB node with the dev chain.
+
+```shell
+$ ckb run -C devnet
+```
+
+For more information, see [Install a CKB Node by Using the Pre-built Installer Package](../preparation/installckb#install-a-ckb-node-by-using-the-pre-built-installer-package)
+
+### Create accounts for transactions.
+
+Create two CKB accounts, Alice and Bob, and specify Alice as the miner to receive mining rewards that is used for transactions.
+
+Step 1. Create the account for Alice.
+
+```
+$ export TOP=$(pwd)
+$ export PATH=$PATH:$TOP/ckb_v0.39.0_x86_64-unknown-linux-gnu
+$ ckb-cli account new
+Your new account is locked with a password. Please give a password. Do not forget this password.
+Password: 
+Repeat password: 
+address:
+  mainnet: ckb1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qxe85u4
+  testnet: ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
+lock_arg: 0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e
+lock_hash: 0xf6ea009a4829de7aeecd75f3ae6bcdbaacf7328074ae52a48456a8793a4b1cca
+```
+
+Step 2. Get the private key for the account of Alice.
+
+```
+$ ckb-cli account export --extended-privkey-path alice --lock-arg 0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e
+Password: 
+message: "Success exported account as extended privkey to: \"alice\", please use this file carefully"
+```
+
+Step 3. Specify the account of Alice as the miner by replacing args in the devnet/ckb.toml file with the lock_arg of the account.
+
+```
+$ ed devnet/ckb.toml <<EOF
+143a
+[block_assembler]
+code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+args = "0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e"
+hash_type = "type"
+message = "0x"
+.
+wq
+EOF
+```
+
+Step 4. Restart the CKB node and start the miner.
+
+Stop the CKB node by using the ctrl + C command in the terminal that runs the node and then start the node by executing `ckb run -C devnet`.
+
+To start the miner, open a new terminal and run the following commands:
+
+```shell
+$ export TOP=$(pwd)
+$ export PATH=$PATH:$TOP/ckb_v0.40.0_x86_64-unknown-linux-gnu.tar.gz
+$ ckb miner -C devnet
+```
+
+Step 5. Check the Capacity of the Account of Alice.
+
+```
+$ ckb-cli wallet get-capacity --address "ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf"
+immature: 8039446.8758295 (CKB)
+total: 10451302.54823011 (CKB)
+```
+
+Step 6. Create an account for Bob.
+
+```shell
+$ export TOP=$(pwd)
+$ export PATH=$PATH:$TOP/ckb_v0.39.0_x86_64-unknown-linux-gnu
+$ ckb-cli account new
+Your new account is locked with a password. Please give a password. Do not forget this password.
+Password: 
+Repeat password: 
+address:
+  mainnet: ckb1qyqwe03shn6udvhjmrkzm53f53sr5l3qdwvsewv2mv
+  testnet: ckt1qyqwe03shn6udvhjmrkzm53f53sr5l3qdwvsytj4hs
+lock_arg: 0xecbe30bcf5c6b2f2d8ec2dd229a4603a7e206b99
+lock_hash: 0x34f085b5d2fa3f4ad2880713082a72864522a6ebffa1eb931b09e0407092eda5
+```
+
+To get the private key for the account of Bob:
+
+```shell
+$ ckb-cli account export --extended-privkey-path bob --lock-arg 0xecbe30bcf5c6b2f2d8ec2dd229a4603a7e206b99
+Password: 
+message: "Success exported account as extended privkey to: \"bob\", please use this file carefully"
+```
+
+For more information about creating accounts, see [Create Accounts](../preparation/createaccount).
+
+### Download the Hello Lumos example.
 
 ```
 $ cd
 $ git clone https://github.com/nervosnetwork/
 ```
 
-### **Step 2. Install dependencies.**
+### Install dependencies.
 
 ```shell
 $ cd hellolumos
@@ -53,17 +211,37 @@ Done in 52.70s.
 </p>
 </details>
 
-### Step 3. Update the account information.
+### Update the account information.
 
-In the hellolumos/src/accounts.ts file, update `PRIVATE_KEY`, `ADDRESS`, `ARGS` and `LOCKHASH` for ALICE and BOB with the information prepared in preparation phase.
+Replace the value of `PRIVATE_KEY`, `ADDRESS`, `ARGS` and `LOCKHASH` for ALICE and BOB in the `accounts.ts` file with the account information you have prepared when creating accounts. For more information about creating accounts, see [Create an Account](../preparation/createaccount).
 
-### Step 4. Build the project.
+Example:
+
+```typescript title="hellolumos/src/accounts.ts"
+export const ALICE = {
+  PRIVATE_KEY:
+    "0xf2a91b1410f7308631b89603262448ba515cddac1ffe250265551c82fff3eb3a",
+  ADDRESS: "ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf",
+  ARGS: "0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e",
+  LOCKHASH: "0xf6ea009a4829de7aeecd75f3ae6bcdbaacf7328074ae52a48456a8793a4b1cca"
+};
+
+export const BOB = {
+  PRIVATE_KEY:
+    "0x670ac6ac1ce8004b4220f0fb024179461f11989ff4d446816f78813b80b9c696",
+  ADDRESS: "ckt1qyqwe03shn6udvhjmrkzm53f53sr5l3qdwvsytj4hs",
+  ARGS: "0xecbe30bcf5c6b2f2d8ec2dd229a4603a7e206b99",
+  LOCKHASH: "0x34f085b5d2fa3f4ad2880713082a72864522a6ebffa1eb931b09e0407092eda5",
+};
+```
+
+### Build the project.
 
 ```
 $ tsc
 ```
 
-### Step 5. Enter the Node.js REPL mode.
+### Enter the Node.js REPL mode.
 
 ```shell
 $ node --experimental-repl-await
@@ -78,7 +256,7 @@ Type ".help" for more information.
 </p>
 </details>
 
-### Step 6. Start the server.
+### Execute the index.js file to start the server and include the required modules.
 
 ```shell
 > const {accounts,querycells,buildTXs,querytransactions} = require(".");
@@ -87,7 +265,6 @@ Type ".help" for more information.
 <details><summary>CLICK ME</summary>
 <p>
 
-
 ```shell
 The server is started.
 ```
@@ -95,14 +272,14 @@ The server is started.
 </p>
 </details>
 
-### Step 7. Perform a common transfer transaction.
+### Perform a common transfer transaction.
 
-Get the information of the two accounts that are required for later queries and transactions.
+Step 1. Get the lock script for the accounts of Alice and Bob.
 
 ```shell
 > const alice = accounts.ALICE;
 > const bob = accounts.BOB;
-> const {parseAddress}=require("@ckb-lumos/helpers");
+> const { parseAddress }=require("@ckb-lumos/helpers");
 > const script1 = parseAddress(alice.ADDRESS);
 > const script2 = parseAddress(bob.ADDRESS);
 > console.log(script1);
@@ -123,476 +300,74 @@ Get the information of the two accounts that are required for later queries and 
 </p>
 </details>
 
-Get the balance information of Alice.
+Step 2. Get the balance for the accounts of Alice and Bob.
 
 ```shell
 > const balance1 = querycells.getBalancebyLock(script1);
-```
-
-<details><summary>CLICK ME</summary>
-<p>
-
-
-```shell
 > The balance of the account is 5908399726984497n
 ```
 
-</p>
-</details>
-
-Get the balance information of Bob.
-
 ```shell
-> const balance1 = querycells.getBalancebyLock(script2);
+> const balance2 = querycells.getBalancebyLock(script2);
+> The balance of the account is 000000000000n
 ```
 
-<details><summary>CLICK ME</summary>
-<p>
+Step 3. Assemble a common transfer transaction. 
 
-
-```shell
-> The balance of the account is 360000000000n
-```
-
-</p>
-</details>
-
-Build the common transaction. The buildCommonTx() function performs the following actions: 
+The buildCommonTx() function performs the following actions: 
 
 - Create a new Transaction Skeleton.
-- common.transfer: Transfer action
-- common.payFee: Add pay fee for the transaction
-- common.prepareSigningEntries: Prepare signing entries.
+- Add transfer action to the skeleton by using `common.transfer`.
+- Add pay fee for the transaction by using `common.payFee`.
+- Prepare signing entries by using `common.prepareSigningEntries`.
+
+For information about assembling a transaction, see [Assemble Transactions](../tutorials/buildtransactions).
 
 ```shell
 > const txskeleton = await buildTXs.buildCommonTx(alice.ADDRESS, bob.ADDRESS,20000000000n,10000000n);
 ```
 
+Step 4. Sign the transaction.
+
 ```shell
 > const message = txskeleton.get("signingEntries").get(0)?.message;
 > console.log(message);
 0x7b9f14c93c1105213ab437f157460aa93963babff4cb03553e7dde6e72cbaf19
-```
-
-Sign the transaction.
-
-```shell
 > const privatekey1 = alice.PRIVATE_KEY;
+> const { key }=require("@ckb-lumos/hd");
 > const Sig = key.signRecoverable(message, privatekey1);
 > console.log(Sig);
 0x709026a75b82aca580d758c62eceaa9982b81057146a6c0205db3ee7b5581e3201d3ccd5845ea6d25b9b977f98f7c1c74efe4c38292b654d03fa2d037fa0777b01
 ```
 
-Seal the transaction.
+Step 5. Seal the transaction.
 
-```
-> const {sealTransaction}=require("@ckb-lumos/helpers");
+```shell
+> const { sealTransaction }=require("@ckb-lumos/helpers");
 > const tx = sealTransaction(txskeleton, [Sig]);
 ```
 
-Send the transaction.
+Step 6. Send the transaction.
 
-```
-> const {RPC}=require("@ckb-lumos/rpc");
+```shell
+> const { RPC }=require("@ckb-lumos/rpc");
 > const rpc = new RPC("http://127.0.0.1:8114");
 > const hash = await rpc.send_transaction(tx);
 > console.log(hash);
 0xe332fb6efba38e16b8fd20a4f47d5fffcf8fcac0c863b0eb30ef75067847936d
 ```
 
-Check the transaction status.
+Step 7. Check the transaction status.
 
-```
+```shell
 > const txWithStatus= await rpc.get_transaction(hash);
 > console.log(txWithStatus.tx_status.status);
 committed
 ```
 
-Check the new balance of Bob.
+Step 8. Check the new balance of Bob.
 
-```
+```shell
 > const newbalance = querycells.getBalancebyLock(script2);
-> The balance of the account is 380000000000n
+> The balance of the account is 20000000000n
 ```
-
-### Step 8. Deposit to DAO
-
-### Step 9. Withdraw from DAO
-
-
-
-```shell
-> const depositcells = buildTXs.listDAOCells(alice.ADDRESS,"deposit");
-```
-
-<details><summary>CLICK ME</summary>
-<p>
-
-
-```shell
-List the DAO cells of the celltype deposit for the address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
-> {
-  cell_output: {
-    capacity: '0x4a817c800',
-    lock: {
-      code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-      hash_type: 'type',
-      args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
-    },
-    type: {
-      code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
-      hash_type: 'type',
-      args: '0x'
-    }
-  },
-  out_point: {
-    tx_hash: '0x953a32bc8cad5023d59f9467789ca0826fc7e17248ed6d09cfa9ea4d03f15eec',
-    index: '0x0'
-  },
-  block_hash: '0x28cb80a7eeb12db569e50c7058c33e6f77026d47591a335cb58e08105754932c',
-  block_number: '0xa9',
-  data: '0x0000000000000000'
-}
-```
-
-</p>
-</details>
-
-```shell
-> const withdrawcells = buildTXs.listDAOCells(alice.ADDRESS,"withdraw");
-```
-
-<details><summary>CLICK ME</summary>
-<p>
-
-
-```shell
-List the DAO cells of the celltype withdraw for the address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
-undefined
-> {
-  cell_output: {
-    capacity: '0x4a817c800',
-    lock: {
-      code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-      hash_type: 'type',
-      args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
-    },
-    type: {
-      code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
-      hash_type: 'type',
-      args: '0x'
-    }
-  },
-  out_point: {
-    tx_hash: '0x313378dc3ce2d5c3f3efd546bc9595b54907844c20a72adae15cb9e970ce90df',
-    index: '0x0'
-  },
-  block_hash: '0x657bef9f9d300bfd884065992f243770b9fa7dc8aafa304c98e210d2e02d1248',
-  block_number: '0x12c',
-  data: '0x6a00000000000000'
-}
-{
-  cell_output: {
-    capacity: '0x4a817c800',
-    lock: {
-      code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-      hash_type: 'type',
-      args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
-    },
-    type: {
-      code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
-      hash_type: 'type',
-      args: '0x'
-    }
-  },
-  out_point: {
-    tx_hash: '0xbc708146e8fea53a4629d37fbd345f7e9dca79225d90bb1f73e7077ade93da19',
-    index: '0x0'
-  },
-  block_hash: '0xfc4a10116dbfb591796dcbf19e95c26ac647e7c2e41fc1b327a19c7ddd1eb938',
-  block_number: '0x135',
-  data: '0x1a01000000000000'
-}
-```
-
-</p>
-</details>
-
-
-
-```shell
-> const depositcell = {
-...   cell_output: {
-.....     capacity: '0x4a817c800',
-.....     lock: {
-.......       code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-.......       hash_type: 'type',
-.......       args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
-.......     },
-.....     type: {
-.......       code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
-.......       hash_type: 'type',
-.......       args: '0x'
-.......     }
-.....   },
-...   out_point: {
-.....     tx_hash: '0xa0b55857228b8f1d1d4c8bb09af5d35076d314510d539dfa5e7ebdaa02517145',
-.....     index: '0x0'
-.....   },
-...   block_hash: '0xf19e0764b46e1454d9a18a9e69ef56e1d1f91e185ccbdf43c737ee8761b7bdfe',
-...   block_number: '0x11a',
-...   data: '0x0000000000000000'
-... };
-> const withdrawSkeleton = await buildTXs.withdrawfromDAO(depositcell,alice.ADDRESS,10000000n);
-```
-
-<details><summary>CLICK ME</summary>
-<p>
-
-
-```shell
-Withdraw a DAO cell for the address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
-signingEntries: [
-  {
-    type: 'witness_args_lock',
-    index: 0,
-    message: '0xaa2600befcdf92a7fee92825f3248d47dc8f3f56939a64a2556679c71e06d818'
-  }
-]
-```
-
-</p>
-</details>
-
-
-
-```shell
-> const withdrawMessage = withdrawSkeleton.get("signingEntries").get(0)?.message;
-> const privatekey1=alice.PRIVATE_KEY;
-> const {key}=require("@ckb-lumos/hd");
-> const withdrawSig = key.signRecoverable(withdrawMessage, privatekey1);
-> const {sealTransaction}=require("@ckb-lumos/helpers");
-> const withdrawTX = sealTransaction(withdrawSkeleton, [withdrawSig]);
-> const {RPC}=require("@ckb-lumos/rpc");
-> const rpc = new RPC("http://127.0.0.1:8114");
-> const withdrawHash = await rpc.send_transaction(withdrawTX);
-> console.log("The withdraw transaction hash is",withdrawHash);
-```
-
-<details><summary>CLICK ME</summary>
-<p>
-
-
-```shell
-The withdraw transaction hash is 0xbc708146e8fea53a4629d37fbd345f7e9dca79225d90bb1f73e7077ade93da19
-```
-
-</p>
-</details>
-
-
-
-```shell
-> const withdrawTxWithStatus= await rpc.get_transaction(withdrawHash);
-> console.log("The withdraw transaction status is:",withdrawTxWithStatus.tx_status.status);
-```
-
-<details><summary>CLICK ME</summary>
-<p>
-
-
-```shell
-The withdraw transaction status is: pending
-```
-
-</p>
-</details>
-
-
-
-```shell
-> const depositcells2 = buildTXs.listDAOCells(alice.ADDRESS,"deposit");
-```
-
-<details><summary>CLICK ME</summary>
-<p>
-
-
-```shell
-List the DAO cells of the celltype deposit for the address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
-
-> {
-  cell_output: {
-    capacity: '0x4a817c800',
-    lock: {
-      code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-      hash_type: 'type',
-      args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
-    },
-    type: {
-      code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
-      hash_type: 'type',
-      args: '0x'
-    }
-  },
-  out_point: {
-    tx_hash: '0x953a32bc8cad5023d59f9467789ca0826fc7e17248ed6d09cfa9ea4d03f15eec',
-    index: '0x0'
-  },
-  block_hash: '0x28cb80a7eeb12db569e50c7058c33e6f77026d47591a335cb58e08105754932c',
-  block_number: '0xa9',
-  data: '0x0000000000000000'
-}
-{
-  cell_output: {
-    capacity: '0x4a817c800',
-    lock: {
-      code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-      hash_type: 'type',
-      args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
-    },
-    type: {
-      code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
-      hash_type: 'type',
-      args: '0x'
-    }
-  },
-  out_point: {
-    tx_hash: '0xa0b55857228b8f1d1d4c8bb09af5d35076d314510d539dfa5e7ebdaa02517145',
-    index: '0x0'
-  },
-  block_hash: '0xf19e0764b46e1454d9a18a9e69ef56e1d1f91e185ccbdf43c737ee8761b7bdfe',
-  block_number: '0x11a',
-  data: '0x0000000000000000'
-}
-```
-
-</p>
-</details>
-
-
-
-```shell
-> const withdrawcells2 = buildTXs.listDAOCells(alice.ADDRESS,"withdraw");
-```
-
-<details><summary>CLICK ME</summary>
-<p>
-
-
-```shell
-List the DAO cells of the celltype withdraw for the address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
-
-> {
-  cell_output: {
-    capacity: '0x4a817c800',
-    lock: {
-      code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-      hash_type: 'type',
-      args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
-    },
-    type: {
-      code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
-      hash_type: 'type',
-      args: '0x'
-    }
-  },
-  out_point: {
-    tx_hash: '0x313378dc3ce2d5c3f3efd546bc9595b54907844c20a72adae15cb9e970ce90df',
-    index: '0x0'
-  },
-  block_hash: '0x657bef9f9d300bfd884065992f243770b9fa7dc8aafa304c98e210d2e02d1248',
-  block_number: '0x12c',
-  data: '0x6a00000000000000'
-}
-```
-
-</p>
-</details>
-
-Unlock the withdraw cell.
-
-```shell
-const withdrawcell={
-...   cell_output: {
-.....     capacity: '0x4a817c800',
-.....     lock: {
-.......       code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-.......       hash_type: 'type',
-.......       args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
-.......     },
-.....     type: {
-.......       code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
-.......       hash_type: 'type',
-.......       args: '0x'
-.......     }
-.....   },
-...   out_point: {
-.....     tx_hash: '0xff73473ae997d9d5f4285c2ce3f8e39fd856094fb549731bb8b2cb8e81aaec08',
-.....     index: '0x0'
-.....   },
-...   block_hash: '0x33f572a2a2ce308aa51342ce0dae844fda33490c43af02da9711df708fbfe492',
-...   block_number: '0x13d',
-...   data: '0xa900000000000000'
-... };
-> const unlockskeleton = await buildTXs.unlockWithdraw(depositcell,withdrawcell,alice.ADDRESS,alice.ADDRESS,10000000n);
-```
-**Note**: The withdraw cell can only be successfully unlocked after the lock period of the cell passed. Otherwise this function would throw an error. The lock period is 180 epoches.
-
-<details><summary>CLICK ME</summary>
-<p>
-
-
-```shell
-signingEntries: [
-  {
-    type: 'witness_args_lock',
-    index: 0,
-    message: '0xe2443664840ecd470aaa68eb1d947fd0cc8e177cfc2209a70cebf26c56e8d3aa'
-  }
-]
-```
-
-</p>
-</details>
-
-
-
-```shell
-> const unlockMessage = unlockskeleton.get("signingEntries").get(0)?.message;
-> const unlockSig = key.signRecoverable(unlockMessage,privatekey1);
-
-> const unlockTX = sealTransaction(unlockskeleton, [unlockSig])
-
-> const unlockHash = await rpc.send_transaction(unlockTX);
-> console.log("The unlock withdraw transaction hash is",unlockHash);
-```
-
-<details><summary>CLICK ME</summary>
-<p>
-
-
-```shell
-The unlock withdraw transaction hash is 0x1eb26531dc32e1c7d8a167fb99735ecb8fb81c8c2d4ddc6ec0245fdb3af420f4
-```
-
-</p>
-</details>
-
-
-
-```shell
-> const unlockTxWithStatus= await rpc.get_transaction(unlockHash);
-> console.log("The unlock transaction status is:",unlockTxWithStatus.tx_status.status);
-```
-
-<details><summary>CLICK ME</summary>
-<p>
-
-
-```shell
-The unlock transaction status is: committed
-```
-
-</p>
-</details>

@@ -1,39 +1,46 @@
 ---
 id: installlumos
-title: Initialize a Project
+title: Install Lumos
 ---
-This guide shows how to initialize a project that uses Lumos packages as dependencies. For the projects that have already listed Lumos packages as dependencies, just run `yarn install` in the projects directly to install the packages. 
+This guide shows how to install Lumos packages that the DApp requires as dependencies in a project. <!--For the projects that have already listed Lumos packages as dependencies, just run `yarn install` in the projects directly to install the packages.--> 
 
 ## Prerequisites
 
-The following prerequisites apply for initializing a project that uses Lumos packages as dependencies:
+The following prerequisites apply for installing Lumos packages as dependencies for a project:
 
 - Node.js and Yarn are installed.
 - Dependencies for build tools are installed.
 
 ## Environment
 
-A project can be initialized to use Lumos on all major platforms, including Linux, Windows and macOS.
+Lumos packages can be installed as dependencies for a Node.js project on all major platforms, including Linux, Windows and macOS.
 
 The following examples are verified on Ubuntu 20.04.2.
 
 ## Steps
 
-To initialize a project and install Lumos packages for the project:
+To install Lumos packages for a project:
 
-### **Step 1. Create a new directory for the project and navigate into the directory.**
+### **Step 1. Navigate into the directory of the project.**
 
 ```
-$ mkdir mydapp
 $ cd mydapp
 ```
 
-### **Step 2. Create a `package.json` file for the project by using the `yarn init` command.**
+### **Step 2. If this is a new project, initialize the project by using the `yarn init` command.**
 
 This command prompts questions about the name and version of the project and the name of the initial entry point file (by default this is **index.js**). Just accept the defaults by hitting enter or type answers for each of the questions.
 
 ```
 $ yarn init
+```
+
+<details><summary>CLICK ME</summary>
+<p>
+
+
+
+```shell
 yarn init v1.22.5
 question name (mydapp):
 question version (1.0.0):
@@ -47,6 +54,9 @@ success Saved package.json
 Done in 44.54s.
 ```
 
+</p>
+</details>
+
 ### **Step 3. Install Lumos packages as dependencies for the project.**
 
 A Lumos packages can be installed according to the application requirements by using the `yarn add` command or the `npm install` command.
@@ -55,6 +65,14 @@ The following example installs the indexer, the common-scripts, the config-manag
 
 ```shell
 $ yarn add @ckb-lumos/indexer@0.15.0 @ckb-lumos/common-scripts@0.15.0 @ckb-lumos/config-manager@0.15.0
+```
+
+<details><summary>CLICK ME</summary>
+<p>
+
+
+
+```shell
 yarn add v1.22.5
 info No lockfile found.
 [1/4] Resolving packages...
@@ -87,6 +105,9 @@ info All dependencies
 └─ yallist@3.1.1
 Done in 125.02s.
 ```
+
+</p>
+</details>
 
 ## Troubleshooting
 

@@ -6,13 +6,9 @@ title: Install a CKB Node
 
 <!--The Nervos CKB (Common Knowledge Base) is the bottom-most layer in the Nervos ecosystem. It serves as a foundation to build on and provides trust to all layers built on top.-->
 
-## CKB Nodes
+<!--CKB nodes can be categorized into three types:--><!--**Full Nodes**: Full nodes verify new blocks and transactions, relay blocks and transactions, and select the chain fork on which they agree. Full nodes are the verifiers of the network. The CKB nodes used for the development and testing are **full nodes**.--><!--**Mining Nodes**: Mining nodes participate in the CKB consensus process. The mining nodes collect new transactions, package them into blocks and produce new blocks when they have found a Proof-of-Work. Mining nodes do not have to store the entire transaction history, only the current cell set.--><!--**Light Nodes**: Light nodes trust full nodes, only subscribe and store a subset of cells that they are concerned with. They use minimal resources. Users increasingly rely on mobile devices and mobile apps to access the Internet, the light node is designed to run on mobile devices.-->
 
-CKB nodes can be categorized into three types:
-
-- **Full Nodes**: Full nodes verify new blocks and transactions, relay blocks and transactions, and select the chain fork on which they agree. Full nodes are the verifiers of the network. The CKB nodes used for the development and testing are **full nodes**.
-- **Mining Nodes**: Mining nodes participate in the CKB consensus process. The mining nodes collect new transactions, package them into blocks and produce new blocks when they have found a Proof-of-Work. Mining nodes do not have to store the entire transaction history, only the current cell set.
-- **Light Nodes**: Light nodes trust full nodes, only subscribe and store a subset of cells that they are concerned with. They use minimal resources. Users increasingly rely on mobile devices and mobile apps to access the Internet, the light node is designed to run on mobile devices.
+The CKB nodes used in the DApp development are **full nodes** that are the verifiers of the network. A CKB full node verifies new blocks and transactions, relays blocks and transactions, and selects the chain fork on which it agrees.
 
 ## Networks
 
@@ -46,7 +42,7 @@ There are two options for installing a CKB node:
 
   **Tippy** is a tool that helps set up and manage CKB nodes. It can install and start running a CKB node by one simple click.
 
-  Note: Tippy is currently in the development and experimental stage. (To be updated)
+  **Note**: Tippy is currently in the development and experimental stage. (To be updated)
 
 ## Install a CKB Node by Using the Pre-built Installer Package
 
@@ -56,7 +52,7 @@ To install a CKB node by using the pre-built installer package:
 
 ### **Step 1. Download the CKB Pre-built Installer Package.**
 
-The following example download the version 0.39.0. All releases can be found on the [CKB releases](https://github.com/nervosnetwork/ckb/releases) page.
+The following example downloads the CKB version 0.39.0. All releases can be found on the [CKB releases](https://github.com/nervosnetwork/ckb/releases) page.
 
 ```shell
 $ export TOP=$(pwd)
@@ -74,7 +70,7 @@ ckb 0.39.0
 
 ### **Step 3. Choose a CKB network and run the CKB node.**
 
-To run the CKB node, choose a CKB network according to your developing and testing purpose. DEV chain is the recommended network for CKB starters. For more information about CKB networks, see [Networks](../preparation/installckb#networks).
+DEV chain is the recommended network for CKB starters, and to run the [Hello Lumos](../preparation/hellolumos) example. For more information about CKB networks, see [Networks](../preparation/installckb#networks).
 
 <Tabs
   defaultValue="dev"
@@ -189,7 +185,7 @@ import TabItem from '@theme/TabItem';
   ]}>
 <TabItem value="ubuntu"><p><b>Step 1. Install Tippy</b></p>
 
-<p>Tippy can be installed from the pre-built installer or built from <a href="https://github.com/nervosnetwork/tippy">source</a>. The following example installs Tippy version 0.1.5 from the pre-built installer. For more information about the installation from source, see the [Readme](https://github.com/nervosnetwork/tippy) of Tippy.</p>
+<p>Tippy can be installed from the pre-built installer or built from <a href="https://github.com/nervosnetwork/tippy">source</a>. The following example installs Tippy version 0.1.5 from the pre-built installer. For more information about the installation from source, see the <a href="https://github.com/nervosnetwork/tippy">Readme</a> of Tippy.</p>
 
 <p>To install Tippy from the pre-built installer on Ubuntu 20.04:</p>
 
