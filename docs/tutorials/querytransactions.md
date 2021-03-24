@@ -2,110 +2,67 @@
 id: querytransactions
 title: Query on Transactions
 ---
-Transactions are the most fundamental entities for interacting with Nervos CKB. 
+Transactions are the most fundamental entities for a DApp to interact with Nervos CKB. For more information about CKB transactions, see [Transaction](https://docs.nervos.org/docs/reference/transaction#docsNav) and [CKB RFC](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0019-data-structures/0019-data-structures.md#transaction).
 
-## Data Structure
+Lumos provides convenient query functions on transactions with the support of the `TransactionCollector` class.
 
-A transaction includes the following fields:
+## TransactionCollector
 
-- `deps`: Dependent cell set, provides read-only cells required by transaction verification. These must be references to living cells.
-- `inputs`: Cell references and proofs. Cell references point to live cells that are transferred or updated in the transaction. Proofs (e.g., signature) prove that the transaction creator has the permission to transfer or update the referenced cells.
-- `outputs`: New cells created in this state transition.
+The [TransactionCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L479) class can be used to query transactions according to specific query options.
 
-For more information about CKB transactions, see [Transaction](https://docs.nervos.org/docs/reference/transaction#docsNav) and [CKB RFC](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#44-transaction).
+**Constructor**:
 
-### A Transaction Example
-
-```
-{
-  "version": "0x0",
-  "cell_deps": [
-    {
-      "out_point": {
-        "tx_hash": "0xbd864a269201d7052d4eb3f753f49f7c68b8edc386afc8bb6ef3e15a05facca2",
-        "index": "0x0"
-      },
-      "dep_type": "dep_group"
-    }
-  ],
-  "header_deps": [
-    "0xaa1124da6a230435298d83a12dd6c13f7d58caf7853f39cea8aad992ef88a422"
-  ],
-  "inputs": [
-    {
-      "previous_output": {
-        "tx_hash": "0x8389eba3ae414fb6a3019aa47583e9be36d096c55ab2e00ec49bdb012c24844d",
-        "index": "0x1"
-      },
-      "since": "0x0"
-    }
-  ],
-  "outputs": [
-    {
-      "capacity": "0x746a528800",
-      "lock": {
-        "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
-        "args": "0x56008385085341a6ed68decfabb3ba1f3eea7b68",
-        "hash_type": "type"
-      },
-      "type": null
-    },
-    {
-      "capacity": "0x1561d9307e88",
-      "lock": {
-        "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
-        "args": "0x886d23a7858f12ebf924baaacd774a5e2cf81132",
-        "hash_type": "type"
-      },
-      "type": null
-    }
-  ],
-  "outputs_data": [
-    "0x",
-    "0x"
-  ],
-  "witnesses": ["0x55000000100000005500000055000000410000004a975e08ff99fa0001
-    42ff3b86a836b43884b5b46f91b149f7cc5300e8607e633b7a29c94dc01c6616a12f62e74a1
-    415f57fcc5a00e41ac2d7034e90edf4fdf800"
-  ]
-}
-```
+(indexer: Indexer, queries: queryOptions, options?: TransactionCollectorOptions | undefined)
 
 ## Examples
 
-### Query Transactions Related to a Lock Script
+### Query Transactions by a Lock Script
 
-To query transactions related to a lock script:
+The following example creates a new TransactionCollector to collect transactions for a specific lock script and returns the result with status.
 
-```typescript title="mydapp/src/querytransactions.ts"
-const indexer = new Indexer("http://127.0.0.1:8114", "./indexed-data");
-export const getTransactionsbyLock = async (
-    lockScript: Script,
-  ) => {
-    const txCollector = new TransactionCollector(indexer,{lock:lockScript});
-    for await (const txWithStatus of txCollector.collect()) {
-        console.log(txWithStatus);
-    }
+```typescript title="hellolumos/src/querytransactions.ts"
+import {INDEXER} from "./index";
+import { Script, Transaction } from "@ckb-lumos/base";
+
+export async function getTxbyLock (
+  lockScript: Script,
+) {
+  console.log("Get transactions by lock script:");
+  const txCollector = new TransactionCollector(INDEXER,{lock:lockScript});
+  const txs:Transaction[]= [];
+  for await (const txWithStatus of txCollector.collect()) {
+    
+    const tx = txWithStatus.transaction; 
+    const txStatus=txWithStatus.tx_status.status;
+    txs.push(tx);
+    //console.log(txStatus);
+  }
+  return txs;
 }
-const lockscript:Script = {
-    code_hash:
-      "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
-    hash_type: "type",
-    args: "0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e",
-  };
 
-async function Query(lockscript:Script) {
-  await getTransactionsbyLock(lockscript);
-} 
-Query(lockscript);
 ```
+
+Try the getTxbyLock(lockScript) function in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
 
 ```shell
-{
-  transaction: {
+$ node --experimental-repl-await
+Welcome to Node.js v14.0.0.
+Type ".help" for more information.
+> const { accounts, querytransactions }=require(".");
+The server is started.
+> const alice = accounts.ALICE;
+> const script={
+  code_hash: "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+  hash_type: "type",
+  args: alice.ARGS,
+ };
+> await querytransactions.getTxbyLock(script);
+Get transactions by lock script:
+[
+  {
     cell_deps: [],
     hash: '0x84a1ff885e82f1d48813968994f63eae22df5baf65519240fc74811ba3b31e92',
     header_deps: [],
@@ -117,13 +74,7 @@ Query(lockscript);
       '0x590000000c00000055000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce801140000007e00660b8ab122bca3ba468c5b6eee71f40b7d8e00000000'
     ]
   },
-  tx_status: {
-    block_hash: '0x4e23ef8268abd4f58b93a060d5f97ad0c039384ec031d073cb680f916b5ec201',
-    status: 'committed'
-  }
-}
-{
-  transaction: {
+  {
     cell_deps: [],
     hash: '0xbdc50e04c88978fe53debe989863855b2e3e4be02dd989c6f8771a2b263ef213',
     header_deps: [],
@@ -135,29 +86,6 @@ Query(lockscript);
       '0x590000000c00000055000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce801140000007e00660b8ab122bca3ba468c5b6eee71f40b7d8e00000000'
     ]
   },
-  tx_status: {
-    block_hash: '0xce5cffcdf54b5583bd9a8773893d62004c0462fdd3eeb7d69473027a054795b6',
-    status: 'committed'
-  }
-}
-{
-  transaction: {
-    cell_deps: [],
-    hash: '0x2a02955087850354a731a8a782e58e936ad67308af8f3a781f4c0edeb3c6c9fc',
-    header_deps: [],
-    inputs: [ [Object] ],
-    outputs: [ [Object] ],
-    outputs_data: [ '0x' ],
-    version: '0x0',
-    witnesses: [
-      '0x590000000c00000055000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce801140000007e00660b8ab122bca3ba468c5b6eee71f40b7d8e00000000'
-    ]
-  },
-  tx_status: {
-    block_hash: '0x5cddd87368dbec89c221bad5a5159b4a12ac9129445db25426a4ab91312b566d',
-    status: 'committed'
-  }
-}
 ...
 ```
 </p>
@@ -165,33 +93,35 @@ Query(lockscript);
 
 ### Query Transactions between Given Block Numbers
 
-The following example fetches the transactions between `[fromBlock, toBlock]`, that means both `fromBlock` and `toBlock` are included in the query range.
+The following example fetches the transactions between `[fromBlock, toBlock]`. Both `fromBlock` and `toBlock` are included in the queryOptions.
 
-```typescript title="mydapp/src/querytransactions.ts"
-export const getTransactionsbetweenBlocks = async (
+```typescript title="hellolumos/src/querytransactions.ts"
+export async function getTxbetweenBlocks (
     lockScript: Script,
     fromBlock: string,
     toBlock: string
-  ) => {
-    const txCollector = new TransactionCollector(indexer,{lock:lockScript,fromBlock:fromBlock,toBlock:toBlock});
+  )  {
+    const txCollector = new TransactionCollector(INDEXER,{lock:lockScript,fromBlock:fromBlock,toBlock:toBlock});
     console.log("Get transactions between given blocks:");
     for await (const txWithStatus of txCollector.collect()) {
         console.log(txWithStatus);
     }
 }
-async function Query(lockscript:Script) {
-    await getTransactionsbetweenBlocks(lockscript,"0xc5","0xca");
-} 
-Query(lockscript);
 ```
+Try the getTxbetweenBlocks(lockScript, fromBlock, toBlock) function in the Node.js REPL mode:
+
 <details><summary>CLICK ME</summary>
 <p>
 
 ```shell
+> const from="0x801";
+> const to="0x804";
+> await querytransactions.getTxbetweenBlocks(script,from,to);
+Get transactions between given blocks:
 {
   transaction: {
     cell_deps: [],
-    hash: '0xfb54d9d8c756ffb30809fe58979e5c33e5ec3692bcff0f1275464e3114bae878',
+    hash: '0x5457bae99ab4cea79c78d4b239a92b5e30580cd1dda6637a7a661991704020cd',
     header_deps: [],
     inputs: [ [Object] ],
     outputs: [ [Object] ],
@@ -202,14 +132,14 @@ Query(lockscript);
     ]
   },
   tx_status: {
-    block_hash: '0xd6c6ae5575d56ae8071a0b2e481bc1383112de5016a0c429bd56068dff992af9',
+    block_hash: '0x0c6c197f43b4a27b6c881a2f01d9c4ba8abf2244e2284afa0f1b737979500fbe',
     status: 'committed'
   }
 }
 {
   transaction: {
     cell_deps: [],
-    hash: '0xb912f892f80865c219c012eb260c85160524f76a429763fc2b048ab255e4724d',
+    hash: '0xb2bf608b9e0499fb8679af8b4126c4921fadfdb6efa0a5375e3aaa0676fc65ae',
     header_deps: [],
     inputs: [ [Object] ],
     outputs: [ [Object] ],
@@ -220,14 +150,14 @@ Query(lockscript);
     ]
   },
   tx_status: {
-    block_hash: '0x7f8d1ae67583735bbc51ea6eca160d41f3bafb0f1b2616eae3652c11e7b2a090',
+    block_hash: '0x40c9b99ebb5da3888efb6fbc63fd13b4425a1b81b2a4271fb99a3ba29de9a55c',
     status: 'committed'
   }
 }
 {
   transaction: {
     cell_deps: [],
-    hash: '0x56040bcd0038dc641d7300f48a6ab153132dcc41e5ef26295cf4c617200210aa',
+    hash: '0x59dd00d1444d346b71b8a0c94ea0d418b8a4c85d86040485c145a8a60725cad0',
     header_deps: [],
     inputs: [ [Object] ],
     outputs: [ [Object] ],
@@ -238,44 +168,72 @@ Query(lockscript);
     ]
   },
   tx_status: {
-    block_hash: '0xca60ac493084b8ad60f8b2f151e71239a18da3fa5cb395aed413131eccdd7649',
+    block_hash: '0xd0c09a6615b30f685dd0b0e627021f89e0f35e9b59c575001d8a11f63436b76c',
     status: 'committed'
   }
 }
-...
+{
+  transaction: {
+    cell_deps: [ [Object] ],
+    hash: '0xe332fb6efba38e16b8fd20a4f47d5fffcf8fcac0c863b0eb30ef75067847936d',
+    header_deps: [],
+    inputs: [ [Object] ],
+    outputs: [ [Object], [Object] ],
+    outputs_data: [ '0x', '0x' ],
+    version: '0x0',
+    witnesses: [
+      '0x5500000010000000550000005500000041000000709026a75b82aca580d758c62eceaa9982b81057146a6c0205db3ee7b5581e3201d3ccd5845ea6d25b9b977f98f7c1c74efe4c38292b654d03fa2d037fa0777b01'
+    ]
+  },
+  tx_status: {
+    block_hash: '0xd0c09a6615b30f685dd0b0e627021f89e0f35e9b59c575001d8a11f63436b76c',
+    status: 'committed'
+  }
+}
+{
+  transaction: {
+    cell_deps: [],
+    hash: '0xea8f658e6ea08c38f58f6a0af3530396aba0e51e1064db8626ecd38976625c34',
+    header_deps: [],
+    inputs: [ [Object] ],
+    outputs: [ [Object] ],
+    outputs_data: [ '0x' ],
+    version: '0x0',
+    witnesses: [
+      '0x590000000c00000055000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce801140000007e00660b8ab122bca3ba468c5b6eee71f40b7d8e00000000'
+    ]
+  },
+  tx_status: {
+    block_hash: '0xbae60c9c4f54d6f6a970fb76c2fdd226a83dd8724cff082157da559ce6cf507f',
+    status: 'committed'
+  }
+}
 ```
 </p>
 </details>
 
 ### Skip Transactions
 
-The `skip` query option represents the number of transactions being skipped. The following code snippet skips the first 20 transactions and return the results from the 21st transaction.
+The `skip` query option represents the number of transactions being skipped.
 
-```typescript title="mydapp/src/querytransactions.ts"
-export const getTxandSkip = async (
+```typescript title="hellolumos/src/querytransactions.ts"
+export async function getTxandSkip (
     lockScript: Script,
     skip: number
-  ) => {
-    const txCollector = new TransactionCollector(indexer,{lock:lockScript,skip:skip});
+  )  {
+    const txCollector = new TransactionCollector(INDEXER,{lock:lockScript,skip:skip});
     console.log("Get transactions and skip the first", skip, "trasactions");
     for await (const txWithStatus of txCollector.collect()) {
         console.log(txWithStatus);
     }
 }
-
-async function Query(lockscript:Script) {
-    await getTxandSkip(lockscript,20);
-} 
-Query(lockscript);
 ```
 
 ### Order Transactions by Block Number
 
-By default, the transactions are in ascending order of block numbers.
+The following example creates a new TransactionCollector and uses the TransactionCollector to collect transactions in order of block numbers for a specific lock script. If the order is not specified, the default order is "asc" for the returned result.
 
-The following code snippet returns the results in descending order of block numbers.
-
-```typescript title="mydapp/src/querytransactions.ts"
+```typescript title="hellolumos/src/querytransactions.ts"
 export const getTxandOrder = async (
     lockScript: Script,
     order: "asc"|"desc"
@@ -290,16 +248,16 @@ export const getTxandOrder = async (
 
 ### Prefix Search on `args`
 
-When the `args` field is the full slice of the original args, the default `argsLen` value is -1. 
+The default `argsLen` is -1, that means the full slice of original args is passed in the query. You can specify argsLen with other values when the `args` field is the prefix of original args.
 
-When the `args` field is the prefix of the original args, you can specify `argsLen`  with other values to enable the prefix search on `args` .
+**Note**: It is recommended to specify explicit length for the `argsLen` parameter. For example, the length is 20 in normal scenarios and 28 in the multisig scenario for the lock script. When the length is not certain, the `argsLen` parameter can be set as `any`. But there is performance lost when using `any` rather than explicit length.
 
-```typescript title="mydapp/src/querytransactions.ts"
-export const prefixSearch = async (
+```typescript title="hellolumos/src/querytransactions.ts"
+export async function prefixSearch  (
     lockScript: Script,
     argslen : number
-  ) => {
-    const txCollector = new TransactionCollector(indexer,{lock:lockScript,argsLen:argslen});
+  )  {
+    const txCollector = new TransactionCollector(INDEXER,{lock:lockScript,argsLen:argslen});
     console.log("Prefix Search");
     for await (const txWithStatus of txCollector.collect()) {
         console.log(txWithStatus);
@@ -307,70 +265,53 @@ export const prefixSearch = async (
 }
 ```
 
-The args length is **20** bytes in normal scenarios and **28** bytes in multisig scenarios.  When the length is not certain, the `argsLen` field can be set as `any`. It is recommended to specify an explicit length for the `argsLen` field in prefix search. Prefix searches using explicit length have better performance than using `any`.
-
 ### Fine Grained Query for Transactions
 
-Fine Grained Query for Transactions can be achieved by using `ScriptWrapper` with customized options like `ioType`, `argsLen`.
+Fine Grained Query for Transactions can be achieved by using [ScriptWrapper](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/base/index.d.ts#L351) with customized options like `ioType`, `argsLen`.
 
 The `ioType` field is among `input | output | both`.
 
-The following example gets the transactions of depositing CKB to DAO by specifying the `ioType`  as output for DAO script.
+```typescript title="hellolumos/src/querytransactions.ts"
+import {  ScriptWrapper } from "@ckb-lumos/base";
 
-```typescript title="mydapp/src/querytransactions.ts"
-env.LUMOS_CONFIG_FILE = env.LUMOS_CONFIG_FILE || "./config.json";
-initializeConfig();
-const config = undefined || getConfig();
-const template = config.SCRIPTS["DAO"]!;
-const DAOscript:Script = {
-	code_hash: template.CODE_HASH,
-	hash_type: template.HASH_TYPE,
-    args: "0x"
- };
-const DAOscriptWrapper:ScriptWrapper = {
-    script:DAOscript,
-    ioType:"output"
- };
-export const fineGrainedQuery = async (
+export async function fineGrainedQuery  (
     lockScript: Script,
     typescript : ScriptWrapper
-  ) => {
-    const txCollector = new TransactionCollector(indexer,{lock:lockScript,type:typescript});
+  )   {
+    const txCollector = new TransactionCollector(INDEXER,{lock:lockScript,type:typescript});
     console.log("Fine Grained Query");
     for await (const txWithStatus of txCollector.collect()) {
         console.log(txWithStatus);
     }
 }
-async function Query() {
-    await fineGrainedQuery(lockscript,DAOscriptWrapper);
-} 
-Query();
 ```
+
+Try the fineGrainedQuery(lockScript, typescript) function in the Node.js REPL mode, it returns the transactions of DAO deposit by specifying the `ioType`  as output for DAO script.
 
 <details><summary>CLICK ME</summary>
 <p>
 The DAO cell is created by the step <a href="../preparation/createaccount#step-5-deposit-ckb-to-dao">Deposit CKB to DAO</a> in the preparation phase.
 
 ```shell
-{
-  transaction: {
-    cell_deps: [ [Object], [Object] ],
-    hash: '0x4a08e1609cd2f85ba33b4edf3c40ced779150925796ccea1441cad2b0a95395c',
-    header_deps: [],
-    inputs: [ [Object] ],
-    outputs: [ [Object], [Object] ],
-    outputs_data: [ '0x0000000000000000', '0x' ],
-    version: '0x0',
-    witnesses: [
-      '0x5500000010000000550000005500000041000000f87feb885a4bbfed59284b3eb5131c03639de5c941dc549985c55215a918c3ce019c348cc8090d03f2d9a72e7d840cbbd23a0705770750861c9cb8bf84dc747600'
-    ]
-  },
-  tx_status: {
-    block_hash: '0x37f53dd6884eec2fa93b8fded335f28a3ac63fe9ed3a60226e03138968d30d3c',
-    status: 'committed'
-  }
+const lock:ScriptWrapper = {
+ script:{
+ code_hash: "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+ hash_type: "type",
+ args: alice.ARGS,
+ },
+ argsLen: argslen
 }
 ```
 </p>
 </details>
 
+### Get the Transaction Status.
+
+```typescript title="hellolumos/src/querytransactions.ts"
+import { RPC } from "@ckb-lumos/RPC";
+const rpc = new RPC("http://127.0.0.1:8114");
+const txWithStatus= await rpc.get_transaction(hash);
+console.log("Transaction status is:",txWithStatus.tx_status.status); 
+```
+
+### 

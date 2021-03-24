@@ -1,58 +1,35 @@
 ---
-id: cells
+id: querycells
 title: Query on Cells
 ---
+
 A Cell is the most basic structure that represents a single piece of data in Nervos. The data contained in a Cell can take many forms, including CKBytes, tokens, code like JavaScript code, or even serialized data like JSON strings.
-
-## Data Structure
-
-A cell includes the following fields:
-
-- `capacity`
-
-  - The amount of CKB tokens stored in the cell. 
-  - The size limit on how much information the cell can store.
-
-  The basic unit for `capacity` is `shannon`. A bigger unit `CKByte`, or just `CKB` is also used. 1 CKB equals `10**8` shannons. 1 CKB also means the cell that can store 1 byte of information.
-
-- `data`: State data stored in this cell.
-
-  **Note**: The `data` field can be empty. The total bytes used by a cell (including data) must be less than or equal to the capacity of the cell. 
-
-  The following data can be stored in the `data` field:
-  - Script code as explained in [Script](https://docs.nervos.org/docs/reference/script). 
-  - Token amount for User Defined Token cells.
-  - The latest game states for an on-chain fantasy game.
-
-- `lock` script: The ownership of a cell.
-
-  When a specified cell is used as an input cell in a transaction, the `lock script` included in the cell is executed for signature verification. If the `lock script` fails in the verification, the transaction will be rejected.
-
-- `type` script: The script to be executed to validate the structure of both input cells and output cells included in a transaction.
-
-  `type` script is typically used to validate a DApp logic, such as creating UDTs.
 
 For more information about the cell model, see [Cell Data Structure](https://docs.nervos.org/docs/reference/cell) and [CKB RFC](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#42-cell).
 
-**A Cell Example**
+A CKB DApp must have query functions on cells that are the fundamental functions to support user queries and transaction requests. Lumos provides convenient query functions with the support of the `Indexer` and `CellCollector` classes.
 
-```
-{
-  "capacity": "0x19995d0ccf",
-  "lock": {
-    "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
-    "args": "0x0a486fb8f6fe60f76f001d6372da41be91172259",
-    "hash_type": "type"
-  },
-  "type": null
-}
-```
+## Indexer.collector Function
+
+The [Indexer.collector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L242) function can be used to collect cells according to specific query options and returns the cells as the result.
+
+**Constructor**:
+
+`collector({ lock = null, type = null, argsLen = -1, data = "any", fromBlock = null, toBlock = null, skip = null }`
+
+## CellCollector Class
+
+The [CellCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L324) class also supports query on cells, and it has the order query option to order the result by block numbers.
+
+**Constructor**:
+
+`{  indexer, {lock = null, type = null, argsLen = -1, data = "any", fromBlock = null,  toBlock = null, order = "asc",  skip = null,}}`
 
 ## Examples
 
 ### Query Cells by Lock Script
 
-The findCellsbylock(lockScript) function uses the Lumos indexer to collect cells for a specific lock script and returns the cells as the result.
+The following example collects the cells for a specific lock script.
 
 ```typescript title="hellolumos/src/querycells.ts"
 import {INDEXER} from "./index";
@@ -67,15 +44,25 @@ export const findCellsbylock = async (
   console.log("Find the cells by lock script:");
   for await (const cell of collector.collect()) {
       cells.push(cell);
-      //console.log(cell);
     }
     return cells;
   };
 ```
-Try the findCellsbylock(lockScript) function in Node.js REPL mode:
+
+The indexer is started as follows:
+
+```typescript title="hellolumos/src/index.ts"
+import { Indexer } from "@ckb-lumos/indexer";
+export const CKB_RPC = "http://127.0.0.1:8114";
+export const INDEXER = new Indexer(CKB_RPC, "./indexed-data");
+INDEXER.startForever();
+```
+
+Try the findCellsbylock(lockScript) function in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
+
 
 
 ```shell
@@ -136,12 +123,13 @@ Find the cells by lock script:
   },
 ...
 ```
+
 </p>
 </details>
 
 ### Query Cells by Specific `lock` and `type` Script
 
-The findCellsbyLockandType(lockScript, typeScript) function uses the Lumos indexer to collect cells for a specific lock script and returns the cells as the result.
+The following example collects the cells for a specific lock script and type script, and returns the cells as the result.
 
 ```typescript title="hellolumos/src/querycells.ts"
 export async function findCellsbyLockandType(
@@ -159,10 +147,11 @@ return cells;
 };
 ```
 
-Try the findCellsbyLockandType(lockScript, typeScript) function in Node.js REPL mode:
+Try the findCellsbyLockandType(lockScript, typeScript) function in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
+
 
 ```shell
 > const { CONFIG }=require(".");
@@ -197,12 +186,13 @@ Find the cells by Lock and Type script
   }
 ]
 ```
+
 </p>
 </details>
 
 ### Query Cells between Given Block Numbers
 
-The findCellsfromto(lockScript, fromblock, toblock) function fetches cells between `[fromblock, toblock]`. Both `fromBlock` and `toBlock` are included in the query range for the Lumos indexer.
+The following example fetches cells between `[fromblock, toblock]`. Both `fromBlock` and `toBlock` are included in the query options.
 
 ```typescript title="hellolumos/src/querycells.ts"
 export async function findCellsfromto (
@@ -222,11 +212,12 @@ return cells;
 }
 ```
 
-Try the findCellsfromto(lockScript, fromblock, toblock) function in Node.js REPL mode:
+Try the findCellsfromto(lockScript, fromblock, toblock) function in the Node.js REPL mode:
 
 
 <details><summary>CLICK ME</summary>
 <p>
+
 
 
 ```shell
@@ -267,12 +258,13 @@ Find cells from block 0x81 to block 0x84
   },
 ]
 ```
+
 </p>
 </details>
 
 ### Skip Cells
 
-The `skip` parameter represents the number of cells being skipped. 
+The `skip` parameter represents the number of cells being skipped for the Lumos indexer. 
 
 ```typescript title="hellolumos/src/querycells.ts"
 export async function findCellsandSkip(
@@ -291,40 +283,20 @@ return cells;
 };
 ```
 
-Try the findCellsandSkip(lockScript, skip) function in Node.js REPL mode:
-
 The following example skips the first 100 cells and returns the result from the 101st. cell.
 
 <details><summary>CLICK ME</summary>
 <p>
 
 
+
 ```shell
 >await querycells.findCellsandSkip(script,100);
 ...
 ```
+
 </p>
 </details>
-
-### Order Cells by Block Number
-
-To order cells by block number:
-
-```typescript title="hellolumos/src/querycells.ts"
-export async function findCellsinOrderofBlockNum (
-  lockScript: Script,
-  order:"asc"|"desc"
-): Promise<Cell[]> {
-
-const collector = INDEXER.collector({ lock:lockScript, order:order});
-const cells: Cell[] = [];
-console.log("Find Cells in descending", order, "order of block numbers:");
-for await (const cell of collector.collect()) {
-    cells.push(cell);
- }
-return cells;
-};
-```
 
 ### Prefix Search on `args`
 
@@ -350,11 +322,14 @@ return cells;
 
 ### Fine Grained Query for Cells
 
-Fine grained query for cells can be achieved by using `ScriptWrapper` with customized options like `argsLen`.
+Fine grained query for cells can be achieved by using [ScriptWrapper](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/base/index.d.ts#L351) with customized options like `ioType`, `argsLen`.
+
+The `ioType` field is among `input | output | both`.
 
 If the `argsLen` is not specified in the function, the outside `argsLen` config or the default value -1 will be used.
 
 ```typescript title="hellolumos/src/querycells.ts"
+import { ScriptWrapper } from "@ckb-lumos/base";
 export async function finegrainedsearch(
   lockScript: Script,
   typeScript: Script,
@@ -380,6 +355,7 @@ Try the finegrainedsearch(locScript, typeScript, argslen) function in Node.js RE
 <p>
 
 
+
 ```shell
 > const { CONFIG }=require(".");
 > const template = CONFIG.SCRIPTS["DAO"];
@@ -396,13 +372,101 @@ Try the finegrainedsearch(locScript, typeScript, argslen) function in Node.js RE
 </p>
 </details>
 
+### Order Cells by Block Number
+
+The following example creates a new [CellCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L324) and uses the CellCollector to collect cells in order of block numbers for a specific lock script. If the order is not specified, the default order is "asc" for the returned result.
+
+```typescript title="hellolumos/src/querycells.ts"
+import { CellCollector } from "@ckb-lumos/indexer";
+
+export async function findCellsinOrderofBlockNum (
+  lockScript: Script,
+  order:"asc"|"desc"
+): Promise<Cell[]> {
+    
+const collector = new CellCollector(INDEXER, { lock:lockScript, order:order});
+const cells: Cell[] = [];
+console.log("Find Cells in descending", order, "order of block numbers:");
+for await (const cell of collector.collect()) {
+    cells.push(cell);
+ }
+return cells;
+};
+```
+
+The following example gets the live cells for Alice and returns the result in descending order of block numbers.
+
+<details><summary>CLICK ME</summary>
+<p>
+
+
+
+```shell
+> const { accounts, querycells }=require(".");
+> const alice = accounts.ALICE;
+> const script={
+ code_hash: "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+ hash_type: "type",
+ args: alice.ARGS,
+ };
+> await querycells.findCellsinOrderofBlockNum(script,"desc");
+Find Cells in descending desc order of block numbers:
+[
+  {
+    cell_output: { capacity: '0x124462255f12', lock: [Object], type: undefined },
+    out_point: {
+      tx_hash: '0x53d845d810109d6ee4e94df96565100a4126c6fa671db1d237f60eca4a8d2105',
+      index: '0x0'
+    },
+    block_hash: '0x0301f7aa0c2902383e15662008f9886aa4cd628c4948ba737d13894e7334ea54',
+    block_number: '0x805',
+    data: '0x'
+  },
+  {
+    cell_output: { capacity: '0x1244628be0aa', lock: [Object], type: undefined },
+    out_point: {
+      tx_hash: '0xea8f658e6ea08c38f58f6a0af3530396aba0e51e1064db8626ecd38976625c34',
+      index: '0x0'
+    },
+    block_hash: '0xbae60c9c4f54d6f6a970fb76c2fdd226a83dd8724cff082157da559ce6cf507f',
+    block_number: '0x804',
+    data: '0x'
+  },
+  {
+    cell_output: { capacity: '0x1242ecee4f71', lock: [Object], type: undefined },
+    out_point: {
+      tx_hash: '0xe332fb6efba38e16b8fd20a4f47d5fffcf8fcac0c863b0eb30ef75067847936d',
+      index: '0x1'
+    },
+    block_hash: '0xd0c09a6615b30f685dd0b0e627021f89e0f35e9b59c575001d8a11f63436b76c',
+    block_number: '0x803',
+    data: '0x'
+  },
+...
+```
+
+</p>
+</details>
+
 ### Get the Cell Minimal Capacity
 
 A CKB cell has three fields and itself all take up capacity. The cell must have the capacity that is equal or more than the total size of information stored in the cell. For more information, see [Cell](https://nervosnetwork.github.io/docs-new/docs/reference/cell).
 
 For example, the minimum CKB capacity requirement is 61 CKB (6100000000n) for one common transaction, and 102 CKB (10200000000n) for a DAO deposit transaction.
 
-The minimalCellCapacity(fullCell) function of the @ckb-lumos/helpers package can be used to get the minimal capacity for a cell.
+The [minimalCellCapacity(fullCell)](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/helpers/src/index.ts#L44) function of the @ckb-lumos/helpers package can be used to get the minimal capacity for a cell.
+
+```typescript title="hellolumos/src/querycells.ts"
+import { minimalCellCapacity } from "@ckb-lumos/helpers";
+
+export async function getminimalCellCapacity(
+ fullcell:Cell
+) {
+  console.log("The full cell is", fullcell);
+  const result = minimalCellCapacity(fullcell);
+  console.log("The minimal cell capacity is",result);
+};
+```
 
 Try the minimalCellCapacity(fullCell) function in the Node.js REPL mode:
 
@@ -440,7 +504,9 @@ Try the minimalCellCapacity(fullCell) function in the Node.js REPL mode:
 
 ### Get the Mainnet Address from a Lock Script
 
-The generateAddress(script, {config}) function of the @ckb-lumos/helpers package can be used to generate Address for a specific lock script.
+The [generateAddress(script, {config})](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/helpers/src/index.ts#L89) function of the @ckb-lumos/helpers package can be used to generate address for a specific lock script.
+
+The following example generates the mainnet address for a lock script.
 
 ```typescript title="hellolumos/src/querycells.ts"
 import {predefined} from "@ckb-lumos/config-manager";
@@ -470,7 +536,9 @@ The mainnet address for the lockscript is ckb1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k
 
 ### Generate the Testnet Address from a Lock Script
 
-```typescript title="mydapp/src/querycells.ts"
+The following example generates the Testnet address for a lock script.
+
+```typescript title="hellolumos/src/querycells.ts"
 export async function generateTestnetAddress(
   lockScript:Script,
 )  {
@@ -494,7 +562,18 @@ The testnet address for the lockscript is ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k
 
 ### Get the Lock Script from an Address
 
-The parseAddress (address) function of the @ckb-lumos/helpers package can be used to get the lock script from an address.
+The [parseAddress (address)](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/helpers/src/index.ts#L145) function of the @ckb-lumos/helpers package can be used to get the lock script from an address.
+
+**Example**:
+
+```typescript title="hellolumos/src/querycells.ts"
+export async function generatelockFromAddress (
+  address:Address
+)  {
+  const lockscript = parseAddress(address);
+  console.log("The lockscript of the address is", lockscript);  
+}
+```
 
 Try the parseAddress (address, {config}) function in the Node.js REPL mode: 
 
@@ -516,7 +595,7 @@ Try the parseAddress (address, {config}) function in the Node.js REPL mode:
 
 ### Get the Balance of an Account
 
-The getBalancebyLock(lockScript) function uses the Lumos indexer to collect live cells for a specific lock script and calculates the total capacity as the balance of the account. 
+The following example uses the `Indexer.collector` function to collect live cells for a specific lock script and then calculates the total capacity as the balance of the account. 
 
 ```typescript title="hellolumos/src/querycells.ts"
 export async function getBalancebyLock (
@@ -554,7 +633,7 @@ The balance of the account is 41027155650775568n
 
 ### Get Uncommitted Cells
 
-There is one problem with UTXO based blockchains: a pending transaction requires a certain amount of period before the transaction is accepted by the blockchain. During this period, new cells created by the pending transaction will not be available for new transactions. 
+There is one problem with UTXO based blockchains: pending transactions require a certain amount of period before the transactions are accepted by the blockchain. During this period, new cells created by the pending transaction are not available for new transactions. 
 
 The `@ckb-lumos/transaction-manager` package deals with this problem. The transaction manager wraps an indexer instance, and makes sure the cells that are created in pending transactions, are also exposed and available for new transactions. 
 

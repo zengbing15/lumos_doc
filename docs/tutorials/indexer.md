@@ -1,28 +1,36 @@
 ---
-id: database
-title: Set Up the Database
+id: indexer
+title: Set Up the Lumos Indexer
 ---
 Lumos is designed based on the [`Index-Query-Assemble`](https://docs.nervos.org/docs/reference/cell#index-query-assemble-pattern) pattern. The Lumos indexer polls blocks from a CKB node, indexes them and stores the indexed data in a local database to provide optimal query.
 
 <!--Dapps built with Lumos must have an indexer configured and running.-->
 
-The Lumos indexer supports two types of databases:
+Lumos provides the following two types of indexers:
 
-- The RocksDB database: The RocksDB backed indexer is contained in the  `@ckb-lumos/indexer` package. After the `@ckb-lumos/indexer` package is installed, the RocksDB backed indexer can be used directly.
-- The SQL database: The Lumos indexer supports the SQL database of the latest stable versions of PostgreSQL and MySQL. A separate package, the `@ckb-lumos/sql-indexer` package contains the SQL backed indexer. Specific SQL database settings are required before using the SQL backed indexer. 
+- The RocksDB backed indexer: The RocksDB backed indexer is contained in the  `@ckb-lumos/indexer` package. After the `@ckb-lumos/indexer` package is installed, the RocksDB backed indexer can be used directly.
+- The SQL backed indexer: The Lumos indexer supports the SQL database of the latest stable versions of PostgreSQL and MySQL. A separate package, the `@ckb-lumos/sql-indexer` package contains the SQL backed indexer. Specific SQL database settings are required before using the SQL backed indexer. 
 
 **Note**:  The usage for the SQL backed indexer is not fully verified. It is still in the experimental stage.
 
 <!--Note this issue is actually caused since we are still leveraging the old native node module solution. We are also evaluating other solutions, such as [N-API](https://medium.com/@atulanand94/beginners-guide-to-writing-nodejs-addons-using-c-and-n-api-node-addon-api-9b3b718a9a7f), which is based on a stable API, so there is no need to recompile everything for a different Node.js version. We do hope that in later versions, we can convert to N-API so there is not need to deal with inconsistent module versions.-->
 
-## Set Up the RocksDB Database
+## Environment
 
-The following prerequisites apply for setting up the RocksDB database:
+The Lumos indexer can be set up in a DApp on all major platforms, including Linux, Windows and macOS.
+
+The following examples are verified on Ubuntu 20.04.2. Steps on the other platforms are similar and can be adjusted accordingly.
+
+## Set Up the RocksDB Backed Indexer
+
+The following prerequisites apply for setting up the RocksDB backed indexer:
 
 - Node.js and Yarn are installed.
 - Dependencies for build tools are installed.
 
-### Step 1. Install the indexer package as the dependency for the project.
+### Step 1. Install the indexer package.
+
+The following example installs the RocksDB backed indexer as a dependency for a project.
 
 ```shell
 $ cd mydapp
@@ -40,9 +48,11 @@ const INDEXER = new Indexer(CKB_RPC, "./indexed-data");
 INDEXER.startForever();
 ```
 
-## Set Up the SQL Database
+## Set Up the SQL Backed Indexer
 
-The following prerequisites apply for setting up the SQL database:
+To be Updated...
+
+The following prerequisites apply for setting up the SQL backed indexer:
 
 - Node.js and Yarn are installed.
 - Dependencies for build tools are installed.

@@ -2,7 +2,7 @@
 id: installlumos
 title: Install Lumos
 ---
-This guide shows how to install Lumos packages that the DApp requires as dependencies in a project. <!--For the projects that have already listed Lumos packages as dependencies, just run `yarn install` in the projects directly to install the packages.--> 
+This guide shows how to install Lumos packages that a DApp requires as dependencies. <!--For the projects that have already listed Lumos packages as dependencies, just run `yarn install` in the projects directly to install the packages.--> 
 
 ## Prerequisites
 
@@ -15,11 +15,9 @@ The following prerequisites apply for installing Lumos packages as dependencies 
 
 Lumos packages can be installed as dependencies for a Node.js project on all major platforms, including Linux, Windows and macOS.
 
-The following examples are verified on Ubuntu 20.04.2.
+The following examples are verified on Ubuntu 20.04.2. Steps on the other platforms are similar and can be adjusted accordingly.
 
 ## Steps
-
-To install Lumos packages for a project:
 
 ### **Step 1. Navigate into the directory of the project.**
 
@@ -117,4 +115,4 @@ If any gyp error about missing dependencies for node-gyp is encountered, go to c
 
 ### Error While Rebuilding the xxhash Package
 
-node-gyp rebuilds the xxhash package during the `yarn add` or `npm install` process. Incompatible NodeJS may cause the rebuild failure. Reinstall a lower version of NodeJS, for example, NodeJS 12, and then install Lumos packages.
+node-gyp rebuilds the xxhash package during the `yarn add` or `npm install` process. Incompatible Node.js may cause the rebuilding failure. Reinstall a lower version of Node.js, for example, Node.js 12, and then install Lumos packages.

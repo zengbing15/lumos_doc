@@ -1,8 +1,8 @@
 module.exports = {
   someSidebar: {
-    Introduction: ['introduction/intro', 'introduction/prerequisites'],
-	'Getting Started': ['preparation/hellolumos','preparation/setupsystem', 'preparation/installckb','preparation/createaccount'],
-   'Basics': ['tutorials/installlumos','tutorials/config','tutorials/database','tutorials/cells','tutorials/querytransactions','tutorials/buildtransactions','tutorials/managekeys'],
+    Introduction: ['introduction/intro','introduction/lumoscomponents','introduction/prerequisites'],
+	'Getting Started': ['preparation/setupsystem', 'preparation/installckb','preparation/createaccount','preparation/hellolumos'],
+   'Tutorials': ['tutorials/installlumos','tutorials/config','tutorials/indexer','tutorials/querycells','tutorials/querytransactions','tutorials/buildtransactions','tutorials/managekeys'],
 	'Examples': ['tutorials/integratenft']
   },
 };

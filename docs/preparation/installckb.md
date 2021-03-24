@@ -18,9 +18,9 @@ A CKB node can be set up to connect and interact with one of the following CKB n
 
 - **Testnet (Aggron4)**: The Testnet is used to test applications integration and smart contracts in real environment with actual data. 
 
-  For the first time to start running a node on the Testnet, syncing data requires upwards of one hour for the current number of blocks (**1,300,000+**). The real-time block number on the Testnet can be checked on the [CKB Explorer](https://explorer.nervos.org/aggron) page.
+  For the first time to start running a node on the Testnet, syncing data requires a period of time. For example, it takes upwards of one hour for the current number (**1,300,000+**) of blocks depending on the network connection. The real-time block number on the Testnet can be checked on the [CKB Explorer](https://explorer.nervos.org/aggron) page.
 
-  To get CKB capacity on the Testnet, go to [https://faucet.nervos.org](https://faucet.nervos.org/) and paste the Testnet address of the address in the address input box, then click the **Claim** button. For more information, see [Create an Account](../preparation/createaccount).
+  To get CKB capacity for an account on the Testnet, go to [https://faucet.nervos.org](https://faucet.nervos.org/) and paste the Testnet address of the address in the address input box, then click the **Claim** button. For more information, see [Create an Account](../preparation/createaccount).
 
 - **DEV Chain**:  The DEV chain is a local blockchain that provides an efficient and useful development mode for building and testing applications. <!--This is the recommended network for starters and DApp developers.--> 
 
@@ -70,7 +70,7 @@ ckb 0.39.0
 
 ### **Step 3. Choose a CKB network and run the CKB node.**
 
-DEV chain is the recommended network for CKB starters, and to run the [Hello Lumos](../preparation/hellolumos) example. For more information about CKB networks, see [Networks](../preparation/installckb#networks).
+DEV chain is the recommended network for the later examples and CKB starters. For more information about CKB networks, see [Networks](../preparation/installckb#networks).
 
 <Tabs
   defaultValue="dev"
