@@ -13,4 +13,4 @@ The Lumos indexer supports two types of databases:
 
 **Note**:  The usage for the SQL backed indexer is not fully verified. It is still in the experimental stage.
 
-For more information about the setup of the database, see [Set Up the Database](../tutorials/database).
+For more information about the setup of the database, see [Set Up the Lumos Indexer](../tutorials/indexer).

@@ -22,15 +22,15 @@ hellolumos/
 
 All required dependencies for the Hello Lumos example are listed in package.json. To install the other Lumos packages, see [Install Lumos](../tutorials/installlumos).
 
-The index.ts file sets up the config manager and the Lumos indexer for the project. For more information about setting up the config manager, see [Set Up the Config Manger](../tutorials/config). For more information about setting up the Lumos indexer, see [Set Up the Lumos Indexer](../tutorials/indexer).
+The connection with the CKB node is established by the setup of the config manager and the Lumos indexer in the <u>index.ts</u> file. The Lumos indexer indexes cells locally to provide cells for queries and transaction requests. For more information about setting up the config manager, see [Set Up the Config Manger](../tutorials/config). For more information about setting up the Lumos indexer, see [Set Up the Lumos Indexer](../tutorials/indexer).
 
-The functions in the source files, for example, querying on cells in querycells.ts, building transactions in buildTXs.ts are all facilitated based on the Lumos framework.
+The functions like querying on cells in <u>querycells.ts</u>, building transactions in <u>buildTXs.ts</u> are all facilitated based on the Lumos framework.
 
-The querycells.ts file implements several functions for querying on cells. For more information about querying on cells by using Lumos, see [Query on Cells](../tutorials/querycells).
+The <u>querycells.ts</u> file implements several sample functions by utilizing Lumos utilities for querying on cells. For more information, see [Query on Cells](../tutorials/querycells).
 
-The querytransactions.ts file implements several functions for querying on transactions. For more information about querying on transactions by using Lumos, see [Query on Transactions](../tutorials/querytransactions).
+The <u>querytransactions.ts</u> file implements several sample functions by utilizing Lumos utilities for querying on transactions. For more information, see [Query on Transactions](../tutorials/querytransactions).
 
-The buildTXs.ts file implements several functions for assembling common transfer transactions, DAO deposit and withdraw transactions. For more information about building transactions by using Lumos, see [Assembling Transactions](../tutorials/buildtransactions).
+The <u>buildTXs.ts</u> file implements several sample functions by utilizing Lumos utilities for assembling common transfer transactions, DAO deposit and withdraw transactions. For more information, see [Assembling Transactions](../tutorials/buildtransactions).
 
 This guide will help you to get a general idea about the usage of Lumos through a common transaction. The full code of the example can be found here. 
 
@@ -39,7 +39,7 @@ This guide will help you to get a general idea about the usage of Lumos through 
 The following Prerequisites apply for walking through this guide:
 
 - The development environment is set up. For more information, see [Set Up the Development Environment](../preparation/setupsystem).
-- The CKB node is installed and started. For more information, see [Install a CKB Node](../preparation/installckb).
+- The CKB node is installed and started on DEV chain. For more information, see [Install a CKB Node](../preparation/installckb).
 - Two accounts, Alice and Bob are created. Alice is specified as the miner to receive mining rewards that is used for transactions. For more information, see [Create Accounts](../preparation/createaccount).
 
 ## Environment
@@ -195,70 +195,45 @@ Step 2. Get the balance for the accounts of Alice and Bob.
 
 ```shell
 > const balance1 = querycells.getBalancebyLock(script1);
-> The balance of the account is 5908399726984497n
+> The balance of the account is 1386763373620166n
 ```
 
 ```shell
 > const balance2 = querycells.getBalancebyLock(script2);
-> The balance of the account is 000000000000n
+> The balance of the account is 0n
 ```
 
 Step 3. Assemble a common transfer transaction. 
 
 The buildCommonTx() function performs the following actions: 
 
-- Create a new Transaction Skeleton.
-- Add transfer action to the skeleton by using `common.transfer`.
-- Add pay fee for the transaction by using `common.payFee`.
-- Prepare signing entries by using `common.prepareSigningEntries`.
+- Create a new `TransactionSkeleton` for the transfer action with the `common.transfer` function.
+- Add the pay fee for the transaction with the `common.payFee` function.
+- Prepare signing entries with the `common.prepareSigningEntries` function.
+- Sign and seal the transaction with the `signandSeal` function.
+- Send the transaction with the `rpc.send_transaction` function. 
 
 For more information about assembling a transaction, see [Assemble Transactions](../tutorials/buildtransactions).
 
 ```shell
-> const txskeleton = await buildTXs.buildCommonTx(alice.ADDRESS, bob.ADDRESS,20000000000n,10000000n);
+> const txskeleton = await buildTXs.buildCommonTx(alice.ADDRESS, bob.ADDRESS,20000000000n,10000000n,alice.PRIVATE_KEY);
+The transaction hash is 0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e
 ```
 
-Step 4. Sign the transaction.
+Step 4. Check the transaction status.
 
 ```shell
-> const message = txskeleton.get("signingEntries").get(0)?.message;
-> console.log(message);
-0x7b9f14c93c1105213ab437f157460aa93963babff4cb03553e7dde6e72cbaf19
-> const privatekey1 = alice.PRIVATE_KEY;
-> const { key }=require("@ckb-lumos/hd");
-> const Sig = key.signRecoverable(message, privatekey1);
-> console.log(Sig);
-0x709026a75b82aca580d758c62eceaa9982b81057146a6c0205db3ee7b5581e3201d3ccd5845ea6d25b9b977f98f7c1c74efe4c38292b654d03fa2d037fa0777b01
+> await querytransactions.getTXStatus("0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e");
+The transaction status is pending
 ```
 
-Step 5. Seal the transaction.
+The CKB miner must be started to enable the transaction to be committed. For more information about transaction status, see [Get Transaction Status](../tutorials/querytransactions#get-the-transaction-status).
+
+Step 5. Check the new balance of Bob.
+
+When the transaction is committed, the new balance appears in the result.
 
 ```shell
-> const { sealTransaction }=require("@ckb-lumos/helpers");
-> const tx = sealTransaction(txskeleton, [Sig]);
-```
-
-Step 6. Send the transaction.
-
-```shell
-> const { RPC }=require("@ckb-lumos/rpc");
-> const rpc = new RPC("http://127.0.0.1:8114");
-> const hash = await rpc.send_transaction(tx);
-> console.log(hash);
-0xe332fb6efba38e16b8fd20a4f47d5fffcf8fcac0c863b0eb30ef75067847936d
-```
-
-Step 7. Check the transaction status.
-
-```shell
-> const txWithStatus= await rpc.get_transaction(hash);
-> console.log(txWithStatus.tx_status.status);
-committed
-```
-
-Step 8. Check the new balance of Bob.
-
-```shell
-> const newbalance = querycells.getBalancebyLock(script2);
+> await querycells.getBalancebyLock(script2);
 > The balance of the account is 20000000000n
 ```

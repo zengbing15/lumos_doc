@@ -20,7 +20,7 @@ Lumos components (packages) can be classified into several groups according to t
 
   - **Lumos Indexer**: The Lumos indexer (`@ckb-lumos/indexer` and `@ckb-lumos/sql-indexer`) is a CKB cell indexer that fulfills the [Index-Query-Assemble](https://docs.nervos.org/docs/reference/cell#index-query-assemble-pattern) pattern. The Lumos indexer indexes cells and maintains a local database of the cells that provides an optimal way for querying cells.
 
-    For more information, see [Set Up the Database](../tutorials/database).
+    For more information, see [Set Up the Lumos Indexer](../tutorials/indexer).
 
   - **Transaction Manager**: The transaction manager (`@ckb-lumos/transaction-manager`) can serve as an optional cell provider that enables the output cells of pending transactions to be usable for assembling new transactions.
 

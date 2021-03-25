@@ -29,6 +29,8 @@ The [CellCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c28
 
 ### Query Cells by Lock Script
 
+Example: <u>hellolumos/src/querycells.ts/findCellsbylock()</u>
+
 The following example collects the cells for a specific lock script.
 
 ```typescript title="hellolumos/src/querycells.ts"
@@ -58,7 +60,7 @@ export const INDEXER = new Indexer(CKB_RPC, "./indexed-data");
 INDEXER.startForever();
 ```
 
-Try the findCellsbylock(lockScript) function in the Node.js REPL mode:
+Try the `findCellsbylock` function in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
@@ -129,6 +131,8 @@ Find the cells by lock script:
 
 ### Query Cells by Specific `lock` and `type` Script
 
+Example: <u>hellolumos/src/querycells.ts/findCellsbyLockandType()</u>
+
 The following example collects the cells for a specific lock script and type script, and returns the cells as the result.
 
 ```typescript title="hellolumos/src/querycells.ts"
@@ -147,7 +151,7 @@ return cells;
 };
 ```
 
-Try the findCellsbyLockandType(lockScript, typeScript) function in the Node.js REPL mode:
+Try the `findCellsbyLockandType` function in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
@@ -192,7 +196,9 @@ Find the cells by Lock and Type script
 
 ### Query Cells between Given Block Numbers
 
-The following example fetches cells between `[fromblock, toblock]`. Both `fromBlock` and `toBlock` are included in the query options.
+Example: <u>hellolumos/src/querycells.ts/findCellsfromto()</u>
+
+The example fetches cells between `[fromblock, toblock]`. Both `fromBlock` and `toBlock` are included in the query options.
 
 ```typescript title="hellolumos/src/querycells.ts"
 export async function findCellsfromto (
@@ -212,7 +218,7 @@ return cells;
 }
 ```
 
-Try the findCellsfromto(lockScript, fromblock, toblock) function in the Node.js REPL mode:
+Try the `findCellsfromto` function in the Node.js REPL mode:
 
 
 <details><summary>CLICK ME</summary>
@@ -264,6 +270,8 @@ Find cells from block 0x81 to block 0x84
 
 ### Skip Cells
 
+Example: <u>hellolumos/src/querycells.ts/findCellsandSkip()</u>
+
 The `skip` parameter represents the number of cells being skipped for the Lumos indexer. 
 
 ```typescript title="hellolumos/src/querycells.ts"
@@ -304,6 +312,8 @@ The default `argsLen` is -1, that means the full slice of original args is passe
 
 **Note**: It is recommended to specify explicit length for the `argsLen` parameter. For example, the length is 20 in normal scenarios and 28 in the multisig scenario for the lock script.  When the length is not certain, the `argsLen` parameter can be set as `any`. But there is performance lost when using `any` rather than explicit length.
 
+Example: <u>hellolumos/src/querycells.ts/findCellsbyPrefix()</u>
+
 ```typescript title="hellolumos/src/querycells.ts"
 export async function findCellsbyPrefix(
   lockScript: Script,
@@ -328,6 +338,8 @@ The `ioType` field is among `input | output | both`.
 
 If the `argsLen` is not specified in the function, the outside `argsLen` config or the default value -1 will be used.
 
+Example: <u>hellolumos/src/querycells.ts/finegrainedsearch()</u>
+
 ```typescript title="hellolumos/src/querycells.ts"
 import { ScriptWrapper } from "@ckb-lumos/base";
 export async function finegrainedsearch(
@@ -349,7 +361,7 @@ return cells;
 };
 ```
 
-Try the finegrainedsearch(locScript, typeScript, argslen) function in Node.js REPL mode:
+Try the `finegrainedsearch` function in Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
@@ -374,7 +386,9 @@ Try the finegrainedsearch(locScript, typeScript, argslen) function in Node.js RE
 
 ### Order Cells by Block Number
 
-The following example creates a new [CellCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L324) and uses the CellCollector to collect cells in order of block numbers for a specific lock script. If the order is not specified, the default order is "asc" for the returned result.
+Example: <u>hellolumos/src/querycells.ts/findCellsinOrderofBlockNum()</u>
+
+The example creates a new [CellCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L324) and uses the CellCollector to collect cells in order of block numbers for a specific lock script. If the order is not specified, the default order is "asc" for the returned result.
 
 ```typescript title="hellolumos/src/querycells.ts"
 import { CellCollector } from "@ckb-lumos/indexer";
@@ -456,6 +470,8 @@ For example, the minimum CKB capacity requirement is 61 CKB (6100000000n) for on
 
 The [minimalCellCapacity(fullCell)](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/helpers/src/index.ts#L44) function of the @ckb-lumos/helpers package can be used to get the minimal capacity for a cell.
 
+Example: <u>hellolumos/src/querycells.ts/getminimalCellCapacity()</u>
+
 ```typescript title="hellolumos/src/querycells.ts"
 import { minimalCellCapacity } from "@ckb-lumos/helpers";
 
@@ -468,36 +484,35 @@ export async function getminimalCellCapacity(
 };
 ```
 
-Try the minimalCellCapacity(fullCell) function in the Node.js REPL mode:
+Try the `getminimalCellCapacity` function in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
 
 ```shell
-> const { minimalCellCapacity }= require("@ckb-lumos/helpers");
-> const fullcell= (await querycells.findCellsbylock(script))[0];
-> console.log(fullcell);
-{
+> const depositcell ={
   cell_output: {
-    capacity: '0x1247953509b2',
+    capacity: '0x4a817c800',
     lock: {
       code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
       hash_type: 'type',
       args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
     },
-    type: undefined
+    type: {
+      code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
+      hash_type: 'type',
+      args: '0x'
+    }
   },
   out_point: {
-    tx_hash: '0xe8655b071e3eeb94d73c2307295bbe88431e74d9091bd8ec081404a9ac485251',
+    tx_hash: '0xa48a3a34bf2c1b660722cab0df7be13a85222d282966e185fde785647b5a7944',
     index: '0x0'
   },
-  block_hash: '0x4feda2b0950c3137d4a2128cbe7b25f9dd255c3468007a6b10118f2fccd855bb',
-  block_number: '0x26',
-  data: '0x'
+  block_hash: '0x1a59e0832a7123a1b134496e799c0257023c2cec29a38b0ad76c7447931ed25e',
+  block_number: '0x76e',
+  data: '0x0000000000000000'
 }
-> const minimalcapacity = await minimalCellCapacity(fullcell);
-> console.log(minimalcapacity);
-6100000000n
+The minimal cell capacity is 10200000000n
 ```
 </p>
 </details>
@@ -506,7 +521,9 @@ Try the minimalCellCapacity(fullCell) function in the Node.js REPL mode:
 
 The [generateAddress(script, {config})](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/helpers/src/index.ts#L89) function of the @ckb-lumos/helpers package can be used to generate address for a specific lock script.
 
-The following example generates the mainnet address for a lock script.
+Example: <u>hellolumos/src/querycells.ts/generateMainnetAddress()</u>
+
+The example generates the Mainnet address for a lock script.
 
 ```typescript title="hellolumos/src/querycells.ts"
 import {predefined} from "@ckb-lumos/config-manager";
@@ -520,7 +537,7 @@ export async function generateMainnetAddress(
   console.log("The mainnet address for the lockscript is", mainnetAddress);  
 }
 ```
-Try the generateMainnetAddress(lockScript) function in the Node.js REPL mode:
+Try the `generateMainnetAddress` function in the Node.js REPL mode:
 
 
 <details><summary>CLICK ME</summary>
@@ -548,7 +565,7 @@ export async function generateTestnetAddress(
 }
 ```
 
-Try the generateTestnetAddress(lockScript) function in the Node.js REPL mode:
+Try the `generateTestnetAddress` function in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
@@ -575,7 +592,7 @@ export async function generatelockFromAddress (
 }
 ```
 
-Try the parseAddress (address, {config}) function in the Node.js REPL mode: 
+Try the `parseAddress` function in the Node.js REPL mode: 
 
 <details><summary>CLICK ME</summary>
 <p>
@@ -619,13 +636,13 @@ export async function getBalancebyLock (
 }
 ```
 
-Try the getBalancebyLock(lockScript) function in the Node.js REPL mode:
+Try the `getBalancebyLock` function in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
 
 ```shell
-> const balance = await querycells.getBalancebyLock(script);
+> await querycells.getBalancebyLock(script);
 The balance of the account is 41027155650775568n
 ```
 </p>
@@ -656,4 +673,64 @@ export async function getUncommittedCells(
   return cells;
 }
 ```
+
+### Fetch Cells in locktimepool
+
+Lumos provides the locktimepool module for the cells with a lock period. Now the locktimepool module supports DAO withdrawn cells and Multisig cells. 
+
+The following example uses the [locktimepool.Cellcollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/locktime_pool.ts#L57) class to collect all the withdrawn cells and Multisig cells of an account and returns the collected cells as the result. 
+
+```typescript title="hellolumos/src/querycells.ts"
+import {locktimePool} from "@ckb-lumos/common-scripts";
+
+export async function locktimepoolCells(
+  frominfo: string,
+):Promise<Cell[]> {
+  const collector = new locktimePool.CellCollector(frominfo,INDEXER);
+  const cells: Cell[] = [];
+  for await (const cell of collector.collect()) { 
+      cells.push(cell);
+      console.log(cell); }
+   return cells;
+}
+```
+
+Try the `locktimepoolCells` function in the Node.js REPL mode:
+
+<details><summary>CLICK ME</summary>
+<p>
+
+
+```shell
+> await querycells.locktimepoolCells(alice.ADDRESS);
+{
+  cell_output: {
+    capacity: '0x4a818dbb9',
+    lock: {
+      code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+      hash_type: 'type',
+      args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
+    },
+    type: {
+      code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
+      hash_type: 'type',
+      args: '0x'
+    }
+  },
+  out_point: {
+    tx_hash: '0x74104fe19b92c48ea8dbc16180740f6274ec9135e8aaea9c6a9d01ba2d76b08d',
+    index: '0x0'
+  },
+  block_hash: '0x3cb8bd2b527265a3f9a9ee067c4659a756681e3f065e13a99498b11a34338a6a',
+  block_number: '0x772',
+  data: '0x6e07000000000000',
+  since: '0x20000a0002000172',
+  depositBlockHash: '0x1a59e0832a7123a1b134496e799c0257023c2cec29a38b0ad76c7447931ed25e',
+  withdrawBlockHash: '0x3cb8bd2b527265a3f9a9ee067c4659a756681e3f065e13a99498b11a34338a6a',
+  sinceValidationInfo: undefined
+}
+```
+
+</p>
+</details>
 

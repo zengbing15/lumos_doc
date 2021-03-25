@@ -10,21 +10,21 @@ The following table lists the elements of an account that are useful for the DAp
 | Element     | Description                                                  |
 | ------------ | ------------------------------------------------------------ |
 | Lock&nbsp;script<br/> | The lock script consists of three key parameters, including *code_hash*, *hash_type* and *args*.<br/>Example:<br/><samp>{<br/>&nbsp;code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',<br/> &nbsp;hash_type:&nbsp;'type',<br/>&nbsp;args: '0x82be41cf167110e6c00e79009a3fd4d9abe8c65a'<br/>}</samp> |
-| Address      | CKB address packages lock script into a single line, verifiable, and human read friendly format.<br/>Example:<br/><samp>ckt1qyqg90jpeut8zy8xcq88jqy68l2dn2lgcedqd7ye7n</samp> |
-| Private&nbsp;key | A string of letters and numbers that is used to prove ownership of cryptocurrency or digital assets, allowing them to be sent to other payment addresses. A private key is normally stored in a wallet.<br/>A private key must be kept secret at all times. A private key works similarly to a key to a safe containing your cryptocurrency. Anyone with the key has the ability to open the safe and take the contents. |
-| CKB&nbsp;capacity | The total CKB capacity of the live cells of an account.<br/>**Note**: If an account wants to perform transaction actions like transferring CKB to other accounts, generating tokens, the account must have enough CKB capacity that is equal or more than the minimal CKB requirement of a transaction.<br/>For example, the minimum CKB capacity requirement is 61 CKB (6100000000n) for one common transaction, and 102 CKB (10200000000n) for a DAO deposit transaction. |
+| Address      | A CKB address packages a lock script into a single line in a verifiable and human-readable format.<br/>Example:<br/><samp>ckt1qyqg90jpeut8zy8xcq88jqy68l2dn2lgcedqd7ye7n</samp> |
+| Private&nbsp;key | A private key is a string of letters and numbers that is normally stored in a wallet. It proves the ownership of cryptocurrencies or digital assets and allows the user to send his/her cryptocurrency or digital assets to other payment addresses.<br/>A private key must be kept secret at all times. Anyone with the key has the ability to access the cryptocurrency or digital assets. |
+| CKB&nbsp;capacity | CKB capacity of an account is the total CKB capacity of the live cells of an account.<br/>**Note**: If an account wants to perform transaction actions like transferring CKB to other accounts, the account must have enough CKB capacity that is equal or more than the minimal CKB requirement of a transaction.<br/>For example, the minimum CKB capacity requirement is 61 CKB (6100000000n) for one common transaction, and 102 CKB (10200000000n) for a DAO deposit transaction. |
 
 This guide will prepare two CKB accounts, Alice and Bob for later usage in the [Hello Lumos](../preparation/hellolumos) example.<!--Create an account by using ckb-cli.--> <!--Get the private key of an account.--><!--Get CKB capacity for an account.--><!--Check the capacity of an account.-->
 
 ## Prerequisites 
 
-The following prerequisites apply for creating accounts to be used in the [Hello Lumos](../preparation/hellolumos) example:
+The following prerequisites apply for creating accounts:
 
 - The CKB node is installed and running. 
 
 ## Create the accounts by using ckb-cli.
 
-ckb-cli is included in the CKB pre-built installer package. It is a command line tool that provides the functions of rpc requests, creating CKB addresses, managing wallets, sending transactions, and depositing to Nervos DAO etc. These functions can help with debugging and testing during the development process. For more information, see [ckb-cli Sub Commands](https://github.com/nervosnetwork/ckb-cli/wiki/Sub-Commands).
+**ckb-cli** is included in the CKB pre-built installer package. It is a command line tool that provides the functions of rpc requests, creating CKB addresses, managing wallets, sending transactions, and depositing to Nervos DAO etc. These functions can help with debugging and testing during the development process. For more information, see [ckb-cli Sub Commands](https://github.com/nervosnetwork/ckb-cli/wiki/Sub-Commands).
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -45,7 +45,7 @@ $ tar xzf ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
 $ export PATH=$PATH:$TOP/ckb_v0.39.0_x86_64-unknown-linux-gnu
 ```
 
-<p>Verify the binaries are working and check versions.</p>
+<p>Verify the tool is working.</p>
 
 ```shell
 $ ckb-cli -V
@@ -150,16 +150,22 @@ message: "Success exported account as extended privkey to: \"bob\", please use t
 ```
 
 </TabItem>
- <TabItem value="windows"><p><b>Step 1. Download the CKB Pre-built Installer Package and unzip the ckb-cli tool into C:\ckb.</b></p>
+ <TabItem value="windows"><p><b>Step 1. Download the CKB pre-built installer package.</b></p>
 
 <p>This example downloads <a href="https://github.com/nervosnetwork/ckb/releases/download/v0.39.0/ckb_v0.39.0_x86_64-pc-windows-msvc.zip">v0.39.0</a>. All releases can be found on the <a href="https://github.com/nervosnetwork/ckb/releases">CKB releases</a> page.</p>
-
 <p>If the package is already downloaded, go to Step 2 directly.</p>
 
-<p>Verify the binaries are working and check versions.</p>
+```shell
+C:\curl -LO https://github.com/nervosnetwork/ckb/releases/download/v0.39.0/ckb_v0.39.0_x86_64-pc-windows-msvc.zip
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   646  100   646    0     0    646      0  0:00:01 --:--:--  0:00:01   861
+100 15.8M  100 15.8M    0     0  1472k      0  0:00:11  0:00:11 --:--:-- 1645k
+```
+
+<p>Unzip the files into the C:\ckb folder and verify the tool is working.</p>
 
 ```
-cd C:\ckb 
 C:\ckb> ckb-cli -V
 ckb-cli 0.39.0
 ```
@@ -213,11 +219,9 @@ The process for getting CKB capacity is different for the accounts on different 
     To start the miner, open a new terminal and run the following commands:
 
     ```shell
-    $ export TOP=$(pwd)
-    $ export PATH=$PATH:$TOP/ckb_v0.40.0_x86_64-unknown-linux-gnu.tar.gz
-    $ ckb miner -C devnet
+    C:\ckb> ckb miner -C devnet
     ```
-
+    
   - If the CKB node is installed by Tippy, specify **Block Assembler Lock Arg** in the Edit Chain form with the `lock_arg` of the account.
 
     After the miner is specified, restart the CKB node and start the CKB miner on the Tippy dashboard.
@@ -228,7 +232,7 @@ The process for getting CKB capacity is different for the accounts on different 
 
 <b>Step 5. Check the Capacity of the Account of Alice.</b>
 
-To check the capacity of the account, execute the `ckb-cli wallet get-capacity --address <the Testnet address of the account>` command as follows:
+To check the capacity of the account, execute the `ckb-cli wallet get-capacity --address <the Testnet address of the account> command` as follows:
 
 ```shell
 $ ckb-cli wallet get-capacity --address "ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf"

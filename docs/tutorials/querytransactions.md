@@ -305,13 +305,24 @@ const lock:ScriptWrapper = {
 </p>
 </details>
 
-### Get the Transaction Status.
+### Get Transaction Status
+
+A transaction can be in one of the following status:
+
+- A **pending** result means the node is aware of the transaction but the transaction is not confirmed yet. 
+- A **proposed** result means the node sees a transaction included in a block candidate that is not yet mined. 
+- A **committed** result means that the block involving the transaction has been mined and is officially on chain.
 
 ```typescript title="hellolumos/src/querytransactions.ts"
 import { RPC } from "@ckb-lumos/RPC";
 const rpc = new RPC("http://127.0.0.1:8114");
-const txWithStatus= await rpc.get_transaction(hash);
-console.log("Transaction status is:",txWithStatus.tx_status.status); 
+
+export async function getTXStatus  (
+  txHash: string
+)   {
+  const txWithStatus = await rpc.get_transaction(txHash);
+  const status = txWithStatus.tx_status.status;
+  console.log("The transaction status is",status);
+} 
 ```
 
-### 
