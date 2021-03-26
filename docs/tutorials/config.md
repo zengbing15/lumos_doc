@@ -29,7 +29,7 @@ A DApp can set up the config manger by one of the following variables:
 The following prerequisites apply for setting up the config manager:
 
 - Node.js is installed.
-- Lumos packages are installed.
+- The @ckb-lumos/config-manager package is installed.
 
 ## Set Up the Config Manager by Using Pre-defined Configurations
 

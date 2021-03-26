@@ -2,19 +2,7 @@
 id: buildtransactions
 title: Assemble Transactions
 ---
-<!--The goal and core functionality of a DApp built with Lumos is to build transactions in response to user requests.CKB programming model is flexible but it significantly complicates transaction assembling. -->
-
-Lumos provides the `TransactionSkeleton` interface that significantly simplifies transaction assembling. 
-
-<!--Different scripts used in transaction inputs will require separate message generation, and also separate signing steps.--><!--Some cells might require special argument setup in witness, due to type script validation rules.--><!--Coordination might be required, since both lock script and type script in a cell might require arguments in the same witness construct.-->
-
-## TransactionSkeleton
-
-Each transaction skeleton corresponds to an action, and will be built into a single transaction that is ready to be submitted to CKB. [TransactionSkeleton](https://github.com/nervosnetwork/lumos/blob/develop/packages/helpers/src/index.ts#L212) supports transaction assembling with the following conveniences:
-
-- A well designed component must be able to query and include cells automatically to provide capacities required by the transaction.
-- Individual script logic must be managed and respected by the general transaction skeleton.
-- Scripts sharing the same behavior must be managed together in a unified interface. Developers can rely on abstractions instead of catering for every single detail.
+The goal and core functionality of a DApp built on top of Lumos is to build transactions in response to user requests. Lumos provides the [TransactionSkeleton](https://github.com/nervosnetwork/lumos/blob/develop/packages/helpers/src/index.ts#L212) interface that significantly simplifies the transaction assembling process. Each transaction skeleton corresponds to an action, and will be built into a single transaction that is ready to be submitted to CKB. <!--[TransactionSkeleton](https://github.com/nervosnetwork/lumos/blob/develop/packages/helpers/src/index.ts#L212) supports transaction assembling with the following conveniences:--><!--A well designed component must be able to query and include cells automatically to provide capacities required by the transaction.--><!--Individual script logic must be managed and respected by the general transaction skeleton.--><!--Scripts sharing the same behavior must be managed together in a unified interface. Developers can rely on abstractions instead of catering for every single detail.-->
 
 ## General Workflow for Assembling a Transaction
 
@@ -295,7 +283,8 @@ Try the `deposit2DAO` function in the Node.js REPL mode:
 <p>
 
 ```shell
-C:\hellolumos> node --experimental-repl-await
+$ cd hellolumos
+$ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
 Type ".help" for more information.
 > const {accounts,buildTXs} = require(".");
@@ -411,7 +400,8 @@ Try the `listDAOCells` function in the Node.js REPL mode:
 
 
 ```shell
-C:\hellolumos> node --experimental-repl-await
+$ cd hellolumos
+$ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
 Type ".help" for more information.
 > const {accounts,buildTXs} = require(".");
@@ -474,7 +464,7 @@ export async function withdrawfromDAO(
 
 The withdrawfromDAO() function creates a transaction skeleton and then uses the [dao.withdraw](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/dao.ts#L225) function to withdraw a deposited cell.
 
-The following steps like adding transaction fee, preparing signing entries, signing and sealing the transaction, are the same as the previous examples. For more information, see the steps in the common transaction and the deposit transaction. 
+The steps like adding transaction fee, preparing signing entries, signing and sealing the transaction, are the same as the previous examples. For more information, see the steps in the common transaction and the deposit transaction. 
 
 Try the `withdrawfromDAO` function in the Node.js REPL mode:
 
@@ -483,7 +473,8 @@ Try the `withdrawfromDAO` function in the Node.js REPL mode:
 
 
 ```shell
-C:\hellolumos> node --experimental-repl-await
+$ cd hellolumos
+$ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
 Type ".help" for more information.
 > const {accounts,buildTXs} = require(".");
@@ -530,11 +521,11 @@ The transaction hash is 0x00df109343e2335a4e91375b37b575373902660be5f0d3fd0c2281
 
 ### Unlock a Withdrawn Cell
 
-A withdrawn can be unusable for new transactions until the cell is unlocked.
+A withdrawn cell must be unlocked to make it usable and live cells for new transactions.
 
-> The default lock period is 180 epochs. A withdrawn cell can only be successfully unlocked after the lock period of the cell passed. Otherwise the unlock function will throw an error like "server error {"code":-302,"message":"TransactionFailedToVerify: Immature(Inputs[0]): the transaction is immature because of the since requirement","data":"Immature { index: 0 }"}". 
+> A withdrawn cell can only be successfully unlocked when the epoch reaches the number that fulfills the lock period meaning that the lock period of the cell has passed. Otherwise the unlock function will throw an error like "... the transaction is immature because of the since requirement...". 
 >
-> The value of the `since` field in the withdraw transaction information is the starting epoch of the withdrawn cell.
+> The epoch number that fulfills the lock period = 180 (the default lock period) + <var>the epoch number of the deposit transaction</var> + <var>the epoch index of the deposit transaction</var>/<var>epoch length</var>. 
 
 Example: <u>hellolumos/src/buildTXs.ts/unlockWithdraw()</u>
 
@@ -559,15 +550,53 @@ export async function unlockWithdraw(
 }
 ```
 
- Try the `unlockWithdraw` function in the Node.js REPL mode:
+The following example fetches the epoch information of the deposit transaction.  It firstly gets the block hash of this transaction and then uses the block hash to get the block information. The epoch information "0xa0009000008 {number: 8, index: 9, length: 10}" is located in the block header. So the epoch that fulfills the lock period for the withdrawn cell is (180+8+9/10) .
+
+```shell
+> const {RPC}=require("@ckb-lumos/rpc");
+> const rpc = new RPC("http://127.0.0.1:8114");
+> const tx = await rpc.get_transaction("0x58f49e100a00742396fa66bcd2541fadcae549b56e75350efaa166d5d5bfacdc");
+> console.log(tx.tx_status.block_hash);
+0xc9a0077484dbcfa990e0d12b94d137723aec6a9f3ae44e8ed05e19084a076549
+> const block = await rpc.get_block("0xc9a0077484dbcfa990e0d12b94d137723aec6a9f3ae44e8ed05e19084a076549");
+undefined
+> console.log(block.header.epoch);
+0xa0009000008 // {number: 8, index: 9, length: 10}
+```
+
+Try the `unlockWithdraw` function in the Node.js REPL mode.
 
 <details><summary>CLICK ME</summary>
 <p>
 
 
 ```shell
-> await querytransactions.getTXStatus("0x00df109343e2335a4e91375b37b575373902660be5f0d3fd0c2281b4425c1a7e");
-The transaction status is committed
+> await querytransactions.getTXStatus("0x00df109343e2335a4e91375b37b575373902660be5f0d3fd0c2281b4425c1a7e"); // To check if the withdraw transaction is committed.
+The transaction status is committed 
+
+//The deposit cell is from the result of buildTXs.listDAOCells(alice.ADDRESS,"deposit") that is executed before the cell is withdrawn.
+> const depositcell = { 
+	   cell_output: {
+	     capacity: '0x4a817c800',
+	     lock: {
+	       code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+	       hash_type: 'type',
+	       args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
+	     },
+	     type: {
+	       code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
+	       hash_type: 'type',
+	       args: '0x'
+	     }
+	   },
+	   out_point: {
+	     tx_hash: '0x58f49e100a00742396fa66bcd2541fadcae549b56e75350efaa166d5d5bfacdc',
+	     index: '0x0'
+	   },
+	   block_hash: '0xc9a0077484dbcfa990e0d12b94d137723aec6a9f3ae44e8ed05e19084a076549',
+	   block_number: '0x59',
+	   data: '0x0000000000000000'
+	 };
 > await buildTXs.listDAOCells(alice.ADDRESS,"withdraw");
 List the withdraw cells for the address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
 {
@@ -614,7 +643,7 @@ List the withdraw cells for the address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8q
   block_number: '0x5f',
   data: '0x5900000000000000'
 };
-> await buildTXs.unlockWithdraw(fullcell,withdrawcell,alice.ADDRESS, alice.ADDRESS,10000000n,alice.PRIVATE_KEY);
+> await buildTXs.unlockWithdraw(depositcell,withdrawcell,alice.ADDRESS, alice.ADDRESS,10000000n,alice.PRIVATE_KEY);
 signingEntries: [
   {
     type: 'witness_args_lock',
@@ -631,6 +660,12 @@ The transaction hash is 0xe41b9a78b96719ac4e75eed1359d804e97812131ed961be0c33f27
 </details>
 
 ### Transfer CKB with locktimepool
+
+Lumos provides locktimepool for the cells that has a lock period.
+
+> The default lock period is 180 epochs. A withdrawn cell can only be successfully unlocked after the lock period of the cell passed. Otherwise the transfer function will throw an error like "Uncaught Error: Not enough capacity in from addresses!". 
+>
+> The value of the `since` field in the withdraw transaction information is the starting epoch of the withdrawn cell.
 
 Example: <u>hellolumos/src/buildTXs.ts/locktimepoolTX()</u>
 
@@ -668,6 +703,29 @@ Try the `locktimepoolTX` function in the Node.js REPL mode:
 
 
 ```shell
+> await buildTXs.deposit2DAO(alice.ADDRESS,20000000000n,10000000n,alice.PRIVATE_KEY);
+...
+The transaction hash is 0xa48a3a34bf2c1b660722cab0df7be13a85222d282966e185fde785647b5a7944
+
+// Check the deposit epoch
+> const txdeposit = await rpc.get_transaction("0xa48a3a34bf2c1b660722cab0df7be13a85222d282966e185fde785647b5a7944");
+> console.log(tx.tx_status.block_hash);
+0x1a59e0832a7123a1b134496e799c0257023c2cec29a38b0ad76c7447931ed25e
+> const block = await rpc.get_block("0xc9a0077484dbcfa990e0d12b94d137723aec6a9f3ae44e8ed05e19084a076549");
+> console.log(block.header.epoch);
+0xa00020000be // {number: 190, index: 2, length: 10}, so the epoch number that the cell can be unlocked is (180+190+2/10).
+
+//withdraw the cell from DAO
+> await buildTXs.withdrawfromDAO(depositcell,alice.ADDRESS,10000000n,alice.PRIVATE_KEY);
+...
+The transaction hash is 0x74104fe19b92c48ea8dbc16180740f6274ec9135e8aaea9c6a9d01ba2d76b08d
+'0x74104fe19b92c48ea8dbc16180740f6274ec9135e8aaea9c6a9d01ba2d76b08d'
+>
+//Check the withdraw transaction status.
+> await querytransactions.getTXStatus("0x74104fe19b92c48ea8dbc16180740f6274ec9135e8aaea9c6a9d01ba2d76b08d");
+The transaction status is committed
+>
+//Check the cell in locktimepool
 > await querycells.locktimepoolCells(alice.ADDRESS);
 {
   cell_output: {
@@ -690,13 +748,13 @@ Try the `locktimepoolTX` function in the Node.js REPL mode:
   block_hash: '0x3cb8bd2b527265a3f9a9ee067c4659a756681e3f065e13a99498b11a34338a6a',
   block_number: '0x772',
   data: '0x6e07000000000000',
-  since: '0x20000a0002000172',
+  since: '0x20000a0002000172', 
   depositBlockHash: '0x1a59e0832a7123a1b134496e799c0257023c2cec29a38b0ad76c7447931ed25e',
   withdrawBlockHash: '0x3cb8bd2b527265a3f9a9ee067c4659a756681e3f065e13a99498b11a34338a6a',
   sinceValidationInfo: undefined
 }
-> 
->  
+//when the epoch reaches the '0x20000a0002000172' since value , the locktimepool.transfer function can be executed sucessfully.
+> await buildTXs.locktimepoolTX(bob.ADDRESS,alice.ADDRESS, 10000000000n,10000000n,alice.PRIVATE_KEY);
 ```
 
 </p>

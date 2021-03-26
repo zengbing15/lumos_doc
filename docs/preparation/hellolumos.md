@@ -40,7 +40,7 @@ The following Prerequisites apply for walking through this guide:
 
 - The development environment is set up. For more information, see [Set Up the Development Environment](../preparation/setupsystem).
 - The CKB node is installed and started on DEV chain. For more information, see [Install a CKB Node](../preparation/installckb).
-- Two accounts, Alice and Bob are created. Alice is specified as the miner to receive mining rewards that is used for transactions. For more information, see [Create Accounts](../preparation/createaccount).
+- Two accounts, Alice and Bob are created. Alice is specified as the miner to receive mining rewards. For more information, see [Create accounts](../preparation/createaccount).
 
 ## Environment
 
@@ -147,16 +147,28 @@ Type ".help" for more information.
 </p>
 </details>
 
-### Execute the index.js file to start the server and include the required modules.
+### Start the indexer and initialize the configurations.
 
-```shell
-> const {accounts,querycells,buildTXs,querytransactions} = require(".");
+The following code snippet starts the Lumos indexer and sets up the config manager.
+
+```typescript title="hellolumos/src/index.ts"
+import { Indexer } from "@ckb-lumos/indexer";
+export const INDEXER = new Indexer(CKB_RPC, "./indexed-data");
+INDEXER.startForever();
+
+import { getConfig, initializeConfig } from "@ckb-lumos/config-manager";
+env.LUMOS_CONFIG_FILE = env.LUMOS_CONFIG_FILE || "./config.json";
+initializeConfig();
+export const CONFIG = getConfig();
 ```
+
+Run the code in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
 
 ```shell
+> require(".");
 The server is started.
 ```
 
@@ -222,12 +234,12 @@ The transaction hash is 0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f356
 
 Step 4. Check the transaction status.
 
+> The CKB miner must be started to enable the transaction to be committed. For more information about transaction status, see [Get Transaction Status and Block Hash](../tutorials/querytransactions#get-transaction-status-and-block-hash).
+
 ```shell
-> await querytransactions.getTXStatus("0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e");
+> await querytransactions.getTXbyHash("0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e");
 The transaction status is pending
 ```
-
-The CKB miner must be started to enable the transaction to be committed. For more information about transaction status, see [Get Transaction Status](../tutorials/querytransactions#get-the-transaction-status).
 
 Step 5. Check the new balance of Bob.
 

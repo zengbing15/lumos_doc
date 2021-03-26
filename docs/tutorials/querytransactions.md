@@ -2,17 +2,13 @@
 id: querytransactions
 title: Query on Transactions
 ---
-Transactions are the most fundamental entities for a DApp to interact with Nervos CKB. For more information about CKB transactions, see [Transaction](https://docs.nervos.org/docs/reference/transaction#docsNav) and [CKB RFC](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0019-data-structures/0019-data-structures.md#transaction).
+> Transactions are the most fundamental entities for a DApp to interact with Nervos CKB. For more information about CKB transactions, see [Transaction](https://docs.nervos.org/docs/reference/transaction#docsNav) and [CKB RFC](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0019-data-structures/0019-data-structures.md#transaction).
 
-Lumos provides convenient query functions on transactions with the support of the `TransactionCollector` class.
+Lumos provides the [TransactionCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L479) class to support querying on transactions according to specific query options.
 
-## TransactionCollector
+## Environment
 
-The [TransactionCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L479) class can be used to query transactions according to specific query options.
-
-**Constructor**:
-
-(indexer: Indexer, queries: queryOptions, options?: TransactionCollectorOptions | undefined)
+The following examples are verified on Ubuntu 20.04.2. Steps on the other platforms are similar and can be adjusted accordingly.
 
 ## Examples
 
@@ -20,9 +16,12 @@ The [TransactionCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6b
 
 The following example creates a new TransactionCollector to collect transactions for a specific lock script and returns the result with status.
 
+Example: <u>hellolumos/src/querytransactions.ts/getTxbyLock()</u>
+
 ```typescript title="hellolumos/src/querytransactions.ts"
 import {INDEXER} from "./index";
 import { Script, Transaction } from "@ckb-lumos/base";
+import { TransactionCollector } from "@ckb-lumos/indexer";
 
 export async function getTxbyLock (
   lockScript: Script,
@@ -42,7 +41,7 @@ export async function getTxbyLock (
 
 ```
 
-Try the getTxbyLock(lockScript) function in the Node.js REPL mode:
+Try the `getTxbyLock` function in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
@@ -95,6 +94,8 @@ Get transactions by lock script:
 
 The following example fetches the transactions between `[fromBlock, toBlock]`. Both `fromBlock` and `toBlock` are included in the queryOptions.
 
+Example: <u>hellolumos/src/querytransactions.ts/getTxbetweenBlocks()</u>
+
 ```typescript title="hellolumos/src/querytransactions.ts"
 export async function getTxbetweenBlocks (
     lockScript: Script,
@@ -108,7 +109,7 @@ export async function getTxbetweenBlocks (
     }
 }
 ```
-Try the getTxbetweenBlocks(lockScript, fromBlock, toBlock) function in the Node.js REPL mode:
+Try the `getTxbetweenBlocks` function in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
@@ -214,7 +215,9 @@ Get transactions between given blocks:
 
 ### Skip Transactions
 
-The `skip` query option represents the number of transactions being skipped.
+The <var>skip</var> query option represents the number of transactions being skipped.
+
+Example: <u>hellolumos/src/querytransactions.ts/getTxandSkip()</u>
 
 ```typescript title="hellolumos/src/querytransactions.ts"
 export async function getTxandSkip (
@@ -233,12 +236,14 @@ export async function getTxandSkip (
 
 The following example creates a new TransactionCollector and uses the TransactionCollector to collect transactions in order of block numbers for a specific lock script. If the order is not specified, the default order is "asc" for the returned result.
 
+Example: <u>hellolumos/src/querytransactions.ts/getTxandOrder()</u>
+
 ```typescript title="hellolumos/src/querytransactions.ts"
-export const getTxandOrder = async (
+export async function getTxandOrder (
     lockScript: Script,
     order: "asc"|"desc"
-  ) => {
-    const txCollector = new TransactionCollector(indexer,{lock:lockScript,order:order});
+  )  {
+    const txCollector = new TransactionCollector(INDEXER,{lock:lockScript,order:order});
     console.log("Get transactions in order of", order);
     for await (const txWithStatus of txCollector.collect()) {
         console.log(txWithStatus);
@@ -246,11 +251,15 @@ export const getTxandOrder = async (
 }
 ```
 
-### Prefix Search on `args`
+### Prefix Search on <var>args</var>
 
-The default `argsLen` is -1, that means the full slice of original args is passed in the query. You can specify argsLen with other values when the `args` field is the prefix of original args.
+The default value of <var>argsLen</var> is -1 for the query on a full slice of the args of a lock script.
 
-**Note**: It is recommended to specify explicit length for the `argsLen` parameter. For example, the length is 20 in normal scenarios and 28 in the multisig scenario for the lock script. When the length is not certain, the `argsLen` parameter can be set as `any`. But there is performance lost when using `any` rather than explicit length.
+You can specify <var>argsLen</var> with a value other than the default value to enable the prefix search on the args of a lock script.
+
+> It is recommended to specify an explicit length for the <var>argsLen</var> parameter. For example, the length is **20** in normal scenarios and **28** in the multisig scenario for the lock script. When the length is not certain, the <var>argsLen</var> parameter can be set as `any`. But there is performance lost when using `any` rather than an explicit length.
+
+Example: <u>hellolumos/src/querytransactions.ts/prefixSearch()</u>
 
 ```typescript title="hellolumos/src/querytransactions.ts"
 export async function prefixSearch  (
@@ -267,18 +276,27 @@ export async function prefixSearch  (
 
 ### Fine Grained Query for Transactions
 
-Fine Grained Query for Transactions can be achieved by using [ScriptWrapper](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/base/index.d.ts#L351) with customized options like `ioType`, `argsLen`.
+Fine Grained Query for Transactions can be achieved by using [ScriptWrapper](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/base/index.d.ts#L351) with customized options like <var>ioType</var>, <var>argsLen</var>.
 
-The `ioType` field is among `input | output | both`.
+The value for the <var>ioType</var> field is among `input | output | both`.
+
+Example: <u>hellolumos/src/querytransactions.ts/fineGrainedQuery()</u>
 
 ```typescript title="hellolumos/src/querytransactions.ts"
-import {  ScriptWrapper } from "@ckb-lumos/base";
+import { ScriptWrapper} from "@ckb-lumos/base";
 
 export async function fineGrainedQuery  (
     lockScript: Script,
-    typescript : ScriptWrapper
-  )   {
-    const txCollector = new TransactionCollector(INDEXER,{lock:lockScript,type:typescript});
+    typescript : Script,
+    argslen: number,
+    iotype:"output"|"input"|"both"
+    ) {
+    const type:ScriptWrapper = {
+      script:typescript,
+      ioType:iotype,
+      argsLen: argslen
+    }
+    const txCollector = new TransactionCollector(INDEXER,{lock:lockScript,type:type});
     console.log("Fine Grained Query");
     for await (const txWithStatus of txCollector.collect()) {
         console.log(txWithStatus);
@@ -286,32 +304,25 @@ export async function fineGrainedQuery  (
 }
 ```
 
-Try the fineGrainedQuery(lockScript, typescript) function in the Node.js REPL mode, it returns the transactions of DAO deposit by specifying the `ioType`  as output for DAO script.
+Try the `fineGrainedQuery` function in the Node.js REPL mode:
 
-<details><summary>CLICK ME</summary>
-<p>
-The DAO cell is created by the step <a href="../preparation/createaccount#step-5-deposit-ckb-to-dao">Deposit CKB to DAO</a> in the preparation phase.
 
 ```shell
-const lock:ScriptWrapper = {
- script:{
- code_hash: "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
- hash_type: "type",
- args: alice.ARGS,
- },
- argsLen: argslen
-}
+
 ```
-</p>
-</details>
+### Get Transaction Status and Block Hash
 
-### Get Transaction Status
+> A transaction can be in one of the following status:
+>
+> - A **pending** result means the node is aware of the transaction but the transaction is not confirmed yet.
+>
+> - A **proposed** result means the node sees a transaction included in a block candidate that is not yet mined.
+>
+> - A **committed** result means that the block involving the transaction has been mined and is officially on chain.
 
-A transaction can be in one of the following status:
+The following example uses the get_transaction function to get the transaction information (status, block_hash) for a specific transaction hash.
 
-- A **pending** result means the node is aware of the transaction but the transaction is not confirmed yet. 
-- A **proposed** result means the node sees a transaction included in a block candidate that is not yet mined. 
-- A **committed** result means that the block involving the transaction has been mined and is officially on chain.
+Example: <u>hellolumos/src/querytransactions.ts/getTXStatus()</u>
 
 ```typescript title="hellolumos/src/querytransactions.ts"
 import { RPC } from "@ckb-lumos/RPC";
@@ -321,8 +332,11 @@ export async function getTXStatus  (
   txHash: string
 )   {
   const txWithStatus = await rpc.get_transaction(txHash);
-  const status = txWithStatus.tx_status.status;
+  
+  const status = txWithStatus?.tx_status.status;
+  const blockhash = txWithStatus?.tx_status.block_hash;
   console.log("The transaction status is",status);
-} 
+  console.log("The block hash for the transaction is",blockhash);
+}
 ```
 

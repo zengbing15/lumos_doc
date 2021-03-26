@@ -4,15 +4,15 @@ title: Create Accounts
 ---
 A CKB account is represented as a collection of live cells locked by a lock script. The ID of the account is the lock script args.
 
-The following table lists the elements of an account that are useful for the DApp development.
+The following table lists the elements of an account that are useful during the DApp development process.
 
 
 | Element     | Description                                                  |
 | ------------ | ------------------------------------------------------------ |
-| Lock&nbsp;script<br/> | The lock script consists of three key parameters, including *code_hash*, *hash_type* and *args*.<br/>Example:<br/><samp>{<br/>&nbsp;code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',<br/> &nbsp;hash_type:&nbsp;'type',<br/>&nbsp;args: '0x82be41cf167110e6c00e79009a3fd4d9abe8c65a'<br/>}</samp> |
-| Address      | A CKB address packages a lock script into a single line in a verifiable and human-readable format.<br/>Example:<br/><samp>ckt1qyqg90jpeut8zy8xcq88jqy68l2dn2lgcedqd7ye7n</samp> |
-| Private&nbsp;key | A private key is a string of letters and numbers that is normally stored in a wallet. It proves the ownership of cryptocurrencies or digital assets and allows the user to send his/her cryptocurrency or digital assets to other payment addresses.<br/>A private key must be kept secret at all times. Anyone with the key has the ability to access the cryptocurrency or digital assets. |
-| CKB&nbsp;capacity | CKB capacity of an account is the total CKB capacity of the live cells of an account.<br/>**Note**: If an account wants to perform transaction actions like transferring CKB to other accounts, the account must have enough CKB capacity that is equal or more than the minimal CKB requirement of a transaction.<br/>For example, the minimum CKB capacity requirement is 61 CKB (6100000000n) for one common transaction, and 102 CKB (10200000000n) for a DAO deposit transaction. |
+| Lock&nbsp;script<br/> | <pre>A lock script consists of three key parameters, including *code_hash*, *hash_type* and *args*.<br/>Example:<br/><samp>{<br/>&nbsp;code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',<br/> &nbsp;hash_type:&nbsp;'type',<br/>&nbsp;args: '0x82be41cf167110e6c00e79009a3fd4d9abe8c65a'<br/>}</samp></pre> |
+| Address      | <pre>A CKB address packages a lock script into a single line in a verifiable and human-readable format.<br/>Example:<br/><samp>ckt1qyqg90jpeut8zy8xcq88jqy68l2dn2lgcedqd7ye7n</samp></pre> |
+| Private&nbsp;key | <pre>A private key is a string of letters and numbers that is normally stored in a wallet. It proves the ownership of cryptocurrencies or digital assets and allows the user to send his/her cryptocurrency or digital assets to other payment addresses.<br/>A private key must be kept secret at all times. Anyone with the key has the ability to access the cryptocurrency or digital assets.</pre> |
+| CKB&nbsp;capacity | <pre>CKB capacity of an account is the total CKB capacity of the live cells of an account.<br/>**Note**: If an account wants to perform transaction actions like transferring CKB to other accounts, the account must have enough CKB capacity that is equal or more than the minimal CKB requirement of a transaction.<br/>For example, the minimum CKB capacity requirement is 61 CKB (6100000000n) for one common transaction, and 102 CKB (10200000000n) for a DAO deposit transaction.</pre> |
 
 This guide will prepare two CKB accounts, Alice and Bob for later usage in the [Hello Lumos](../preparation/hellolumos) example.<!--Create an account by using ckb-cli.--> <!--Get the private key of an account.--><!--Get CKB capacity for an account.--><!--Check the capacity of an account.-->
 
