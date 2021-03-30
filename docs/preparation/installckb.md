@@ -18,13 +18,14 @@ A CKB node can be set up to connect and interact with one of the following CKB n
 
 - **Testnet (Aggron4)**: The Testnet is used to test applications integration and smart contracts in real environment with actual data. 
 
-  For the first time to start running a node on the Testnet, syncing data requires a period of time. For example, it takes upwards of one hour for the current number (**1,300,000+**) of blocks depending on the network connection. The real-time block number on the Testnet can be checked on the [CKB Explorer](https://explorer.nervos.org/aggron) page.
-
-  To get CKB capacity for an account on the Testnet, go to [https://faucet.nervos.org](https://faucet.nervos.org/) and paste the Testnet address of the address in the address input box, then click the **Claim** button. For more information, see [Create Accounts](../preparation/createaccount).
-
 - **DEV Chain**:  The DEV chain is a local blockchain that provides an efficient and useful development mode for building and testing applications. <!--This is the recommended network for starters and DApp developers.--> 
 
-  To get CKB capacity for an account on the DEV chain, the account can be specified as the miner in the chain configurations. For more information, see [Create Accounts](../preparation/createaccount).
+:::tip
+For the first time to start running a node on the **Testnet**, syncing data requires upwards of one hour for the current number (**1,300,000+**) of blocks depending on the network connection. The real-time block number on the Testnet can be checked on the [CKB Explorer](https://explorer.nervos.org/aggron) page.<br/>
+To get CKB capacity for an account on the Testnet, go to [https://faucet.nervos.org](https://faucet.nervos.org/) and paste the Testnet address of the address in the address input box, then click the **Claim** button. For more information, see [Create Accounts](../preparation/createaccount).<br/>
+
+To get CKB capacity for an account on the **DEV** chain, specify the account as the miner in the chain configurations for receiving mining rewards. For more information, see [Create Accounts](../preparation/createaccount).
+:::
 
 ## Installation Options
 
@@ -42,13 +43,12 @@ There are two options for installing a CKB node:
 
   **Tippy** is a tool that helps set up and manage CKB nodes. It can install and start running a CKB node by one simple click.
 
-  **Note**: Tippy is currently in the development and experimental stage. (To be updated)
-
+  :::note
+  Tippy is currently in the development and experimental stage. (To be updated)
+  :::
 ## Install a CKB Node by Using the Pre-built Installer Package
 
-CKB nodes can be installed by using the pre-built installer package on all major platforms including Linux, Windows, and Mac. 
-
-The following examples are verified on **Ubuntu 20.04.2**. Steps on the other platforms are similar and can be adjusted accordingly.
+The following examples are verified on **Ubuntu 20.04.2**. Steps on the other platforms can be adjusted accordingly.
 
 ### **Step 1. Download the CKB Pre-built Installer Package.**
 
@@ -185,17 +185,16 @@ import TabItem from '@theme/TabItem';
   ]}>
 <TabItem value="ubuntu"><p><b>Step 1. Install Tippy</b></p>
 
-<p>Tippy can be installed from the pre-built installer or built from <a href="https://github.com/nervosnetwork/tippy">source</a>. The following example installs Tippy version 0.1.5 from the pre-built installer. For more information about the installation from source, see the <a href="https://github.com/nervosnetwork/tippy">Readme</a> of Tippy.</p>
+<p>Tippy can be installed from the pre-built installer or built from <a href="https://github.com/nervosnetwork/tippy">source</a>. The following example installs Tippy version 0.1.6 from the pre-built installer. For more information about the installation from source, see the <a href="https://github.com/nervosnetwork/tippy">Readme</a> of Tippy.</p>
 
 <p>To install Tippy from the pre-built installer on Ubuntu 20.04:</p>
 
 ```
-$ curl -LO https://github.com/nervosnetwork/tippy/releases/download/v0.1.5/tippy-linux-x64.tar.gz
+$ curl -LO https://github.com/nervosnetwork/tippy/releases/download/v0.1.6/tippy-linux-x64.tar.gz
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100   630  100   630    0     0    861      0 --:--:-- --:--:-- --:--:--   860
-100 71.0M  100 71.0M    0     0  12.0M      0  0:00:05  0:00:05 --:--:-- 16.3M
-$ tar xzf tippy-linux-x64.tar.gz
+100   625  100   625    0     0    625      0  0:00:01 --:--:--  0:00:01  1481
+100 61.4M  100 61.4M    0     0  1612k      0  0:00:39  0:00:39 --:--:-- 1642k
 ```
 
 <p><b>Step 2. Run the Tippy tool</b></p>
@@ -225,19 +224,17 @@ $ ./tippy-linux-x64/Tippy
 </TabItem>
     <TabItem value="windows"><p><b>Step 1. Download the Pre-built Installer.</b></p>
 
-The following example downloads the 0.1.5 version. You can find all versions on the <a href="https://github.com/nervosnetwork/tippy/releases">Tippy Releases</a> page.
+The following example downloads the 0.1.6 version. You can find all versions on the <a href="https://github.com/nervosnetwork/tippy/releases">Tippy Releases</a> page.
 
 ```
-C:> curl -LO https://github.com/nervosnetwork/tippy/releases/download/v0.1.5/tippy-win-x64.zip
+C:> curl -LO https://github.com/nervosnetwork/tippy/releases/download/v0.1.6/tippy-win-x64.zip
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100   625    0   625    0     0    312      0 --:--:--  0:00:02 --:--:--   233
-100 61.1M  100 61.1M    0     0  10.1M      0  0:00:06  0:00:06 --:--:-- 23.5M
+100   625  100   625    0     0    625      0  0:00:01 --:--:--  0:00:01  1481
+100 61.4M  100 61.4M    0     0  1612k      0  0:00:39  0:00:39 --:--:-- 1642k
 ```
 
 <p><b>Step 2. Unzip the tippy-win-x64.zip file.</b></p>
-
-There are lot of zip tools that can be used to do this step.
 
 <p><b>Step 3. Double click the Tippy file under the tippy-win-x64 folder to run Tippy.</b></p>
 

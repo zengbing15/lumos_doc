@@ -8,7 +8,7 @@ Lumos provides the [TransactionCollector](https://github.com/nervosnetwork/lumos
 
 ## Environment
 
-The following examples are verified on Ubuntu 20.04.2. Steps on the other platforms are similar and can be adjusted accordingly.
+The following examples are verified on Ubuntu 20.04.2. Steps on the other platforms can be adjusted accordingly.
 
 ## Examples
 
@@ -257,7 +257,11 @@ The default value of <var>argsLen</var> is -1 for the query on a full slice of t
 
 You can specify <var>argsLen</var> with a value other than the default value to enable the prefix search on the args of a lock script.
 
-> It is recommended to specify an explicit length for the <var>argsLen</var> parameter. For example, the length is **20** in normal scenarios and **28** in the multisig scenario for the lock script. When the length is not certain, the <var>argsLen</var> parameter can be set as `any`. But there is performance lost when using `any` rather than an explicit length.
+:::info
+
+It is recommended to specify an explicit length for the <var>argsLen</var> parameter. For example, the length is **20** in normal scenarios and **28** in the multisig scenario for the lock script. When the length is not certain, the <var>argsLen</var> parameter can be set as `any`. But there is performance lost when using `any` rather than an explicit length.
+
+:::
 
 Example: <u>hellolumos/src/querytransactions.ts/prefixSearch()</u>
 
@@ -304,21 +308,13 @@ export async function fineGrainedQuery  (
 }
 ```
 
-Try the `fineGrainedQuery` function in the Node.js REPL mode:
-
-
-```shell
-
-```
 ### Get Transaction Status and Block Hash
 
-> A transaction can be in one of the following status:
->
-> - A **pending** result means the node is aware of the transaction but the transaction is not confirmed yet.
->
-> - A **proposed** result means the node sees a transaction included in a block candidate that is not yet mined.
->
-> - A **committed** result means that the block involving the transaction has been mined and is officially on chain.
+A transaction can be in one of the following status:
+
+- A **pending** result means the node is aware of the transaction but the transaction is not confirmed yet.
+- A **proposed** result means the node sees a transaction included in a block candidate that is not yet mined.
+- A **committed** result means that the block involving the transaction has been mined and is officially on chain.
 
 The following example uses the get_transaction function to get the transaction information (status, block_hash) for a specific transaction hash.
 

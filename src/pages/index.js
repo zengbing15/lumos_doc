@@ -39,14 +39,14 @@ function Body() {
   return (
     <main className="container">
       <div className="row margin-vert--xl">
-        <Feature title="Convenient">
-          The <b>Lumos</b> framework provides ... for developing CKB DApps.
+        <Feature title="Powerful">
+          The <b>Lumos</b> framework saves you the hassle of creating code for CKB queries and transactions, and offers powerful modules that make the DApp development easier.
         </Feature>
         <Feature title="Safe" color="#BA00AC">
           The <b>Lumos</b> framework prevents common mistakes people make when...
         </Feature>
-        <Feature title="Powerful" color="#00B100">
-          The <b>Lumos</b> framework can be used to implement 
+        <Feature title="Easy to Use" color="#00B100">
+          The <b>Lumos</b> framework with many features and API integrations that will enhance your experience with CKB DApps development.
         </Feature>
       </div>
     </main>

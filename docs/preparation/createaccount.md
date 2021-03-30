@@ -18,13 +18,13 @@ This guide will prepare two CKB accounts, Alice and Bob for later usage in the [
 
 ## Prerequisites 
 
-The following prerequisites apply for creating accounts:
+The following prerequisites apply for creating the accounts:
 
 - The CKB node is installed and running. 
 
 ## Create the accounts by using ckb-cli.
 
-**ckb-cli** is included in the CKB pre-built installer package. It is a command line tool that provides the functions of rpc requests, creating CKB addresses, managing wallets, sending transactions, and depositing to Nervos DAO etc. These functions can help with debugging and testing during the development process. For more information, see [ckb-cli Sub Commands](https://github.com/nervosnetwork/ckb-cli/wiki/Sub-Commands).
+> **ckb-cli** is included in the CKB pre-built installer package. It is a command line tool that provides the functions of rpc requests, creating CKB addresses, managing wallets, sending transactions, and depositing to Nervos DAO etc. These functions can help with debugging and testing during the development process. For more information, see [ckb-cli Sub Commands](https://github.com/nervosnetwork/ckb-cli/wiki/Sub-Commands).
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -78,7 +78,7 @@ message: "Success exported account as extended privkey to: \"alice\", please use
 
 <b>Step 5. Get CKB Capacity for the account of Alice.</b> (to be updated)
 
-The process for getting CKB capacity is different for the accounts on different networks (chains). 
+The process of getting CKB capacity varies for the accounts on different networks (chains). 
 
 - To get CKB capacity for an account on **DEV chain**, specify the account as the miner for receiving mining rewards.
 

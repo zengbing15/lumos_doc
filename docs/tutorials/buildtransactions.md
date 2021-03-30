@@ -2,42 +2,40 @@
 id: buildtransactions
 title: Assemble Transactions
 ---
-The goal and core functionality of a DApp built on top of Lumos is to build transactions in response to user requests. Lumos provides the [TransactionSkeleton](https://github.com/nervosnetwork/lumos/blob/develop/packages/helpers/src/index.ts#L212) interface that significantly simplifies the transaction assembling process. Each transaction skeleton corresponds to an action, and will be built into a single transaction that is ready to be submitted to CKB. <!--[TransactionSkeleton](https://github.com/nervosnetwork/lumos/blob/develop/packages/helpers/src/index.ts#L212) supports transaction assembling with the following conveniences:--><!--A well designed component must be able to query and include cells automatically to provide capacities required by the transaction.--><!--Individual script logic must be managed and respected by the general transaction skeleton.--><!--Scripts sharing the same behavior must be managed together in a unified interface. Developers can rely on abstractions instead of catering for every single detail.-->
+The goal and core functionality of a DApp built on top of Lumos is to build transactions in response to user requests. Lumos provides the [TransactionSkeleton](https://github.com/nervosnetwork/lumos/blob/develop/packages/helpers/src/index.ts#L212) interface that significantly simplifies the transaction assembling process. Each transaction skeleton corresponds to an action, and will be built into a single transaction that is ready to be submitted to CKB.
 
-## General Workflow for Assembling a Transaction
+This guide introduces the general workflow of assembling transactions. The workflow applies to the following examples of a common transfer operation, DAO deposit and withdraw operations, and a transfer operation with the `locktimepool`.
 
-1. The DApp creates a transaction skeleton.
+<!--[TransactionSkeleton](https://github.com/nervosnetwork/lumos/blob/develop/packages/helpers/src/index.ts#L212) supports transaction assembling with the following conveniences:--><!--A well designed component must be able to query and include cells automatically to provide capacities required by the transaction.--><!--Individual script logic must be managed and respected by the general transaction skeleton.--><!--Scripts sharing the same behavior must be managed together in a unified interface. Developers can rely on abstractions instead of catering for every single detail.-->
 
-2. The DApp adds the fee for the transaction.
+## General Workflow
 
-   **Note**: It is also possible to have someone other than the sender to pay the fee. 
+1. **The DApp creates a transaction skeleton**.
 
-3. The DApp prepares the signing entries.
+2. **The DApp adds the fee for the transaction**. The sender or someone other than the sender can pay the fee. 
 
-   The signing entries are the data that the user's wallet needs to sign to provide valid witnesses for the input lock scripts. 
+3. **The DApp prepares the signing entries**. The signing entries are the data that the user's wallet needs to sign to provide valid witnesses for the input lock scripts. 
 
-4. The DApp acquires the signature from a user wallet.
+4. **The DApp acquires the signature from a user wallet**.
+
+   :::note
 
    From the security perspective of a DApp, Lumos does not support built-in message signing. So the DApp needs to send the raw transaction <!--or the signing entries piece of the skeleton which contains the actual data to sign--> to the user wallet to acquire signatures. The raw transaction contains all the cells and dependencies for the action and the data that needs to be signed.<!--When the client gets the skeleton, the client forwards the transaction skeleton to the wallet for signing.--> 
 
-5. The DApp seals the transaction.
+   :::
 
-   The transaction with signatures is forwarded to the DApp. The DApp seals the transaction by adding the transaction signatures to the transaction structure. 
+5. **The DApp seals the transaction.** The transaction with signatures is forwarded to the DApp. The DApp seals the transaction by adding the transaction signatures to the transaction structure. 
 
-6. The DApp forwards this finalized transaction to the CKB network.
+6. **The DApp forwards this finalized transaction to the CKB network**. The DApp forwards the sealed transaction to the CKB network through the RPC interface. Upon successful receipt, the CKB network returns the transaction hash to the DApp. The transaction hash is sent back to the client such that the client can track the transactions.
 
-   The DApp forwards the sealed transaction to the CKB network through the RPC interface.
-
-   Upon successful receipt, the CKB network returns the transaction hash to the DApp. The transaction hash is sent back to the client such that the client can track the transactions.
-
-7. (Optional) The DApp gets the transaction status.
+7. **(Optional) The DApp gets the transaction status.**
 
 
 ## Examples
 
 ### Transfer CKB in a Common Transaction
 
-Example: <u>hellolumos/src/buildTXs.ts/buildCommonTx()</u>
+Example: <u>hellolumos/src/buildTXs.ts/buildCommonTx</u>
 
 ```typescript title="hellolumos/src/buildTXs.ts"
 export async function buildCommonTx(
@@ -89,7 +87,7 @@ skeleton = await common.transfer(
 
 **Step 2. Add the fee for the transaction.**
 
-The [common.payFee()](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L412) function is used to add the transaction fee to the transaction skeleton.
+The [common.payFee](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L412) function is used to add the transaction fee to the transaction skeleton.
 
 ```typescript title="hellolumos/src/buildTXs.ts"
 skeleton = await common.payFee(
@@ -101,7 +99,7 @@ skeleton = await common.payFee(
 
 **Step 3. Prepare the signing entries.** 
 
-The [prepareSigningEntries()](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L434) function is used to add the signing entries to the transaction skeleton. Now the transaction skeleton is the raw transaction that requires signatures.
+The [prepareSigningEntries](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L434) function is used to add the signing entries to the transaction skeleton. Now the transaction skeleton is the raw transaction that requires signatures.
 
 ```typescript title="hellolumos/src/buildTXs.ts"
 skeleton = common.prepareSigningEntries(skeleton);
@@ -109,9 +107,13 @@ skeleton = common.prepareSigningEntries(skeleton);
 
 **Step 4. Sign and seal the transaction.**
 
-> Lumos does not support built-in message signing. The DApp needs to send the raw transaction to the user wallet to acquire signatures. 
+:::note
 
-For simplicity and demonstration, this example uses the [key.signRecoverable()](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/hd/src/key.ts#L7) function of the HD wallet manager (@ckb-lumos/hd) to generate a signature based on the private key of the account. 
+Lumos does not support built-in message signing. The DApp needs to send the raw transaction to the user wallet to acquire signatures. 
+
+:::
+
+For simplicity and demonstration, this example uses the [key.signRecoverable](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/hd/src/key.ts#L7) function of the HD wallet manager (@ckb-lumos/hd) package to generate a signature based on the private key of the account. 
 
 ```typescript title="hellolumos/src/buildTXs.ts"
 import {key} from "@ckb-lumos/hd";
@@ -136,36 +138,17 @@ The following is a signature output example：
 ]
 ```
 
-
-Another method is to use the `ecdsaSign` function to generate the signatures for signing the transaction.
-
-```typescript
-import { ecdsaSign } from "secp256k1";
-
-const signatures = txskeleton
-    .get("signingEntries")
-    .map(({ message }) => {
-      const o = ecdsaSign(
-        new Uint8Array(new Reader(message).toArrayBuffer()),
-        new Uint8Array(new Reader(privatekey).toArrayBuffer())
-      );
-      const signature = new Uint8Array(65);
-      signature.set(o.signature, 0);
-      signature.set([o.recid], 64);
-      return new Reader(signature.buffer).serializeJson();
-    })
-    .toArray();
-```
-
-To seal the transaction, the example uses the [sealTransaction()](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/helpers/src/index.ts#L257) function of the @ckb-lumos/helpers package to add the transaction signatures to the transaction skeleton.
+To seal the transaction, the example uses the [sealTransaction](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/helpers/src/index.ts#L257) function of the @ckb-lumos/helpers package to add the transaction signatures to the transaction skeleton.
 
 **Step 5. Send this finalized transaction to the CKB network.**
 
-> There is one legacy issue in Lumos old versions, that Anyone-Can-Pay (ACP) script must be available on the chain.
->
-> If you encounter the error that the ACP script is not available when sending transactions to DEV chain, just copy a dummy script into the config.json file under the root of the DApp project to fix the error.
+:::info
 
-The [send_transaction()](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/rpc/src/index.ts#L339) function of the @ckb-lumos/rpc package is used to send the transaction. The function sends the transaction to chain and returns a hash for the transaction. The hash can then be used to track the transactions.
+The earlier versions before 0.16.0 require the Anyone-Can-Pay (ACP) script for submitting transactions. If you fail to submit transactions because of missing the ACP script, you can convert to the latest version of Lumos, or copy a dummy script into the config.json file under the root of the DApp project to fix the error.
+
+:::
+
+The [send_transaction](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/rpc/src/index.ts#L339) function of the @ckb-lumos/rpc package is used to send the transaction. The function sends the transaction to chain and returns a hash for the transaction. The hash can then be used to track the transactions.
 
 ```typescript
 import { RPC } from "@ckb-lumos/rpc";
@@ -189,9 +172,7 @@ console.log("Transaction status is:",txWithStatus.tx_status.status);
 
 ### Deposit CKB to DAO
 
-Nervos DAO is a smart contract. Users can interact the same way as any smart contract on CKB with Nervos DAO. One function of Nervos DAO is to provide an dilution counter-measure for CKByte holders. By deposit in Nervos DAO, holders get proportional secondary rewards, which guarantee their holding are only affected by hardcapped primary issuance as in Bitcoin.
-
-For more information about Nervos DAO, see [RFC: Nervos DAO](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0023-dao-deposit-withdraw/0023-dao-deposit-withdraw.md).
+Nervos DAO is a smart contract. Users can interact the same way as any smart contract on CKB with Nervos DAO. One function of Nervos DAO is to provide an dilution counter-measure for CKByte holders. By deposit in Nervos DAO, holders get proportional secondary rewards, which guarantee their holding are only affected by hardcapped primary issuance as in Bitcoin. For more information about Nervos DAO, see [RFC: Nervos DAO](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0023-dao-deposit-withdraw/0023-dao-deposit-withdraw.md).
 
 Example: <u>hellolumos/src/buildTXs.ts/deposit2DAO()</u>
 
@@ -240,9 +221,9 @@ console.log(JSON.stringify(createTransactionFromSkeleton(skeleton), null, 2));
 
 **Step 2. Add the fee for the deposit transaction.**
 
-The example uses an existing module, the secp256k1-blake160 lock script in common-scripts to build the transaction for the paying transaction fee action. In the example, the sender provides 0.1 CKB as the transaction fee.
+The example uses an existing module, the secp256k1-blake160 lock script of the @ckb-lumos/common-scripts package to build the transaction for the paying transaction fee action. In the example, the sender provides 0.1 CKB as the transaction fee.
 
-> The deposit action and the paying transaction fee action are using the same address (the sender address). If you checked the transaction skeleton after incurring fees, you can notice that the transaction skeleton has only one input for the two actions. Lumos can intelligently rewrite the change cells generated in the deposit action to pay enough transaction fee. 
+The deposit action and the paying transaction fee action are using the same address (the sender address). If you checked the transaction skeleton after incurring fees, you can notice that the transaction skeleton has only one input for the two actions. Lumos can intelligently rewrite the change cells generated in the deposit action to pay enough transaction fee. 
 
 ```typescript title="hellolumos/src/buildTXs.ts"
 skeleton = await secp256k1Blake160.payFee(skeleton,sender,BigInt(txFee));
@@ -258,9 +239,13 @@ skeleton = secp256k1Blake160.prepareSigningEntries(skeleton);
 
 **Step 4. Sign and seal the transaction.**
 
-> Lumos does not support built-in message signing. The DApp needs to send the raw transaction to the user wallet to acquire signatures. 
+:::note
 
-For simplicity and demonstration, the example uses the [key.signRecoverable()](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/hd/src/key.ts#L7) function of the HD wallet manager (@ckb-lumos/hd) to generate a signature based on the private key of the account. 
+Lumos does not support built-in message signing. The DApp needs to send the raw transaction to the user wallet to acquire signatures. 
+
+:::
+
+For simplicity and demonstration, the example uses the [key.signRecoverable](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/hd/src/key.ts#L7) function of the HD wallet manager (@ckb-lumos/hd) to generate a signature based on the private key of the account. 
 
 For more information, see Step 4 in the common transaction section.
 
@@ -275,7 +260,7 @@ The following is a deposit transaction hash output example:
 
 
 ```shell
-The deposit transaction hash is 0x655bac89e443db42d48644f9fd89ddee70691f8e39ee4635c313375e8b2e6c0a
+The transaction hash is 0x655bac89e443db42d48644f9fd89ddee70691f8e39ee4635c313375e8b2e6c0a
 ```
 Try the `deposit2DAO` function in the Node.js REPL mode:
 
@@ -365,9 +350,13 @@ The transaction hash is 0x58f49e100a00742396fa66bcd2541fadcae549b56e75350efaa166
 </p>
 </details>
 
-When the transaction is committed to the chain, the deposited 200 CKB appears in the result by using ckb-cli to check the capacity.
+When the transaction is committed to the chain, check the capacity by using ckb-cli. You can see the deposited 200 CKB in the result.
 
-> Ensure the CKB minder is started to enable the transaction to be committed.
+:::note
+
+Ensure the CKB minder is started to enable the transaction to be committed.
+
+:::
 
 ```shell
 $ ckb-cli wallet get-capacity --address "ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf"
@@ -462,7 +451,7 @@ export async function withdrawfromDAO(
 }
 ```
 
-The withdrawfromDAO() function creates a transaction skeleton and then uses the [dao.withdraw](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/dao.ts#L225) function to withdraw a deposited cell.
+The example creates a transaction skeleton and then uses the [dao.withdraw](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/dao.ts#L225) function to withdraw a deposited cell.
 
 The steps like adding transaction fee, preparing signing entries, signing and sealing the transaction, are the same as the previous examples. For more information, see the steps in the common transaction and the deposit transaction. 
 
@@ -480,7 +469,8 @@ Type ".help" for more information.
 > const {accounts,buildTXs} = require(".");
 The server is started.
 > const alice = accounts.ALICE;
-> const fullcell = {
+//Choose one deposited cell from the result of the listDAOCells step.
+> const depositcell = {
 	   cell_output: {
 	     capacity: '0x4a817c800',
 	     lock: {
@@ -521,11 +511,15 @@ The transaction hash is 0x00df109343e2335a4e91375b37b575373902660be5f0d3fd0c2281
 
 ### Unlock a Withdrawn Cell
 
-A withdrawn cell must be unlocked to make it usable and live cells for new transactions.
+A withdrawn cell must be unlocked to make it usable as a live cell for new transactions.
 
-> A withdrawn cell can only be successfully unlocked when the epoch reaches the number that fulfills the lock period meaning that the lock period of the cell has passed. Otherwise the unlock function will throw an error like "... the transaction is immature because of the since requirement...". 
->
-> The epoch number that fulfills the lock period = 180 (the default lock period) + <var>the epoch number of the deposit transaction</var> + <var>the epoch index of the deposit transaction</var>/<var>epoch length</var>. 
+:::info
+
+A withdrawn cell can only be successfully unlocked when the epoch reaches the number that fulfills the lock period, i.e. the lock period of the cell has passed. Otherwise the unlock function will throw an error like "... the transaction is immature because of the since requirement...". 
+
+The epoch number that fulfills the lock period = 180 (the default lock period) + <var>the epoch number of the deposit transaction</var> + <var>the epoch index of the deposit transaction</var>/<var>epoch length</var>. 
+
+:::
 
 Example: <u>hellolumos/src/buildTXs.ts/unlockWithdraw()</u>
 
@@ -550,7 +544,7 @@ export async function unlockWithdraw(
 }
 ```
 
-The following example fetches the epoch information of the deposit transaction.  It firstly gets the block hash of this transaction and then uses the block hash to get the block information. The epoch information "0xa0009000008 {number: 8, index: 9, length: 10}" is located in the block header. So the epoch that fulfills the lock period for the withdrawn cell is (180+8+9/10) .
+Use the following commands to fetch the epoch information of the deposit transaction. It firstly gets the block hash of this transaction and then uses the block hash to get the block information. The epoch information "0xa0009000008 {number: 8, index: 9, length: 10}" is located in the block header. So the epoch number that fulfills the lock period for the withdrawn cell is (180+8+9/10) .
 
 ```shell
 > const {RPC}=require("@ckb-lumos/rpc");
@@ -574,29 +568,6 @@ Try the `unlockWithdraw` function in the Node.js REPL mode.
 > await querytransactions.getTXStatus("0x00df109343e2335a4e91375b37b575373902660be5f0d3fd0c2281b4425c1a7e"); // To check if the withdraw transaction is committed.
 The transaction status is committed 
 
-//The deposit cell is from the result of buildTXs.listDAOCells(alice.ADDRESS,"deposit") that is executed before the cell is withdrawn.
-> const depositcell = { 
-	   cell_output: {
-	     capacity: '0x4a817c800',
-	     lock: {
-	       code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-	       hash_type: 'type',
-	       args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
-	     },
-	     type: {
-	       code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
-	       hash_type: 'type',
-	       args: '0x'
-	     }
-	   },
-	   out_point: {
-	     tx_hash: '0x58f49e100a00742396fa66bcd2541fadcae549b56e75350efaa166d5d5bfacdc',
-	     index: '0x0'
-	   },
-	   block_hash: '0xc9a0077484dbcfa990e0d12b94d137723aec6a9f3ae44e8ed05e19084a076549',
-	   block_number: '0x59',
-	   data: '0x0000000000000000'
-	 };
 > await buildTXs.listDAOCells(alice.ADDRESS,"withdraw");
 List the withdraw cells for the address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
 {
@@ -661,11 +632,13 @@ The transaction hash is 0xe41b9a78b96719ac4e75eed1359d804e97812131ed961be0c33f27
 
 ### Transfer CKB with locktimepool
 
-Lumos provides locktimepool for the cells that has a lock period.
+Lumos provides [locktimepool](https://github.com/nervosnetwork/lumos/blob/develop/packages/common-scripts/src/locktime_pool.ts) for the cells that has a lock period.
 
-> The default lock period is 180 epochs. A withdrawn cell can only be successfully unlocked after the lock period of the cell passed. Otherwise the transfer function will throw an error like "Uncaught Error: Not enough capacity in from addresses!". 
->
-> The value of the `since` field in the withdraw transaction information is the starting epoch of the withdrawn cell.
+:::info
+
+The default lock period is 180 epochs. A cell that has a lock period is available for new transactions after the lock period of the cell passed. Otherwise transactions performed by the locktimepool.transfer function will throw an error like "Uncaught Error: Not enough capacity in from addresses!". 
+
+:::
 
 Example: <u>hellolumos/src/buildTXs.ts/locktimepoolTX()</u>
 
@@ -702,34 +675,26 @@ Try the `locktimepoolTX` function in the Node.js REPL mode:
 
 
 
-```shell
+```shell {77-102}
+$ node --experimental-repl-await
+Welcome to Node.js v14.0.0.
+Type ".help" for more information.
+> const { accounts,querytransactions, buildTXs}=require(".");
+The server is started.
+>
+//Perform another deposit action to create a deposit cell 
 > await buildTXs.deposit2DAO(alice.ADDRESS,20000000000n,10000000n,alice.PRIVATE_KEY);
 ...
-The transaction hash is 0xa48a3a34bf2c1b660722cab0df7be13a85222d282966e185fde785647b5a7944
-
-// Check the deposit epoch
-> const txdeposit = await rpc.get_transaction("0xa48a3a34bf2c1b660722cab0df7be13a85222d282966e185fde785647b5a7944");
-> console.log(tx.tx_status.block_hash);
-0x1a59e0832a7123a1b134496e799c0257023c2cec29a38b0ad76c7447931ed25e
-> const block = await rpc.get_block("0xc9a0077484dbcfa990e0d12b94d137723aec6a9f3ae44e8ed05e19084a076549");
-> console.log(block.header.epoch);
-0xa00020000be // {number: 190, index: 2, length: 10}, so the epoch number that the cell can be unlocked is (180+190+2/10).
-
-//withdraw the cell from DAO
-> await buildTXs.withdrawfromDAO(depositcell,alice.ADDRESS,10000000n,alice.PRIVATE_KEY);
-...
-The transaction hash is 0x74104fe19b92c48ea8dbc16180740f6274ec9135e8aaea9c6a9d01ba2d76b08d
-'0x74104fe19b92c48ea8dbc16180740f6274ec9135e8aaea9c6a9d01ba2d76b08d'
->
-//Check the withdraw transaction status.
-> await querytransactions.getTXStatus("0x74104fe19b92c48ea8dbc16180740f6274ec9135e8aaea9c6a9d01ba2d76b08d");
+The transaction hash is 0x3162e8ccef8844e83c6cc63122f332f89d7dbd65c7d5f9fa040f4dd532b7abee
+> await querytransactions.getTXbyHash("0x3162e8ccef8844e83c6cc63122f332f89d7dbd65c7d5f9fa040f4dd532b7abee");
 The transaction status is committed
+The block hash for the transaction is 0xd025028f2bc4e4381c0fb1743ada5a5c48e387bf6a49e162120ea9a626fe0772
 >
-//Check the cell in locktimepool
-> await querycells.locktimepoolCells(alice.ADDRESS);
+> await buildTXs.listDAOCells(alice.ADDRESS,"deposit");
+List the deposit cells for the address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
 {
   cell_output: {
-    capacity: '0x4a818dbb9',
+    capacity: '0x4a817c800',
     lock: {
       code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
       hash_type: 'type',
@@ -742,22 +707,83 @@ The transaction status is committed
     }
   },
   out_point: {
-    tx_hash: '0x74104fe19b92c48ea8dbc16180740f6274ec9135e8aaea9c6a9d01ba2d76b08d',
+    tx_hash: '0x3162e8ccef8844e83c6cc63122f332f89d7dbd65c7d5f9fa040f4dd532b7abee',
     index: '0x0'
   },
-  block_hash: '0x3cb8bd2b527265a3f9a9ee067c4659a756681e3f065e13a99498b11a34338a6a',
-  block_number: '0x772',
-  data: '0x6e07000000000000',
-  since: '0x20000a0002000172', 
-  depositBlockHash: '0x1a59e0832a7123a1b134496e799c0257023c2cec29a38b0ad76c7447931ed25e',
-  withdrawBlockHash: '0x3cb8bd2b527265a3f9a9ee067c4659a756681e3f065e13a99498b11a34338a6a',
+  block_hash: '0xd025028f2bc4e4381c0fb1743ada5a5c48e387bf6a49e162120ea9a626fe0772',
+  block_number: '0xf0e',
+  data: '0x0000000000000000'
+}
+>
+>const depositcell = {
+  cell_output: {
+    capacity: '0x4a817c800',
+    lock: {
+      code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+      hash_type: 'type',
+      args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
+    },
+    type: {
+      code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
+      hash_type: 'type',
+      args: '0x'
+    }
+  },
+  out_point: {
+    tx_hash: '0x3162e8ccef8844e83c6cc63122f332f89d7dbd65c7d5f9fa040f4dd532b7abee',
+    index: '0x0'
+  },
+  block_hash: '0xd025028f2bc4e4381c0fb1743ada5a5c48e387bf6a49e162120ea9a626fe0772',
+  block_number: '0xf0e',
+  data: '0x0000000000000000'
+};
+>
+>
+//Withdraw the cell from DAO to prepare a withdraw cell that has a lock period.
+> await buildTXs.withdrawfromDAO(depositcell,alice.ADDRESS,10000000n,alice.PRIVATE_KEY);
+...
+The transaction hash is 0xee510df9a3bebbb00eef405318ba4fa19e5112139a3718ff13921bb962f9dda0
+'0xee510df9a3bebbb00eef405318ba4fa19e5112139a3718ff13921bb962f9dda0'
+>
+//Check the withdraw transaction status.
+> await querytransactions.getTXbyHash("0xee510df9a3bebbb00eef405318ba4fa19e5112139a3718ff13921bb962f9dda0");
+The transaction status is committed
+The block hash for the transaction is 0x63afdb21e9ce8173eb84bd59ac519aa80ab6f18cd4c61be9ceb5d536116c7a3f
+>
+//Check the cell in locktimepool, we can see the withdrawn cell in the locktime pool.
+> await querycells.locktimepoolCells(alice.ADDRESS);
+{
+  cell_output: {
+    capacity: '0x4a81c0719',
+    lock: {
+      code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+      hash_type: 'type',
+      args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
+    },
+    type: {
+      code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
+      hash_type: 'type',
+      args: '0x'
+    }
+  },
+  out_point: {
+    tx_hash: '0xee510df9a3bebbb00eef405318ba4fa19e5112139a3718ff13921bb962f9dda0',
+    index: '0x0'
+  },
+  block_hash: '0x63afdb21e9ce8173eb84bd59ac519aa80ab6f18cd4c61be9ceb5d536116c7a3f',
+  block_number: '0xf1e',
+  data: '0x0e0f000000000000',
+  since: '0x20000a0004000235',
+  depositBlockHash: '0xd025028f2bc4e4381c0fb1743ada5a5c48e387bf6a49e162120ea9a626fe0772',
+  withdrawBlockHash: '0x63afdb21e9ce8173eb84bd59ac519aa80ab6f18cd4c61be9ceb5d536116c7a3f',
   sinceValidationInfo: undefined
 }
-//when the epoch reaches the '0x20000a0002000172' since value , the locktimepool.transfer function can be executed sucessfully.
+>
+>
+//when the epoch reaches '0x20000a0004000235'(565+4/10), the locktimepool.transfer function can be executed sucessfully.
 > await buildTXs.locktimepoolTX(bob.ADDRESS,alice.ADDRESS, 10000000000n,10000000n,alice.PRIVATE_KEY);
 ```
 
 </p>
 
 </details>
-

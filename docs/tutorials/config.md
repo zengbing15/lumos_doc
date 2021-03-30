@@ -2,8 +2,6 @@
 id: config
 title: Set Up the Config Manager
 ---
-## Config Manager
-
 The config manager  (`@ckb-lumos/config-manager`) supports the DApp to boot with a specific chain configuration. All the other components in Lumos can leverage the configuration from the config manager directly.
 
 A DApp can set up the config manger by one of the following variables:
@@ -13,10 +11,7 @@ A DApp can set up the config manger by one of the following variables:
   The pre-defined configurations includes: 
 
   - `LINA`: Mainnet pre-defined configurations
-
   - `AGGRON4`: Testnet pre-defined configurations 
-
-    **Note**: When Testnet is reset, the Lumos config manager can be upgraded with the new Testnet configurations by a initializing step.
 
   For more information, see [Set Up the Config Manager by Using Pre-defined Configurations](../tutorials/config#set-up-the-config-manager-by-using-pre-defined-configurations). 
 
@@ -33,7 +28,7 @@ The following prerequisites apply for setting up the config manager:
 
 ## Set Up the Config Manager by Using Pre-defined Configurations
 
-The following example sets up the config manager to boot the DApp with the pre-defined configurations of Mainnet by specifying the variable <code>LUMOS_CONFIG_NAME</code> with <b>LINA</b>.
+To boot the DApp with the pre-defined Mainnet configurations, you can specify the <var>LUMOS_CONFIG_NAME</var> variable with <b>LINA</b>.
 
 Example:
 
@@ -45,7 +40,7 @@ initializeConfig();
 export const CONFIG = getConfig();
 ```
 
-To set up the config manger to boot the DApp with the pre-defined configurations of Testnet, you can specify the variable with <b>AGGRON4</b>.
+To boot the DApp with the pre-defined Testnet configurations, you can specify the variable with <b>AGGRON4</b>.
 
 ```typescript
 import { env } from "process";
@@ -57,15 +52,17 @@ export const CONFIG = getConfig();
 
 ## Set Up the Config Manager by Using a Local Config File
 
-The <var>LUMOS_CONFIG_FILE</var> variable can be set pointing to a configuration file. Lumos reads the configurations from that configuration file.  
+The <var>LUMOS_CONFIG_FILE</var> variable can be set pointing to a local configuration file. Lumos reads the configurations from that configuration file.  
 
-**Note**: If the `LUMOS_CONFIG_FILE` variable is not set, Lumos reads configurations from the `config.json` file in the current directory.
+:::note
 
-The following example sets up the config manager to boot the DApp with the configurations of the **DEV chain**.
+If the <var>LUMOS_CONFIG_FILE</var> variable is not set, Lumos reads configurations from the `config.json` file in the current directory.
 
-Step 1. Prepare the config.json file in the project root directory.
+:::
 
-Example:
+Step 1. Prepare the `config.json` file in the project root directory.
+
+Include the following content (the configurations of the **DEV chain**) in the config.json file.
 
 ```json title="hellolumos/config.json"
 {
@@ -98,7 +95,9 @@ Example:
 }
 ```
 
-Step 2. Set up the config manager in the DApp as follows.
+Step 2. Set up the config manager in the DApp.
+
+Example:
 
 ```typescript title="hellolumos/src/index.ts"
 import { env } from "process";

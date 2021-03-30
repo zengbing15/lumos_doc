@@ -2,7 +2,7 @@
 id: hellolumos
 title: Hello Lumos
 ---
-The Hello Lumos example is designed to serve as the starting point for learning Lumos. 
+The Hello Lumos example is designed to serve as the starting point for learning Lumos. To walk through this example can help you to get a general idea about the usage of Lumos through a common transaction. The full code of the example can be found here. 
 
 The  example has the following structure:
 
@@ -11,7 +11,7 @@ hellolumos/
 ├── src|accounts.ts
 ├── src|buildTXs.ts
 ├── src|index.ts
-├── src|managekeys.ts
+├── src|manageaccounts.ts
 ├── src|querycells.ts
 ├── src|querytransactions.ts
 ├── config.json
@@ -24,19 +24,13 @@ All required dependencies for the Hello Lumos example are listed in package.json
 
 The connection with the CKB node is established by the setup of the config manager and the Lumos indexer in the <u>index.ts</u> file. The Lumos indexer indexes cells locally to provide cells for queries and transaction requests. For more information about setting up the config manager, see [Set Up the Config Manger](../tutorials/config). For more information about setting up the Lumos indexer, see [Set Up the Lumos Indexer](../tutorials/indexer).
 
-The functions like querying on cells in <u>querycells.ts</u>, building transactions in <u>buildTXs.ts</u> are all facilitated based on the Lumos framework.
-
-The <u>querycells.ts</u> file implements several sample functions by utilizing Lumos utilities for querying on cells. For more information, see [Query on Cells](../tutorials/querycells).
-
-The <u>querytransactions.ts</u> file implements several sample functions by utilizing Lumos utilities for querying on transactions. For more information, see [Query on Transactions](../tutorials/querytransactions).
+The query functions on cells and transactions are all facilitated based on the Lumos framework. For more information, see [Query on Cells](../tutorials/querycells) and [Query on Transactions](../tutorials/querytransactions).
 
 The <u>buildTXs.ts</u> file implements several sample functions by utilizing Lumos utilities for assembling common transfer transactions, DAO deposit and withdraw transactions. For more information, see [Assembling Transactions](../tutorials/buildtransactions).
 
-This guide will help you to get a general idea about the usage of Lumos through a common transaction. The full code of the example can be found here. 
-
 ## Prerequisites
 
-The following Prerequisites apply for walking through this guide:
+The following Prerequisites apply for walking through the Hello Lumos example:
 
 - The development environment is set up. For more information, see [Set Up the Development Environment](../preparation/setupsystem).
 - The CKB node is installed and started on DEV chain. For more information, see [Install a CKB Node](../preparation/installckb).
@@ -80,6 +74,8 @@ $ git clone https://github.com/nervosnetwork/hellolumos
 ```
 
 ### Install dependencies.
+
+The Lumos packages required by the Hello Lumos example are installed during this step. To install other Lumos packages, see [Install Lumos](../tutorials/installlumos). 
 
 ```shell
 $ cd hellolumos
@@ -186,22 +182,12 @@ Step 1. Get the lock script for the accounts of Alice and Bob.
 > const script1 = parseAddress(alice.ADDRESS);
 > const script2 = parseAddress(bob.ADDRESS);
 > console.log(script1);
-```
-
-<details><summary>CLICK ME</summary>
-<p>
-
-
-```shell
 {
   code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
   hash_type: 'type',
   args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
 }
 ```
-
-</p>
-</details>
 
 Step 2. Get the balance for the accounts of Alice and Bob.
 
@@ -234,11 +220,15 @@ The transaction hash is 0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f356
 
 Step 4. Check the transaction status.
 
-> The CKB miner must be started to enable the transaction to be committed. For more information about transaction status, see [Get Transaction Status and Block Hash](../tutorials/querytransactions#get-transaction-status-and-block-hash).
+:::note
+
+The CKB miner must be started to commit the transaction on chain. For more information about transaction status, see [Get Transaction Status and Block Hash](../tutorials/querytransactions#get-transaction-status-and-block-hash).
+
+:::
 
 ```shell
 > await querytransactions.getTXbyHash("0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e");
-The transaction status is pending
+The transaction status is committed
 ```
 
 Step 5. Check the new balance of Bob.

@@ -10,6 +10,9 @@ module.exports = {
   projectName: 'lumos_doc', // Usually your repo name.
   themes: ['@docusaurus/theme-live-codeblock'],
   themeConfig: {
+	prism: {
+      theme: require('prism-react-renderer/themes/oceanicNext'),
+    },
     navbar: {
       title: 'Lumos Documentation',
       logo: {

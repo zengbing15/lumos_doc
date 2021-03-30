@@ -3,13 +3,13 @@ id: querycells
 title: Query on Cells
 ---
 
-> A Cell is the most basic structure that represents a single piece of data in Nervos. The data contained in a Cell can take many forms, including CKBytes, tokens, code like JavaScript code, or even serialized data like JSON strings. For more information about the cell model, see [Cell Data Structure](https://docs.nervos.org/docs/reference/cell) and [CKB RFC](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#42-cell).
+> A Cell is the most basic structure that represents a single piece of data in Nervos. The data contained in a cell can take many forms, including CKBytes, tokens, code like JavaScript code, or even serialized data like JSON strings. For more information about the cell model, see [Cell Data Structure](https://docs.nervos.org/docs/reference/cell) and [CKB RFC](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#42-cell).
 
-Querying on cells are the fundamental functions for a DApp to respond to user queries and transaction requests. Lumos provides the `collector` function in the Lumos indexer and the transaction manager modules, and the `CellCollector` class in the modules of common scripts to support query functions fulfilling specific query options.
+Querying on cells are the fundamental functions for a DApp to respond to user queries and transaction requests. Lumos provides the `collector` function in the Lumos indexer and the transaction manager modules, and the `CellCollector` class in the modules of common scripts to support queries fulfilling specific query options.
 
 ## Environment
 
-The following examples are verified on Ubuntu 20.04.2. Steps on the other platforms are similar and can be adjusted accordingly.
+The following examples are verified on Ubuntu 20.04.2. Steps on the other platforms can be adjusted accordingly.
 
 ## Examples
 
@@ -275,7 +275,11 @@ The default value of <var>argsLen</var> is -1 for the query on a full slice of t
 
 You can specify <var>argsLen</var> with a value other than the default value to enable the prefix search on the args of a lock script.
 
-> It is recommended to specify an explicit length for the <var>argsLen</var> parameter. For example, the length is **20** in normal scenarios and **28** in the multisig scenario for the lock script.  When the length is not certain, the <var>argsLen</var> parameter can be set as `any`. But there is performance lost when using `any` rather than an explicit length.
+:::info
+
+It is recommended to specify an explicit length for the <var>argsLen</var> parameter. For example, the length is **20** in normal scenarios and **28** in the multisig scenario for the lock script.  When the length is not certain, the <var>argsLen</var> parameter can be set as `any`. But there is performance lost when using `any` rather than an explicit length.
+
+:::
 
 Example: <u>hellolumos/src/querycells.ts/findCellsbyPrefix()</u>
 
@@ -483,114 +487,6 @@ The minimal cell capacity is 10200000000n
 ```
 </p>
 </details>
-
-### Get the Mainnet Address from a Lock Script
-
-The [generateAddress](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/helpers/src/index.ts#L89) function of the @ckb-lumos/helpers package can be used to generate address for a specific lock script.
-
-Example: <u>hellolumos/src/querycells.ts/generateMainnetAddress()</u>
-
-The example generates the Mainnet address for a lock script.
-
-```typescript title="hellolumos/src/querycells.ts"
-import {predefined} from "@ckb-lumos/config-manager";
-import { generateAddress } from "@ckb-lumos/helpers";
-
-export async function generateMainnetAddress(
-  lockScript:Script,
-)  {
-  const config = undefined || predefined.LINA;
-  const mainnetAddress = generateAddress(lockScript,{config});
-  console.log("The mainnet address for the lockscript is", mainnetAddress);  
-}
-```
-Try the `generateMainnetAddress` function in the Node.js REPL mode:
-
-
-<details><summary>CLICK ME</summary>
-<p>
-
-
-```shell
-> const mainnet = await querycells.generateMainnetAddress(script);
-The mainnet address for the lockscript is ckb1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qxe85u4
-```
-</p>
-</details>
-
-### Generate the Testnet Address from a Lock Script
-
-The following example generates the Testnet address for a lock script.
-
-```typescript title="hellolumos/src/querycells.ts"
-export async function generateTestnetAddress(
-  lockScript:Script,
-)  {
-  const config = undefined || predefined.AGGRON4;
-  const testnetAddress = generateAddress(lockScript, {config});
-  console.log("The testnet address for the lockscript is", testnetAddress);  
-}
-```
-
-Try the `generateTestnetAddress` function in the Node.js REPL mode:
-
-<details><summary>CLICK ME</summary>
-<p>
-
-```shell
-> const mainnet = await querycells.generateTestnetAddress(script);
-The testnet address for the lockscript is ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
-```
-</p>
-</details>
-
-### Get the Lock Script from an Address
-
-The [parseAddress](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/helpers/src/index.ts#L145) function of the @ckb-lumos/helpers package can be used to get the lock script from an address.
-
-**Example**:
-
-```typescript title="hellolumos/src/querycells.ts"
-import { parseAddress } from "@ckb-lumos/helpers";
-
-export async function generatelockFromAddress (
-  address:Address
-)  {
-  const lockscript = parseAddress(address);
-  console.log("The lockscript of the address is", lockscript);  
-}
-```
-
-Try the `parseAddress` function in the Node.js REPL mode: 
-
-<details><summary>CLICK ME</summary>
-<p>
-
-```shell
-> const { parseAddress } = require ("@ckb-lumos/helpers");
-> const lockscript = parseAddress("ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf");
-{
-  code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-  hash_type: 'type',
-  args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
-}
-```
-
-</p>
-</details>
-
-### Generate the Lock Hash for a Lock Script
-
-To be updated...
-
-```typescript title="hellolumos/src/querycells.ts"
-export async function generateLockHash(
-  lock:Script
-  ){
-    const lockHash = computeScriptHash(lock);
-    console.log("The lockHash is", lockHash);
-}
-```
 
 ### Get the Balance of an Account
 

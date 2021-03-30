@@ -13,9 +13,7 @@ The following prerequisites apply for installing Lumos packages as dependencies 
 
 ## Environment
 
-Lumos packages can be installed as dependencies for a Node.js project on all major platforms, including Linux, Windows and macOS.
-
-The following examples are verified on Ubuntu 20.04.2. Steps on the other platforms are similar and can be adjusted accordingly.
+The following examples are verified on Ubuntu 20.04.2. Steps on the other platforms can be adjusted accordingly.
 
 ## Steps
 
@@ -57,7 +55,7 @@ Done in 44.54s.
 
 ### **Step 3. Install Lumos packages as dependencies for the project.**
 
-A Lumos packages can be installed according to the application requirements by using the `yarn add` command or the `npm install` command.
+A Lumos package can be installed by using the `yarn add` command or the `npm install` command according to the application requirements.
 
 The following example installs the indexer, the common-scripts, the config-manager packages and their dependencies for the project.
 
