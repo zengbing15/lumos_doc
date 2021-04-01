@@ -42,6 +42,8 @@ export const CONFIG = getConfig();
 
 To boot the DApp with the pre-defined Testnet configurations, you can specify the variable with <b>AGGRON4</b>.
 
+Example:
+
 ```typescript
 import { env } from "process";
 import { getConfig, initializeConfig } from "@ckb-lumos/config-manager";
@@ -60,11 +62,11 @@ If the <var>LUMOS_CONFIG_FILE</var> variable is not set, Lumos reads configurati
 
 :::
 
-Step 1. Prepare the `config.json` file in the project root directory.
+### Step 1. Prepare the `config.json` file in the project root directory.
 
-Include the following content (the configurations of the **DEV chain**) in the config.json file.
+Prepare the file with the following content (the configurations of **DEV chain**):
 
-```json title="hellolumos/config.json"
+```json title="hellolumos/config.json" {1-28}
 {
   "PREFIX": "ckt",
   "SCRIPTS": {
@@ -95,7 +97,7 @@ Include the following content (the configurations of the **DEV chain**) in the c
 }
 ```
 
-Step 2. Set up the config manager in the DApp.
+### Step 2. Set up the config manager in the DApp.
 
 Example:
 

@@ -16,16 +16,14 @@ A CKB node can be set up to connect and interact with one of the following CKB n
 
 - **Mainnet (Lina)**: The Mainnet is the main CKB public network. The real-time information of the Lina Mainnet can be checked on the [CKB Explorer](https://explorer.nervos.org/) page.
 
-- **Testnet (Aggron4)**: The Testnet is used to test applications integration and smart contracts in real environment with actual data. 
+- **Testnet (Aggron4)**: The Testnet is used to test applications integration and smart contracts in real environment with actual data. To get CKB capacity for an account on the Testnet, go to [https://faucet.nervos.org](https://faucet.nervos.org/) and paste the Testnet address of the address in the address input box, then click the **Claim** button. For more information, see [Create Accounts](../preparation/createaccount).
 
-- **DEV Chain**:  The DEV chain is a local blockchain that provides an efficient and useful development mode for building and testing applications. <!--This is the recommended network for starters and DApp developers.--> 
+  :::info
 
-:::tip
-For the first time to start running a node on the **Testnet**, syncing data requires upwards of one hour for the current number (**1,300,000+**) of blocks depending on the network connection. The real-time block number on the Testnet can be checked on the [CKB Explorer](https://explorer.nervos.org/aggron) page.<br/>
-To get CKB capacity for an account on the Testnet, go to [https://faucet.nervos.org](https://faucet.nervos.org/) and paste the Testnet address of the address in the address input box, then click the **Claim** button. For more information, see [Create Accounts](../preparation/createaccount).<br/>
+  For the first time to start running a node on the **Testnet**, syncing data requires upwards of one hour for the current number (**1,300,000+**) of blocks depending on the network connection. The real-time block number on the Testnet can be checked on the [CKB Explorer](https://explorer.nervos.org/aggron) page.<br/>
+  :::
 
-To get CKB capacity for an account on the **DEV** chain, specify the account as the miner in the chain configurations for receiving mining rewards. For more information, see [Create Accounts](../preparation/createaccount).
-:::
+- **DEV Chain**:  The DEV chain is a local blockchain that provides an efficient and useful development mode for building and testing applications. To get CKB capacity for an account on the **DEV** chain, specify the account as the miner in the chain configurations for receiving mining rewards. For more information, see [Create Accounts](../preparation/createaccount).<!--This is the recommended network for starters and DApp developers.--> 
 
 ## Installation Options
 
@@ -54,7 +52,7 @@ The following examples are verified on **Ubuntu 20.04.2**. Steps on the other pl
 
 The following example downloads the CKB version 0.39.0. All releases can be found on the [CKB releases](https://github.com/nervosnetwork/ckb/releases) page.
 
-```shell
+```bash {1-4}
 $ export TOP=$(pwd)
 $ curl -LO https://github.com/nervosnetwork/ckb/releases/download/v0.39.0/ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
 $ tar xzf ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
@@ -63,14 +61,14 @@ $ export PATH=$PATH:$TOP/ckb_v0.39.0_x86_64-unknown-linux-gnu
 
 ### **Step 2. Verify the binaries are working and check versions.**
 
-```shell
+```bash {1}
 $ ckb -V
 ckb 0.39.0
 ```
 
 ### **Step 3. Choose a CKB network and run the CKB node.**
 
-DEV chain is the recommended network for the later examples and CKB starters. For more information about CKB networks, see [CKB Networks](../preparation/installckb#ckb-networks).
+**DEV chain** is the recommended network for the later examples and CKB starters. For more information about CKB networks, see [CKB Networks](../preparation/installckb#ckb-networks).
 
 <Tabs
   defaultValue="dev"
@@ -81,7 +79,7 @@ DEV chain is the recommended network for the later examples and CKB starters. Fo
   ]}>
 <TabItem value="dev"><p><b>1. Initialize the CKB node on the DEV blockchain.</b></p>
 
-```shell
+```bash {1}
 $ ckb init -C devnet -c dev
 WARN: mining feature is disabled because of lacking the block assembler config options
 Initialized CKB directory in devnet
@@ -101,7 +99,7 @@ create default.db-options
 
 <p>To modify <code>genesis_epoch_length</code> and <code>permanent_difficulty_in_dummy</code>:</p>
 
-```shell
+```bash {1-8}
 $ ed devnet/specs/dev.toml <<EOF
 91d
 90a
@@ -118,7 +116,7 @@ EOF
 
 <p>To modify the value to generate a new block every second (1000 milliseconds):</p>
 
-```shell
+```bash {1-4}
 $ ed devnet/ckb-miner.toml <<EOF
 39s/5000/1000/
 wq
@@ -129,14 +127,14 @@ EOF
 
 <p><b>3. Start the CKB node with the dev chain.</b></p>
 
-```shell
+```bash {1}
 $ ckb run -C devnet
 ```
 
 </TabItem>
     <TabItem value="testnet"><p><b>1. Initialize the Testnet node.</b></p>
 
-```shell
+```bash {1}
 $ ckb init --chain testnet -C testnet
 WARN: mining feature is disabled because of lacking the block assembler config options
 Initialized CKB directory in testnet
@@ -146,14 +144,14 @@ create ckb-miner.toml
 
 <p><b>2. Start the CKB Testnet node.</b></p>
 
-```shell
+```bash {1}
 $ ckb run -C testnet
 ```
 
 </TabItem>
     <TabItem value="mainnet"><p><b>1. Initialize the Mainnet node.</b></p>
 
-```shell
+```bash {1}
 $ ckb init --chain mainnet -C mainnet
 WARN: mining feature is disabled because of lacking the block assembler config options
 Initialized CKB directory in mainnet
@@ -163,7 +161,7 @@ create ckb-miner.toml
 
 <p><b>2. Start the CKB Mainnet node.</b></p>
 
-```shell
+```bash
 $ ckb run -C mainnet
 ```
 
@@ -185,11 +183,11 @@ import TabItem from '@theme/TabItem';
   ]}>
 <TabItem value="ubuntu"><p><b>Step 1. Install Tippy</b></p>
 
-<p>Tippy can be installed from the pre-built installer or built from <a href="https://github.com/nervosnetwork/tippy">source</a>. The following example installs Tippy version 0.1.6 from the pre-built installer. For more information about the installation from source, see the <a href="https://github.com/nervosnetwork/tippy">Readme</a> of Tippy.</p>
+<p>Tippy can be installed by using the pre-built installer or built from <a href="https://github.com/nervosnetwork/tippy">source</a>. The following example installs Tippy version 0.1.6 by using the pre-built installer. For more information about the installation from source, see the <a href="https://github.com/nervosnetwork/tippy">Readme</a> of Tippy.</p>
 
-<p>To install Tippy from the pre-built installer on Ubuntu 20.04:</p>
+<p>To install Tippy by using the pre-built installer on Ubuntu 20.04:</p>
 
-```
+```bash {1}
 $ curl -LO https://github.com/nervosnetwork/tippy/releases/download/v0.1.6/tippy-linux-x64.tar.gz
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
@@ -199,9 +197,9 @@ $ curl -LO https://github.com/nervosnetwork/tippy/releases/download/v0.1.6/tippy
 
 <p><b>Step 2. Run the Tippy tool</b></p>
 
-<p>To run the Tippy tool in command line:</p>
+<p>To run the Tippy tool in the command line:</p>
 
-```
+```bash {1-3}
 $ chmod +x ./tippy-linux-x64/Tippy
 $ cd tippy-linux-x64
 $ ./tippy-linux-x64/Tippy
@@ -209,7 +207,7 @@ $ ./tippy-linux-x64/Tippy
 
 <p>If a desktop GUI is installed, double click the Tippy file under the tippy-linux-x64 folder to run Tippy.</p>
 
-<p>A web page on http://localhost:5000/Home will be opened in a browser after the execution or the double click. If the page is not opened, open the browser and type http://localhost:5000/Home in the address field to open it.</p>
+<p>A web page on <a>http://localhost:5000/Home</a> will be opened in a browser after the execution or the double click. If the page is not opened, open the browser and type <a>http://localhost:5000/Home</a> in the address field to open it.</p>
 
 <p><b>Step 3. Create a CKB node.</b></p>
 
@@ -226,7 +224,7 @@ $ ./tippy-linux-x64/Tippy
 
 The following example downloads the 0.1.6 version. You can find all versions on the <a href="https://github.com/nervosnetwork/tippy/releases">Tippy Releases</a> page.
 
-```
+```bash {1}
 C:> curl -LO https://github.com/nervosnetwork/tippy/releases/download/v0.1.6/tippy-win-x64.zip
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
@@ -238,7 +236,7 @@ C:> curl -LO https://github.com/nervosnetwork/tippy/releases/download/v0.1.6/tip
 
 <p><b>Step 3. Double click the Tippy file under the tippy-win-x64 folder to run Tippy.</b></p>
 
-<p>A web page on http://localhost:5000/Home will be opened in a browser after the double click. If the page is not opened, open the browser and type http://localhost:5000/Home in the address field to open it.</p>
+<p>A web page on <a>http://localhost:5000/Home</a> will be opened in a browser after the double click. If the page is not opened, open the browser and type <a>http://localhost:5000/Home</a> in the address field to open it.</p>
 
 <p><b>Step 4. Create a CKB node.</b></p>
 

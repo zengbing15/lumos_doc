@@ -32,6 +32,8 @@ export async function generateKey(){
 }
 ```
 
+Try the `generateKey` function in the Node.js REPL mode:
+
 
 <details><summary>CLICK ME</summary>
 <p>
@@ -83,26 +85,23 @@ export async function private2Public (
 }
 ```
 
-### Generate the Mainnet Address from a Lock Script
+### Generate the Address from a Lock Script
 
 The [generateAddress](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/helpers/src/index.ts#L89) function of the @ckb-lumos/helpers package can be used to generate address from a specific lock script.
 
-The following example generates the Mainnet address from a lock script.
+The following example generates the address from a lock script.
 
 ```typescript title="hellolumos/src/manageaccounts.ts"
-import {predefined} from "@ckb-lumos/config-manager";
-import { generateAddress } from "@ckb-lumos/helpers";
-
-export async function generateMainnetAddress(
+export async function generateAddressfromLock(
   lockScript:Script,
+  config: Config
 )  {
-  const config = undefined || predefined.LINA;
-  const mainnetAddress = generateAddress(lockScript,{config});
-  console.log("The mainnet address for the lockscript is", mainnetAddress);  
+  const address = generateAddress(lockScript, {config});
+  console.log("The address for the lockscript is", address);  
 }
 ```
 
-Try the `generateMainnetAddress` function in the Node.js REPL mode:
+Try the `generateAddressfromLock` function in the Node.js REPL mode:
 
 
 <details><summary>CLICK ME</summary>
@@ -110,59 +109,21 @@ Try the `generateMainnetAddress` function in the Node.js REPL mode:
 
 
 
-```shell
-> const mainnet = await manageaccounts.generateMainnetAddress(script);
-The mainnet address for the lockscript is ckb1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qxe85u4
+```bash {1,4,6-9}
+$ node --experimental-repl-await
+Welcome to Node.js v14.0.0.
+Type ".help" for more information.
+> const { accounts, manageaccounts, CONFIG}=require(".");
+The server is started.
+> const alice = accounts.ALICE;
+> const { parseAddress }=require("@ckb-lumos/helpers");
+> const script = parseAddress(alice.ADDRESS);
+> const address = await manageaccounts.generateAddressfromLock(script,CONFIG);
+The address for the lockscript is ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
 ```
 
 </p>
 </details>
-
-### Generate the Testnet Address from a Lock Script
-
-The following example generates the Testnet address from a lock script.
-
-```typescript title="hellolumos/src/manageaccounts.ts"
-export async function generateTestnetAddress(
-  lockScript:Script,
-)  {
-  const config = undefined || predefined.AGGRON4;
-  const testnetAddress = generateAddress(lockScript, {config});
-  console.log("The testnet address for the lockscript is", testnetAddress);  
-}
-```
-
-Try the `generateTestnetAddress` function in the Node.js REPL mode:
-
-<details><summary>CLICK ME</summary>
-<p>
-
-
-```shell
-> const mainnet = await manageaccounts.generateTestnetAddress(script);
-The testnet address for the lockscript is ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
-```
-
-</p>
-</details>
-
-### Generate the Testnet Address from a Public Key
-
-```typescript title="hellolumos/src/manageaccounts.ts"
-import { pubkeyToAddress } from "@nervosnetwork/ckb-sdk-utils";
-
-export const publicKeyToTestnetAddress = (
-  publicKey: string,
-  prefix = AddressPrefix.Testnet
-) => {
-  const pubkey = publicKey.startsWith("0x") ? publicKey : `0x${publicKey}`;
-  return pubkeyToAddress(pubkey, {
-    prefix,
-    type: Type.HashIdx,
-    codeHashOrCodeHashIndex: "0x00",
-  });
-};
-```
 
 ### Get the Lock Script from an Address
 
@@ -224,30 +185,64 @@ export async function generateLockHash(
 ### Generate an Account from a Private Key
 
 ```typescript title="hellolumos/src/manageaccounts.ts"
-import * as ckbUtils from "@nervosnetwork/ckb-sdk-utils";
 import { parseAddress} from "@ckb-lumos/helpers";
 import { utils, Address, Hash, Script, HexString } from "@ckb-lumos/base";
 const { computeScriptHash } = utils;
+import { key } from "@ckb-lumos/hd";
 
 export type Account = {
   lockScript: Script;
   lockHash: Hash;
   address: Address;
-  pubKey: HexString;
+  pubKey: string;
   lockScriptMeta?: any;
-};
-
-export const generateAccountFromPrivateKey = (privKey: HexString): Account => {
-  const pubKey = ckbUtils.privateKeyToPublicKey(privKey);
-  const address = publicKeyToTestnetAddress(pubKey);
-  const lockScript = parseAddress(address);
+}
+export const generateAccountFromPrivateKey = (privKey: string): Account => {
+  const pubKey = key.privateToPublic(privKey);
+  const args = key.publicKeyToBlake160(pubKey);
+  const template = CONFIG.SCRIPTS["SECP256K1_BLAKE160"]!
+  const lockScript = {    
+    code_hash: template.CODE_HASH,
+    hash_type: template.HASH_TYPE,
+    args: args
+  };
+  const address = generateAddress(lockScript);
   const lockHash = computeScriptHash(lockScript);
   return {
     lockScript,
     lockHash,
     address,
     pubKey,
-  };
-};
+  }
+}
 ```
 
+Try the `generateAccountFromPrivateKey` function in the Node.js REPL mode: 
+
+<details><summary>CLICK ME</summary>
+<p>
+
+
+
+```shell
+$ node --experimental-repl-await
+Welcome to Node.js v14.0.0.
+Type ".help" for more information.
+> const { accounts, manageaccounts }=require(".");
+The server is started.
+> const alice = accounts.ALICE;
+> await manageaccounts.generateAccountFromPrivateKey(alice.PRIVATE_KEY);
+{
+  lockScript: {
+    code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+    hash_type: 'type',
+    args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
+  },
+  lockHash: '0xf6ea009a4829de7aeecd75f3ae6bcdbaacf7328074ae52a48456a8793a4b1cca',
+  address: 'ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf',
+  pubKey: '0x02963f88be6c4163a68abf0539facdfc2a77064c6091f618953a230caeacf5237e'
+}
+```
+
+</p>
+</details>

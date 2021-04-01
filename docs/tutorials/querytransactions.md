@@ -16,14 +16,14 @@ The following examples are verified on Ubuntu 20.04.2. Steps on the other platfo
 
 The following example creates a new TransactionCollector to collect transactions for a specific lock script and returns the result with status.
 
-Example: <u>hellolumos/src/querytransactions.ts/getTxbyLock()</u>
+Example:
 
-```typescript title="hellolumos/src/querytransactions.ts"
+```typescript title="hellolumos/src/querytransactions.ts/getTxsbyLock()" {9}
 import {INDEXER} from "./index";
 import { Script, Transaction } from "@ckb-lumos/base";
 import { TransactionCollector } from "@ckb-lumos/indexer";
 
-export async function getTxbyLock (
+export async function getTxsbyLock (
   lockScript: Script,
 ) {
   console.log("Get transactions by lock script:");
@@ -41,7 +41,7 @@ export async function getTxbyLock (
 
 ```
 
-Try the `getTxbyLock` function in the Node.js REPL mode:
+Try the `getTxsbyLock` function in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
@@ -58,7 +58,7 @@ The server is started.
   hash_type: "type",
   args: alice.ARGS,
  };
-> await querytransactions.getTxbyLock(script);
+> await querytransactions.getTxsbyLock(script);
 Get transactions by lock script:
 [
   {
@@ -94,22 +94,22 @@ Get transactions by lock script:
 
 The following example fetches the transactions between `[fromBlock, toBlock]`. Both `fromBlock` and `toBlock` are included in the queryOptions.
 
-Example: <u>hellolumos/src/querytransactions.ts/getTxbetweenBlocks()</u>
+Example:
 
-```typescript title="hellolumos/src/querytransactions.ts"
-export async function getTxbetweenBlocks (
+```typescript title="hellolumos/src/querytransactions.ts/getTxsbetweenBlocks()" {6}
+export async function getTxsbetweenBlocks (
     lockScript: Script,
     fromBlock: string,
     toBlock: string
   )  {
-    const txCollector = new TransactionCollector(INDEXER,{lock:lockScript,fromBlock:fromBlock,toBlock:toBlock});
+    const txCollector = new TransactionCollector(INDEXER,{lock:lockScript,fromBlock,toBlock});
     console.log("Get transactions between given blocks:");
     for await (const txWithStatus of txCollector.collect()) {
         console.log(txWithStatus);
     }
 }
 ```
-Try the `getTxbetweenBlocks` function in the Node.js REPL mode:
+Try the `getTxsbetweenBlocks` function in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
@@ -117,7 +117,7 @@ Try the `getTxbetweenBlocks` function in the Node.js REPL mode:
 ```shell
 > const from="0x801";
 > const to="0x804";
-> await querytransactions.getTxbetweenBlocks(script,from,to);
+> await querytransactions.getTxsbetweenBlocks(script,from,to);
 Get transactions between given blocks:
 {
   transaction: {
@@ -217,14 +217,14 @@ Get transactions between given blocks:
 
 The <var>skip</var> query option represents the number of transactions being skipped.
 
-Example: <u>hellolumos/src/querytransactions.ts/getTxandSkip()</u>
+Example:
 
-```typescript title="hellolumos/src/querytransactions.ts"
-export async function getTxandSkip (
-    lockScript: Script,
+```typescript title="hellolumos/src/querytransactions.ts/getTxsandSkip()" {5}
+export async function getTxsandSkip (
+    lock: Script,
     skip: number
   )  {
-    const txCollector = new TransactionCollector(INDEXER,{lock:lockScript,skip:skip});
+    const txCollector = new TransactionCollector(INDEXER,{lock,skip});
     console.log("Get transactions and skip the first", skip, "trasactions");
     for await (const txWithStatus of txCollector.collect()) {
         console.log(txWithStatus);
@@ -236,14 +236,14 @@ export async function getTxandSkip (
 
 The following example creates a new TransactionCollector and uses the TransactionCollector to collect transactions in order of block numbers for a specific lock script. If the order is not specified, the default order is "asc" for the returned result.
 
-Example: <u>hellolumos/src/querytransactions.ts/getTxandOrder()</u>
+Example:
 
-```typescript title="hellolumos/src/querytransactions.ts"
-export async function getTxandOrder (
-    lockScript: Script,
+```typescript title="hellolumos/src/querytransactions.ts/getTxsandOrder()" {5}
+export async function getTxsandOrder (
+    lock: Script,
     order: "asc"|"desc"
   )  {
-    const txCollector = new TransactionCollector(INDEXER,{lock:lockScript,order:order});
+    const txCollector = new TransactionCollector(INDEXER,{lock,order});
     console.log("Get transactions in order of", order);
     for await (const txWithStatus of txCollector.collect()) {
         console.log(txWithStatus);
@@ -263,14 +263,14 @@ It is recommended to specify an explicit length for the <var>argsLen</var> param
 
 :::
 
-Example: <u>hellolumos/src/querytransactions.ts/prefixSearch()</u>
+Example:
 
-```typescript title="hellolumos/src/querytransactions.ts"
-export async function prefixSearch  (
-    lockScript: Script,
-    argslen : number
+```typescript title="hellolumos/src/querytransactions.ts/findTXsbyPrefix()" {5}
+export async function findTXsbyPrefix  (
+    lock: Script,
+    argsLen : number
   )  {
-    const txCollector = new TransactionCollector(INDEXER,{lock:lockScript,argsLen:argslen});
+    const txCollector = new TransactionCollector(INDEXER,{lock,argsLen});
     console.log("Prefix Search");
     for await (const txWithStatus of txCollector.collect()) {
         console.log(txWithStatus);
@@ -284,12 +284,12 @@ Fine Grained Query for Transactions can be achieved by using [ScriptWrapper](htt
 
 The value for the <var>ioType</var> field is among `input | output | both`.
 
-Example: <u>hellolumos/src/querytransactions.ts/fineGrainedQuery()</u>
+Example:
 
-```typescript title="hellolumos/src/querytransactions.ts"
+```typescript title="hellolumos/src/querytransactions.ts/finegrainedSearch()" {9-13}
 import { ScriptWrapper} from "@ckb-lumos/base";
 
-export async function fineGrainedQuery  (
+export async function finegrainedSearch  (
     lockScript: Script,
     typescript : Script,
     argslen: number,
@@ -318,13 +318,13 @@ A transaction can be in one of the following status:
 
 The following example uses the get_transaction function to get the transaction information (status, block_hash) for a specific transaction hash.
 
-Example: <u>hellolumos/src/querytransactions.ts/getTXStatus()</u>
+Example: 
 
-```typescript title="hellolumos/src/querytransactions.ts"
+```typescript title="hellolumos/src/querytransactions.ts/getTxsbyHash()" {7}
 import { RPC } from "@ckb-lumos/RPC";
 const rpc = new RPC("http://127.0.0.1:8114");
 
-export async function getTXStatus  (
+export async function getTxsbyHash  (
   txHash: string
 )   {
   const txWithStatus = await rpc.get_transaction(txHash);

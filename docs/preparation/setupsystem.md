@@ -8,7 +8,7 @@ This guide will help you get your system set up for building DApps with Lumos. I
 
 CKB DApps can be developed on all major platforms including Linux, Windows, and Mac. 
 :::note
-The support on Windows for CKB nodes that are required during the development is experimental.  To be more performant, we recommend to use a Linux or Unix-based (Mac) operating system. For more information, see [Get CKB Binary on Windows (experimental)](https://docs.nervos.org/docs/basics/guides/ckb-on-windows).
+CKB nodes are required during the development process. The support on Windows for CKB nodes is experimental. To be more performant, we recommend to use a Linux or Unix-based (Mac) operating system. For more information, see [Get CKB Binary on Windows (experimental)](https://docs.nervos.org/docs/basics/guides/ckb-on-windows).
 :::
 
 ## Install Node.js
@@ -23,9 +23,9 @@ Node.js is the runtime environment that must be installed on the system before u
   ]}>
 <TabItem value="ubuntu"><p>Install Node.js with Apt by Using a NodeSource PPA:</p>
 
-```
-curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
-sudo apt install nodejs
+```bash
+$ curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
+$ sudo apt install nodejs
 ```
 
 </TabItem>
@@ -39,7 +39,7 @@ It is recommended to install Yarn through the NPM package manager, which comes b
 
 To install Yarn through NPM:
 
-```
+```bash
 npm install --global yarn
 ```
 
@@ -67,13 +67,17 @@ $ sudo apt install build-essential
 ```
 
 </TabItem>
-  <TabItem value="windows">The development dependencies for Windows are as follows:<ul><li>The current version of Python.</li><li>Visual C++ Build Environment</li></ul><b>Installation Options</b>
+
+<TabItem value="macos">The development dependencies for macOS are as follows:<ul><li>Python v3.6, v3.7, v3.8, or v3.9</li><li><a href="https://developer.apple.com/xcode/download/">Xcode</a> and Xcode command line tools</li></ul>
+
+</TabItem>
+
+ <TabItem value="windows">The development dependencies for Windows are as follows:<ul><li>The current version of Python.</li><li>Visual C++ Build Environment</li></ul><b>Installation Options</b>
 
 <ul><li>Option 1: Install all the required tools and configurations using Microsoft's windows-build-tools by running <code>npm install -g windows-build-tools -vs2019</code> from an elevated PowerShell (run as Administrator).<p><b>Note</b>: This command installs all the system dependencies without conflicting with any software already installed on the system. Depending on the build tools' version, the installation requires 3 to 8 gigabytes space to get all dependencies installed. It can take at least 30 minutes depending on the network connection.</p></li><li>Option 2: Install dependencies and configure the tools manually.<ul><li>Install Visual C++ Build Environment: Tools for Visual Studio 2019 -> <a href="https://visualstudio.microsoft.com/downloads/">Visual Studio 2019 Build Tools</a> (using "Visual C++ build tools" workload) and run <code>npm config set msvs_version 2019</code> in a cmd terminal.</li><li>Install the current version of Python from the <a href="https://docs.python.org/3/using/windows.html#the-microsoft-store-package">Microsoft Store package</a>, and run <code>npm config set python /path/to/python</code>.</li></ul></li></ul>
 
 </TabItem>
 
-<TabItem value="macos">The development dependencies for macOS are as follows:<ul><li>Python v3.6, v3.7, v3.8, or v3.9</li><li><a href="https://developer.apple.com/xcode/download/">Xcode</a> and Xcode command line tools</li></ul></TabItem>
 </Tabs>
 For more information, see the instructions of <a href="https://github.com/nodejs/node-gyp">node-gyp</a>.
 

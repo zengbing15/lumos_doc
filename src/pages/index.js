@@ -10,10 +10,11 @@ function Hero() {
   return (
     <header className="hero">
       <div className="container margin-vert--lg">
+	
         <h1 className="hero__title">{siteConfig.title}</h1>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
         <Link
-          to={useBaseUrl("docs/introduction/intro")}
+          to={useBaseUrl("docs/introduction/about")}
           className="button button--primary button--outline button--lg"
         >
           Get Started

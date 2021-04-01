@@ -8,28 +8,33 @@ module.exports = {
   favicon: 'img/favicon.png',
   organizationName: 'xying21', // Usually your GitHub org/user name.
   projectName: 'lumos_doc', // Usually your repo name.
-  themes: ['@docusaurus/theme-live-codeblock'],
+
   themeConfig: {
+
+	
+	hideableSidebar: true,
 	prism: {
-      theme: require('prism-react-renderer/themes/oceanicNext'),
+      theme: require('prism-react-renderer/themes/nightOwlLight'),
     },
     navbar: {
-      title: 'Lumos Documentation',
-      logo: {
-        alt: 'Lumos',
-        src: 'img/favicon.png',
+		hideOnScroll: true,
+		title: 'Lumos Documentation',
+		logo: {
+			alt: 'Lumos',
+			src: 'img/favicon.png',
       },
       items: [
         {
           to: 'docs/introduction/intro',
           activeBasePath: 'docs',
           label: 'Docs',
-          position: 'left',
+          position: 'right',
         },
-        {href: 'https://nervosnetwork.github.io/lumos/globals.html', label: 'API Documenation', position: 'left'},
+        {href: 'https://nervosnetwork.github.io/lumos/globals.html', label: 'API Documenation', position: 'right'},
         {
           href: 'https://github.com/nervosnetwork/lumos',
-          label: 'GitHub',
+		  className: 'github-link',
+          'aria-label': 'GitHub',
           position: 'right',
         },
       ],
@@ -99,12 +104,12 @@ module.exports = {
           editUrl:
             'https://github.com/xying21/lumos_doc/tree/master',
         },
-        blog: {
+        /*blog: {
           showReadingTime: true,
           // Please change this to your repo.
           editUrl:
             'https://github.com/facebook/docusaurus/edit/master/website/blog/',
-        },
+        },*/
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },

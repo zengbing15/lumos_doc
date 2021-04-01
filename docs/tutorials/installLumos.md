@@ -113,4 +113,4 @@ If any gyp error about missing dependencies for node-gyp is encountered, go to c
 
 ### Error While Rebuilding the xxhash Package
 
-node-gyp rebuilds the xxhash package during the `yarn add` or `npm install` process. Incompatible Node.js may cause the rebuilding failure. Reinstall a lower version of Node.js, for example, Node.js 12, and then install Lumos packages.
+node-gyp rebuilds the xxhash package during the `yarn add` process. Incompatible Node.js may cause the rebuilding failure. Reinstall a lower version of Node.js, for example, Node.js 12, and then install Lumos packages.

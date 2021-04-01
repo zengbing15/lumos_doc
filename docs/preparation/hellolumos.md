@@ -102,6 +102,12 @@ Done in 52.70s.
 
 Replace the value of `PRIVATE_KEY`, `ADDRESS`, `ARGS` and `LOCKHASH` for ALICE and BOB in the `accounts.ts` file with the account information you have prepared when creating accounts. For more information about creating accounts, see [Create Accounts](../preparation/createaccount).
 
+:::note
+
+The account information in this documentation is only used for demonstration. Do **not** use these private keys,  addresses and args elsewhere. 
+
+:::
+
 Example:
 
 ```typescript title="hellolumos/src/accounts.ts"
@@ -124,61 +130,38 @@ export const BOB = {
 
 ### Build the project.
 
-```
+```javascript {1}
 $ tsc
 ```
 
 ### Enter the Node.js REPL mode.
 
-```shell
+```javascript {1}
 $ node --experimental-repl-await
-```
-<details><summary>CLICK ME</summary>
-<p>
-
-```shell
 Welcome to Node.js v14.0.0.
 Type ".help" for more information.
 ```
-</p>
-</details>
-
 ### Start the indexer and initialize the configurations.
 
-The following code snippet starts the Lumos indexer and sets up the config manager.
 
-```typescript title="hellolumos/src/index.ts"
-import { Indexer } from "@ckb-lumos/indexer";
-export const INDEXER = new Indexer(CKB_RPC, "./indexed-data");
-INDEXER.startForever();
-
-import { getConfig, initializeConfig } from "@ckb-lumos/config-manager";
-env.LUMOS_CONFIG_FILE = env.LUMOS_CONFIG_FILE || "./config.json";
-initializeConfig();
-export const CONFIG = getConfig();
-```
-
-Run the code in the Node.js REPL mode:
-
-<details><summary>CLICK ME</summary>
-<p>
-
-```shell
+```javascript {1}
 > require(".");
 The server is started.
 ```
 
-</p>
-</details>
+For more information about setting up the Lumos indexer, see [Set Up the Lumos Indexer](../tutorials/indexer).
+
+For more information about setting up the config manager, see [Set Up the Config Manager](../tutorials/config).
 
 ### Perform a common transfer transaction.
 
-Step 1. Get the lock script for the accounts of Alice and Bob.
+Step 1. Get the account information of Alice and Bob.
 
-```shell
+```javascript {1-7}
+> const { accounts, querycells, buildTXs}=require(".");
 > const alice = accounts.ALICE;
 > const bob = accounts.BOB;
-> const { parseAddress }=require("@ckb-lumos/helpers");
+> const { parseAddress } = require("@ckb-lumos/helpers");
 > const script1 = parseAddress(alice.ADDRESS);
 > const script2 = parseAddress(bob.ADDRESS);
 > console.log(script1);
@@ -191,30 +174,20 @@ Step 1. Get the lock script for the accounts of Alice and Bob.
 
 Step 2. Get the balance for the accounts of Alice and Bob.
 
-```shell
+```javascript {1,3}
 > const balance1 = querycells.getBalancebyLock(script1);
 > The balance of the account is 1386763373620166n
-```
-
-```shell
 > const balance2 = querycells.getBalancebyLock(script2);
 > The balance of the account is 0n
 ```
 
-Step 3. Assemble a common transfer transaction. 
+Step 3. Transfer 200 CKB from Alice to Bob. 
 
-The buildCommonTx() function performs the following actions: 
+For more information, see [Transfer CKB in a Common Transaction](../tutorials/buildtransactions#transfer-ckb-in-a-common-transaction).
 
-- Create a new `TransactionSkeleton` for the transfer action with the `common.transfer` function.
-- Add the pay fee for the transaction with the `common.payFee` function.
-- Prepare signing entries with the `common.prepareSigningEntries` function.
-- Sign and seal the transaction with the `signandSeal` function.
-- Send the transaction with the `rpc.send_transaction` function. 
-
-For more information about assembling a transaction, see [Assemble Transactions](../tutorials/buildtransactions).
-
-```shell
-> const txskeleton = await buildTXs.buildCommonTx(alice.ADDRESS, bob.ADDRESS,20000000000n,10000000n,alice.PRIVATE_KEY);
+```javascript {1}
+> const txskeleton = await buildTXs.commonTransfer([alice.ADDRESS], bob.ADDRESS,20000000000n,10000000n,alice.PRIVATE_KEY);
+[warn] ANYONE_CAN_PAY script info not found in config!
 The transaction hash is 0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e
 ```
 
@@ -226,7 +199,7 @@ The CKB miner must be started to commit the transaction on chain. For more infor
 
 :::
 
-```shell
+```javascript {1}
 > await querytransactions.getTXbyHash("0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e");
 The transaction status is committed
 ```
@@ -235,7 +208,7 @@ Step 5. Check the new balance of Bob.
 
 When the transaction is committed, the new balance appears in the result.
 
-```shell
+```javascript {1}
 > await querycells.getBalancebyLock(script2);
 > The balance of the account is 20000000000n
 ```

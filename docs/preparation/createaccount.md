@@ -12,7 +12,7 @@ The following table lists the elements of an account that are useful during the 
 | Lock&nbsp;script<br/> | <pre>A lock script consists of three key parameters, including *code_hash*, *hash_type* and *args*.<br/>Example:<br/><samp>{<br/>&nbsp;code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',<br/> &nbsp;hash_type:&nbsp;'type',<br/>&nbsp;args: '0x82be41cf167110e6c00e79009a3fd4d9abe8c65a'<br/>}</samp></pre> |
 | Address      | <pre>A CKB address packages a lock script into a single line in a verifiable and human-readable format.<br/>Example:<br/><samp>ckt1qyqg90jpeut8zy8xcq88jqy68l2dn2lgcedqd7ye7n</samp></pre> |
 | Private&nbsp;key | <pre>A private key is a string of letters and numbers that is normally stored in a wallet. It proves the ownership of cryptocurrencies or digital assets and allows the user to send his/her cryptocurrency or digital assets to other payment addresses.<br/>A private key must be kept secret at all times. Anyone with the key has the ability to access the cryptocurrency or digital assets.</pre> |
-| CKB&nbsp;capacity | <pre>CKB capacity of an account is the total CKB capacity of the live cells of an account.<br/>**Note**: If an account wants to perform transaction actions like transferring CKB to other accounts, the account must have enough CKB capacity that is equal or more than the minimal CKB requirement of a transaction.<br/>For example, the minimum CKB capacity requirement is 61 CKB (6100000000n) for one common transaction, and 102 CKB (10200000000n) for a DAO deposit transaction.</pre> |
+| CKB&nbsp;capacity | <pre>CKB capacity of an account is the total CKB capacity of the live cells of an account.<br/>**Note**: If an account wants to perform transaction actions like transferring CKB to other accounts, the account must have enough CKB capacity that is equal or more than the minimal CKB requirement of a transaction.<br/>For example, the minimum CKB capacity requirement is 61 [CKB](https://docs.nervos.org/docs/basics/glossary#shannon "One CKByte is equal to 100,000,000 Shannons.") (6,100,000,000 shannons) for one common transaction, and 102 CKB (10,200,000,000 shannons) for a DAO deposit transaction.</pre> |
 
 This guide will prepare two CKB accounts, Alice and Bob for later usage in the [Hello Lumos](../preparation/hellolumos) example.<!--Create an account by using ckb-cli.--> <!--Get the private key of an account.--><!--Get CKB capacity for an account.--><!--Check the capacity of an account.-->
 
@@ -38,7 +38,7 @@ import TabItem from '@theme/TabItem';
 
 <TabItem value="ubuntu"><p><b>Step 1. Download the CKB Pre-built Installer Package.</b></p><p>If the package is already downloaded, go to Step 2 directly.</p>
 
-```shell
+```shell {1-4}
 $ export TOP=$(pwd)
 $ curl -LO https://github.com/nervosnetwork/ckb/releases/download/v0.39.0/ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
 $ tar xzf ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
@@ -47,14 +47,14 @@ $ export PATH=$PATH:$TOP/ckb_v0.39.0_x86_64-unknown-linux-gnu
 
 <p>Verify the tool is working.</p>
 
-```shell
+```shell {1}
 $ ckb-cli -V
 ckb-cli 0.39.0
 ```
 
 <b>Step 3. Create the account for Alice.</b>
 
-```shell
+```shell {1}
 $ ckb-cli account new
 Your new account is locked with a password. Please give a password. Do not forget this password.
 Password: 
@@ -70,7 +70,7 @@ lock_hash: 0xf6ea009a4829de7aeecd75f3ae6bcdbaacf7328074ae52a48456a8793a4b1cca
 
 The extended private key is exported to the `$(pwd)/alice` file. The first line in the file is the private key of the account. The second line is the chain code.
 
-```shell
+```shell {1}
 $ ckb-cli account export --extended-privkey-path alice --lock-arg 0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e
 Password: 
 message: "Success exported account as extended privkey to: \"alice\", please use this file carefully"
@@ -84,7 +84,7 @@ The process of getting CKB capacity varies for the accounts on different network
 
   - If the CKB node is installed by using the pre-built installer, specify the `args` in the `block_assembler` section in ckb.toml with the `lock_arg` of the account.
 
-    ```shell
+    ```shell {1-10}
     $ ed devnet/ckb.toml <<EOF
     143a
     [block_assembler]
@@ -103,7 +103,7 @@ The process of getting CKB capacity varies for the accounts on different network
 
     To start the miner, open a new terminal and run the following commands:
 
-    ```shell
+    ```shell {1-3}
     $ export TOP=$(pwd)
     $ export PATH=$PATH:$TOP/ckb_v0.40.0_x86_64-unknown-linux-gnu.tar.gz
     $ ckb miner -C devnet
@@ -121,7 +121,7 @@ The process of getting CKB capacity varies for the accounts on different network
 
 To check the capacity of the account, execute the `ckb-cli wallet get-capacity --address <the Testnet address of the account>` command as follows:
 
-```shell
+```shell {1}
 $ ckb-cli wallet get-capacity --address "ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf"
 immature: 8039446.8758295 (CKB)
 total: 10451302.54823011 (CKB)
@@ -129,7 +129,7 @@ total: 10451302.54823011 (CKB)
 
 <b>Step 7. Create an account for Bob.</b>
 
-```shell
+```shell {1}
 $ ckb-cli account new
 Your new account is locked with a password. Please give a password. Do not forget this password.
 Password: 
@@ -143,7 +143,7 @@ lock_hash: 0x34f085b5d2fa3f4ad2880713082a72864522a6ebffa1eb931b09e0407092eda5
 
 To get the private key for the account of Bob:
 
-```
+```shell {1}
 $ ckb-cli account export --extended-privkey-path bob --lock-arg 0xecbe30bcf5c6b2f2d8ec2dd229a4603a7e206b99
 Password: 
 message: "Success exported account as extended privkey to: \"bob\", please use this file carefully"
@@ -155,7 +155,7 @@ message: "Success exported account as extended privkey to: \"bob\", please use t
 <p>This example downloads <a href="https://github.com/nervosnetwork/ckb/releases/download/v0.39.0/ckb_v0.39.0_x86_64-pc-windows-msvc.zip">v0.39.0</a>. All releases can be found on the <a href="https://github.com/nervosnetwork/ckb/releases">CKB releases</a> page.</p>
 <p>If the package is already downloaded, go to Step 2 directly.</p>
 
-```shell
+```shell {1}
 C:\curl -LO https://github.com/nervosnetwork/ckb/releases/download/v0.39.0/ckb_v0.39.0_x86_64-pc-windows-msvc.zip
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
@@ -165,14 +165,14 @@ C:\curl -LO https://github.com/nervosnetwork/ckb/releases/download/v0.39.0/ckb_v
 
 <p>Unzip the files into the C:\ckb folder and verify the tool is working.</p>
 
-```
+```shell {1}
 C:\ckb> ckb-cli -V
 ckb-cli 0.39.0
 ```
 
 <b>Step 2. Create the account for Alice.</b>
 
-```powershell
+```shell {1}
 C:\ckb> ckb-cli account new
 Your new account is locked with a password. Please give a password. Do not forget this password.
 Password: 
@@ -188,7 +188,7 @@ lock_hash: 0xf6ea009a4829de7aeecd75f3ae6bcdbaacf7328074ae52a48456a8793a4b1cca
 
 The extended private key is exported to the `C:/ckb/alice` file. The first line in the file is the private key of the account. The second line is the chain code.
 
-```shell
+```shell {1}
 C:\ckb> ckb-cli account export --extended-privkey-path alice --lock-arg 0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e
 Password: 
 message: "Success exported account as extended privkey to: \"alice\", please use this file carefully"
@@ -218,7 +218,7 @@ The process for getting CKB capacity is different for the accounts on different 
 
     To start the miner, open a new terminal and run the following commands:
 
-    ```shell
+    ```shell {1}
     C:\ckb> ckb miner -C devnet
     ```
     
@@ -234,7 +234,7 @@ The process for getting CKB capacity is different for the accounts on different 
 
 To check the capacity of the account, execute the `ckb-cli wallet get-capacity --address <the Testnet address of the account> command` as follows:
 
-```shell
+```shell {1}
 $ ckb-cli wallet get-capacity --address "ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf"
 immature: 8039446.8758295 (CKB)
 total: 10451302.54823011 (CKB)
@@ -242,7 +242,7 @@ total: 10451302.54823011 (CKB)
 
 <b>Step 6. Create an account for Bob.</b>
 
-```shell
+```shell {1}
 $ ckb-cli account new
 Your new account is locked with a password. Please give a password. Do not forget this password.
 Password: 
@@ -256,7 +256,7 @@ lock_hash: 0x34f085b5d2fa3f4ad2880713082a72864522a6ebffa1eb931b09e0407092eda5
 
 To get the private key for the account of Bob:
 
-```
+```shell {1}
 $ ckb-cli account export --extended-privkey-path bob --lock-arg 0xecbe30bcf5c6b2f2d8ec2dd229a4603a7e206b99
 Password: 
 message: "Success exported account as extended privkey to: \"bob\", please use this file carefully"

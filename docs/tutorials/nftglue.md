@@ -10,8 +10,6 @@ The  example has the following structure:
 dapps-on-ckb-workshop-code/
 ├── nft-glue
 ├── nft-validator
-├── LICENSE
-├── README.md
 ```
 
 - **nft-validator**: The **nft-validator** is a Rust based on-chain script validator project for supporting NFT tokens on CKB. [Capsule](https://github.com/nervosnetwork/capsule) is leveraged to simplify the script development.
@@ -31,7 +29,8 @@ dapps-on-ckb-workshop-code/
 
 The following prerequisites apply for this example:
 
-- The CKB node is running on DEV chain.
+- The CKB node is running on DEV chain. For more information, see [Install a CKB Node](../preparation/installckb).
+- The account to deploy the NFT script is created with enough CKB capacity (33613.0 CKB).
 
 ## Deploy the NFT Script on DEV Chain
 
@@ -52,7 +51,7 @@ To install Capsule by using the pre-built installer:
 
   :::note
 
-  Some versions of Capsule are incompatible with the NFT integration code example in this guide. Version **0.1.3** is verified and recommended for walking through this NFT integration example.
+  There are some versions of Capsule that are incompatible with the NFT integration code example. Version **0.1.3** is verified and recommended for walking through this NFT integration example.
 
   :::
 

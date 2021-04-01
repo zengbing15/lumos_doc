@@ -1,13 +1,13 @@
 ---
 id: intro
-title: Overview
-sidebar_label: Overview
+title: What is Lumos?
+sidebar_label: Lumos Overview
 ---
 Lumos is an open-source framework that was developed by the Nervos Developer Tools team for building Nervos CKB DApps. <!--The framework is developed by using JavaScript and TypeScript in NodeJs environment.-->
 
 All the DApps running on CKB separate functionally into two parts: computation and verification, according to the programming model of CKB. For more information about the CKB programming model, see [CKB whitepaper](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md).
 
-The desktop applications or web server applications that run in the Node.js environment and serve as the off-chain computation part can be developed on top of Lumos. 
+The <!--desktop applications or web server--> applications that run in the Node.js environment and serve as the **off-chain computation** part can be developed on top of Lumos. 
 
 > Lumos enables to free the DApp developers from most of the hassles for dealing with CKB. So the developers can focus on the specific logic in the DApps.
 
@@ -26,16 +26,6 @@ For more information about the Lumos packages, see [Lumos Components](../introdu
 <img src="../../img/CKB dapp with Lumos.png" width="600"/>
 
 Figure 1 Architecture of a CKB DApp Built with Lumos
-
-## About This Guide
-
-This documentation guide offers informational content to help you get started developing CKB DApps on the Lumos framework.
-
-The recommended reading path for this guide is as follows:
-
-1. Get started from the **Getting Started** sections that include the guides to prepare the development environment, install a CKB node, create accounts, and walk through a Hello Lumos example.
-2. Read the **Tutorials** sections to find more about the basic concepts, workflows, simple examples about the usage of Lumos.
-3. Take a try at the **Final Example** that introduces how Lumos helps with a contract integration on CKB.
 
 ## References
 
