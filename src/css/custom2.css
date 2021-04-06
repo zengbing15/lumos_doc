@@ -2,14 +2,14 @@
 /* You can override the default Infima variables here. */
 :root {
   --ifm-color-kubernetes: #326de6;
-  --ifm-color-primary: #00bdff;
+  --ifm-color-primary: #3578e5;
   --ifm-color-primary-dark: #00aae6;
   --ifm-color-primary-darker: #0290c0;
   --ifm-color-primary-darkest: #016d94;
   --ifm-color-primary-light: #1ac4ff;
   --ifm-color-primary-lighter: #4dd1ff;
   --ifm-color-primary-lightest: #a7e7ff;
-  --ifm-table-head-background: var(--ifm-color-primary);
+  --ifm-table-head-background: var(--ifm-color-primary-dark);
   --ifm-table-head-color: #fff;
   --ifm-code-font-size: 95%;
   --ifm-leading-number: 1.1;
@@ -97,7 +97,7 @@ code {
 	counter-reset: linenumber;
 }
 
-body .prism-code .token-line,
+/* body .prism-code .token-line,
 code > .token-line {
   counter-increment: linenumber;
 }
@@ -127,7 +127,7 @@ code > .token-line:first-child:last-child::before {
 body .prism-code .token-line,
 code .token-line {
   padding-right: 2em;
-}
+} */
 
 .tabs {
   border-bottom: 1px solid var(--ifm-color-primary-lightest);
@@ -211,7 +211,7 @@ video {
   width: 1px;
   height: 60px;
   margin-left: 20px;
-  transform: skew(-15deg, 0);
+  transform: skew(0);
 }
 
 .menu__link--active {

@@ -2,9 +2,7 @@
 id: manageaccounts
 title: Manage Accounts
 ---
-> The ownership of CKB is established through keys, the lock script and addresses.
-
-Lumos also provides the functions to manage the keys, addresses and the lock script of an account.
+The ownership of CKB is established through keys, the lock script and addresses. Lumos also provides the functions to manage the keys, addresses and the lock script of [a CKB account](../concepts/ckbaccounts). <!--For more information about CKB accounts, see [CKB Accounts](../concepts/ckbaccounts).--> 
 
 ## Prerequisites
 
@@ -168,7 +166,7 @@ The lockscript of the address is {
 
 ### Generate the Lock Hash from a Lock Script
 
-The [computeScriptHash](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/base/lib/utils.js#L73) function generates hash value for a specific lock script.
+The [computeScriptHash](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/base/lib/utils.js#L73) function generates the hash value for a specific lock script.
 
 ```typescript title="hellolumos/src/manageaccounts.ts"
 import { utils } from "@ckb-lumos/base";

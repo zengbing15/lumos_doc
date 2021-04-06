@@ -35,31 +35,19 @@ This guide introduces the general workflow of assembling transactions. The workf
 
 ### Transfer CKB in a Common Transaction
 
-The @ckb-lumos/common-scripts package includes a `common` script that can transfer capacity from `fromInfos` to an address. 
+The @ckb-lumos/common-scripts package includes a `common` script that can transfer capacity from `fromInfos` to an address, add the transaction fee and signing entries to the transaction.
 
 **Step 1. Create a transaction skeleton.**
 
-Example:
+The [common.transfer()](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L175) function can be used to create a common transfer transaction.
 
-```typescript title="hellolumos/src/buildTXs.ts/commonTransfer()"
-let txSkeleton:TransactionSkeletonType = TransactionSkeleton({cellProvider: INDEXER});
-const tipheader = await rpc.get_tip_header();
+**Constructor**
 
-txSkeleton = await common.transfer(
-            txSkeleton,
-            fromInfos,
-            toAddress,
-            BigInt(amount),
-            undefined,
-            tipheader
-            );
-```
-
-The example creates a transaction skeleton with the [common.transfer](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L175 "(txSkeleton: TransactionSkeletonType, fromInfos: FromInfo[], toAddress: string, amount: bigint, changeAddress?: string | undefined, tipHeader?: Header | undefined, { config, useLocktimeCellsFirst</var>, <var>LocktimePoolCellCollector</var>, }?)") function.
+`common.transfer`(txSkeleton: TransactionSkeletonType, fromInfos: FromInfo[], toAddress: Address,  amount: bigint, changeAddress?: Address, tipHeader?: Header, {  config = undefined,  useLocktimeCellsFirst = true,  LocktimePoolCellCollector = locktimePool.CellCollector,}: {   config?: Config;   useLocktimeCellsFirst?: boolean;  LocktimePoolCellCollector?: any;  } = {})
 
 The <var>fromInfos</var> parameter used for generating signing messages can be a [MultisigScript](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/from_info.ts#L20) | Address (string) | [ACP](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/from_info.ts#L31) | [CustomScript](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/from_info.ts#L36). MultisigScript is used for the secp256k1_blake160_multisig lock script (the transactions that require multi-signatures).
 
-An example of fromInfos including MultisigScript:
+An example of <var>fromInfos</var> including MultisigScript:
 
 ```typescript
 const fromInfos = [
@@ -78,7 +66,27 @@ The `common.transfer` function can use cells with lock period in priority over o
 
 To use the cells without lock period, just use `undefined` for <var>tipHeader</var> or specify the <var>useLocktimeCellsFirst</var> parameter as false.
 
+The following example creates a transaction skeleton with the [common.transfer](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L175 "(txSkeleton: TransactionSkeletonType, fromInfos: FromInfo[], toAddress: string, amount: bigint, changeAddress?: string | undefined, tipHeader?: Header | undefined, { config, useLocktimeCellsFirst</var>, <var>LocktimePoolCellCollector</var>, }?)") function.
+
+Example:
+
+```typescript title="hellolumos/src/buildTXs.ts/commonTransfer()"
+let txSkeleton:TransactionSkeletonType = TransactionSkeleton({cellProvider: INDEXER});
+const tipheader = await rpc.get_tip_header();
+
+txSkeleton = await common.transfer(
+            txSkeleton,
+            fromInfos,
+            toAddress,
+            BigInt(amount),
+            undefined,
+            tipheader
+            );
+```
+
 **Step 2. Add the fee for the transaction.**
+
+The [common.payFee](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L412) function is used in the following example to add the transaction fee to the transaction skeleton.
 
 Example:
 
@@ -89,8 +97,6 @@ txSkeleton = await common.payFee(
         BigInt(txFee),
 )
 ```
-
-The [common.payFee](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L412) function is used to add the transaction fee to the transaction skeleton.
 
 **Step 3. Prepare the signing entries.** 
 
@@ -177,7 +183,7 @@ console.log("Transaction status is:",txWithStatus.tx_status.status);
 
 ### Deposit CKB to DAO
 
-Nervos DAO is a smart contract. Users can interact the same way as any smart contract on CKB with Nervos DAO. One function of Nervos DAO is to provide an dilution counter-measure for CKByte holders. By deposit in Nervos DAO, holders get proportional secondary rewards, which guarantee their holding are only affected by hardcapped primary issuance as in Bitcoin. For more information about Nervos DAO, see [RFC: Nervos DAO](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0023-dao-deposit-withdraw/0023-dao-deposit-withdraw.md).
+> Nervos DAO is a smart contract. Users can interact the same way as any smart contract on CKB with Nervos DAO. One function of Nervos DAO is to provide an dilution counter-measure for CKByte holders. By deposit in Nervos DAO, holders get proportional secondary rewards, which guarantee their holding are only affected by hardcapped primary issuance as in Bitcoin. For more information about Nervos DAO, see [RFC: Nervos DAO](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0023-dao-deposit-withdraw/0023-dao-deposit-withdraw.md).
 
 **Step 1. Create a transaction skeleton with the DAO script.**
 
@@ -658,7 +664,7 @@ The default lock period is 180 epochs. A cell that has a lock period is availabl
 
 Example:
 
-```typescript title="hellolumos/src/buildTXs.ts/locktimepoolTX()" {12}
+```typescript title="hellolumos/src/buildTXs.ts/locktimepoolTX()" {12,14,15}
 import {locktimePool} from "@ckb-lumos/common-scripts";
 
 export async function locktimePoolTransfer(
@@ -669,9 +675,7 @@ export async function locktimePoolTransfer(
     privateKey:string
 ):Promise<Hash> {
     const tipheader = await rpc.get_tip_header();
-   
     let skeleton = TransactionSkeleton({ cellProvider: INDEXER });
-    //@ts-ignore
     skeleton = await locktimePool.transfer(skeleton, [frominfo], toaddress, BigInt(amount),tipheader);
     console.log(JSON.stringify(createTransactionFromSkeleton(skeleton), null, 2));
     skeleton = await locktimePool.payFee(skeleton,[frominfo], txFee, tipheader);
@@ -798,6 +802,300 @@ The block hash for the transaction is 0x63afdb21e9ce8173eb84bd59ac519aa80ab6f18c
 >
 //when the epoch reaches '0x20000a0004000235'(565+4/10), the locktimepool.transfer function can be executed sucessfully.
 > await buildTXs.locktimePoolTransfer(bob.ADDRESS,alice.ADDRESS, 10000000000n,10000000n,alice.PRIVATE_KEY);
+```
+
+</p>
+
+</details>
+
+### Issue SUDT Tokens
+
+> SUDT is the abbreviation of Simple User Defined Token which defines a minimal standard that contains what’s absolutely needed for dapp developers to issue custom tokens on Nervos CKB. You can refer to [RFC: Simple UDT Draft Spec](https://talk.nervos.org/t/rfc-simple-udt-draft-spec/4333) for more details.
+
+:::note
+
+The SUDT script needs to be deployed to DEV chain before operating on SUDT tokens. For more information about deploying the SUDT script, see [Write a SUDT script by Capsule](https://docs.nervos.org/docs/labs/sudtbycapsule). You can also refer to the [Deploy the NFT Script on DEV Chain](http://localhost:3000/lumos_doc/docs/tutorials/integratenft#deploy-the-nft-script-on-dev-chain) example for details about deploying a script on DEV chain.
+
+:::
+
+The [sudt.issueToken()](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/sudt.ts#L43) function can be used to generate SUDT tokens.
+
+**Constructor**
+
+`issueToken`(txSkeleton: TransactionSkeletonType, fromInfo: FromInfo, amount: bigint, capacity?: bigint, tipHeader?: Header, { config = undefined }: Options = {})
+
+The <var>amount</var> parameter means the amount of SUDT tokens to be generated. The <var>capacity</var> parameter is an optional, and it means the amount of CKB capacity used for the generation. If <var>capacity</var> is not defined, the `sudt.issueToken` function will use 142 CKB (the minimal CKB capacity of a SUDT cell) to generate SUDT tokens. 
+
+Example:
+
+```typescript title="hellolumos/src/buildTXs.ts/issueSUDT()" {12}
+import { common, sudt } from "@ckb-lumos/common-scripts";
+
+export async function issueSUDT(
+    fromInfo: FromInfo,
+    amount: bigint,
+    capacity: bigint,
+    txFee: bigint,
+    privateKey:string
+):Promise<Hash> {
+    let skeleton:TransactionSkeletonType = TransactionSkeleton({cellProvider: INDEXER});
+    console.log("Issue SUDT tokens.");
+    skeleton = await sudt.issueToken(skeleton,fromInfo,amount,capacity);
+    console.log(JSON.stringify(createTransactionFromSkeleton(skeleton), null, 2));
+    skeleton = await common.payFee(skeleton,[fromInfo],BigInt(txFee));
+    console.log(createTransactionFromSkeleton(skeleton).inputs.length);
+    skeleton = common.prepareSigningEntries(skeleton);
+    console.log("signingEntries:",skeleton.get("signingEntries").toArray());
+    
+    const tx = await signandSeal(skeleton,privateKey);
+    const hash = await rpc.send_transaction(tx);
+    console.log("The transaction hash is",hash);
+    return hash;
+}
+```
+
+Try the `issueSUDT` function in the Node.js REPL mode:
+
+<details><summary>CLICK ME</summary>
+<p>
+
+
+
+
+```shell {1,4,7-9}
+$ node --experimental-repl-await
+Welcome to Node.js v14.0.0.
+Type ".help" for more information.
+> const { accounts,querytransactions, buildTXs} = require(".");
+The server is started.
+>// 
+> const alice = accounts.ALICE;
+> const bob = accounts.BOB;
+> await buildTXs.issueSUDT(alice.ADDRESS,60000000000n,20000000000n,10000000n,alice.PRIVATE_KEY);
+Issue SUDT tokens.
+{
+  "version": "0x0",
+  "cell_deps": [
+    {
+      "out_point": {
+        "tx_hash": "0xd256a71c30b3f3adbf75a14add58a831336c4beebf04ed142f48d5f608655a48",
+        "index": "0x0"
+      },
+      "dep_type": "code"
+    },
+    {
+      "out_point": {
+        "tx_hash": "0xace5ea83c478bb866edf122ff862085789158f5cbff155b7bb5f13058555b708",
+        "index": "0x0"
+      },
+      "dep_type": "dep_group"
+    }
+  ],
+  "header_deps": [],
+  "inputs": [
+    {
+      "since": "0x0",
+      "previous_output": {
+        "tx_hash": "0xd450fbc655a794f60a687af7af1fd742961c582753edcb417acce660e9f9cc52",
+        "index": "0x0"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "capacity": "0x4a817c800",
+      "lock": {
+        "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+        "hash_type": "type",
+        "args": "0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e"
+      },
+      "type": {
+        "code_hash": "0x82a4784a46f42916f144bfd1926fda614560e403bc131408881de82fee0724ad",
+        "hash_type": "data",
+        "args": "0xf6ea009a4829de7aeecd75f3ae6bcdbaacf7328074ae52a48456a8793a4b1cca"
+      }
+    },
+    {
+      "capacity": "0x2a23bfcd72",
+      "lock": {
+        "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+        "hash_type": "type",
+        "args": "0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e"
+      }
+    }
+  ],
+  "outputs_data": [
+    "0x005847f80d0000000000000000000000",
+    "0x"
+  ],
+  "witnesses": [
+    "0x55000000100000005500000055000000410000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+  ]
+}
+1
+signingEntries: [
+  {
+    type: 'witness_args_lock',
+    index: 0,
+    message: '0x94328eafa1895a7b00bc6410136feaddb494a2cc9b19d39569d80477161eb349'
+  }
+]
+The transaction hash is 0x037c03dddf4a5cd03c6fa3798d082a2a93702f72f7a2c1d60c0bc915031ee48a
+'0x037c03dddf4a5cd03c6fa3798d082a2a93702f72f7a2c1d60c0bc915031ee48a'
+```
+
+</p>
+
+</details>
+
+### Transfer SUDT Tokens
+
+The [sudt.transfer()](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/sudt.ts#L134) function can be used to transfer SUDT tokens.
+
+**Constructor**
+
+`sudt.transfer`(txSkeleton: TransactionSkeletonType, fromInfos: FromInfo[], sudtToken: Token, toAddress: Address, amount: bigint, changeAddress?: Address, capacity?: bigint,  tipHeader?: Header,  {
+    config = undefined,
+    LocktimePoolCellCollector = LocktimeCellCollector,
+    splitChangeCell = false,
+  }: Options & {
+    LocktimePoolCellCollector?: any;
+    splitChangeCell?: boolean;
+  } = {})
+
+The <var>sudtToken</var> parameter is the lock hash of the SUDT tokens owner. You can use [sudt.ownerForSudt](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/sudt.ts#L699) to get the lock hash.
+
+Example:
+
+```typescript title="hellolumos/src/buildTXs.ts/transferSUDT()" {11,12}
+export async function transferSUDT(
+    fromInfo: FromInfo,
+    toAddress: string,
+    amount: bigint,
+    capacity: bigint,
+    txFee: bigint,
+    privateKey:string
+):Promise<Hash> {
+    let skeleton:TransactionSkeletonType = TransactionSkeleton({cellProvider: INDEXER});
+    console.log("Transfer SUDT tokens.");
+    const sudtToken = sudt.ownerForSudt(fromInfo);
+    skeleton = await sudt.transfer(skeleton,[fromInfo],sudtToken, toAddress, amount,undefined, capacity);
+    console.log(JSON.stringify(createTransactionFromSkeleton(skeleton), null, 2));
+    skeleton = await common.payFee(skeleton,[fromInfo],BigInt(txFee));
+    console.log(createTransactionFromSkeleton(skeleton).inputs.length);
+    skeleton = common.prepareSigningEntries(skeleton);
+    console.log("signingEntries:",skeleton.get("signingEntries").toArray());
+    
+    const tx = await signandSeal(skeleton,privateKey);
+    const hash = await rpc.send_transaction(tx);
+    console.log("The transaction hash is",hash);
+    return hash;
+}
+```
+
+Try the `transferSUDT` function in the Node.js REPL mode:
+
+<details><summary>CLICK ME</summary>
+<p>
+
+
+
+
+```shell {1,4,7-10}
+$ node --experimental-repl-await
+Welcome to Node.js v14.0.0.
+Type ".help" for more information.
+> const { accounts,querytransactions, buildTXs} = require(".");
+The server is started.
+>// 
+> const alice = accounts.ALICE;
+> const bob = accounts.BOB;
+>
+> await buildTXs.transferSUDT(alice.ADDRESS, bob.ADDRESS, 20000000000n,20000000000n,10000000n,alice.PRIVATE_KEY);
+Transfer SUDT tokens.
+{
+  "version": "0x0",
+  "cell_deps": [
+    {
+      "out_point": {
+        "tx_hash": "0xd256a71c30b3f3adbf75a14add58a831336c4beebf04ed142f48d5f608655a48",
+        "index": "0x0"
+      },
+      "dep_type": "code"
+    },
+    {
+      "out_point": {
+        "tx_hash": "0xace5ea83c478bb866edf122ff862085789158f5cbff155b7bb5f13058555b708",
+        "index": "0x0"
+      },
+      "dep_type": "dep_group"
+    }
+  ],
+  "header_deps": [],
+  "inputs": [
+    {
+      "since": "0x0",
+      "previous_output": {
+        "tx_hash": "0xf861df9da401fd25acbc400d9de79ccabad4090de39822c866be3efe0b86260e",
+        "index": "0x1"
+      }
+    },
+    {
+      "since": "0x0",
+      "previous_output": {
+        "tx_hash": "0xb87c7a858395f5be72f73a60ef87784ba5a53ed243eacae003ef62d0c9740cac",
+        "index": "0x0"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "capacity": "0x4a817c800",
+      "lock": {
+        "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+        "hash_type": "type",
+        "args": "0xecbe30bcf5c6b2f2d8ec2dd229a4603a7e206b99"
+      },
+      "type": {
+        "code_hash": "0x82a4784a46f42916f144bfd1926fda614560e403bc131408881de82fee0724ad",
+        "hash_type": "data",
+        "args": "0xf6ea009a4829de7aeecd75f3ae6bcdbaacf7328074ae52a48456a8793a4b1cca"
+      }
+    },
+    {
+      "capacity": "0x5ccf69bde4",
+      "lock": {
+        "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+        "hash_type": "type",
+        "args": "0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e"
+      },
+      "type": {
+        "code_hash": "0x82a4784a46f42916f144bfd1926fda614560e403bc131408881de82fee0724ad",
+        "hash_type": "data",
+        "args": "0xf6ea009a4829de7aeecd75f3ae6bcdbaacf7328074ae52a48456a8793a4b1cca"
+      }
+    }
+  ],
+  "outputs_data": [
+    "0x00c817a8040000000000000000000000",
+    "0x00e40b54020000000000000000000000"
+  ],
+  "witnesses": [
+    "0x55000000100000005500000055000000410000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "0x"
+  ]
+}
+3
+signingEntries: [
+  {
+    type: 'witness_args_lock',
+    index: 0,
+    message: '0x93a5fa04bd70001d913acb986bd4a3dd4fa2ed4dabde2a1e6e55964d4093b36d'
+  }
+]
+The transaction hash is 0xe7c73db5250d2ff1bbd933a2c5fd0925e8749d24768cb9125d4fc0adfebc02ea
+'0xe7c73db5250d2ff1bbd933a2c5fd0925e8749d24768cb9125d4fc0adfebc02ea'
+> 
 ```
 
 </p>

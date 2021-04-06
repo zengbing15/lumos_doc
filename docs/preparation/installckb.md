@@ -10,9 +10,11 @@ title: Install a CKB Node
 
 The CKB nodes used in the DApp development are **full nodes** that are the verifiers of the network. A CKB full node verifies new blocks and transactions, relays blocks and transactions, and selects the chain fork on which it agrees.
 
+A CKB node can be set up to connect and interact with a CKB network: **Mainnet**, **Testnet** or **DEV chain**. For more information about CKB networks, see [CKB networks](../basics/ckbnetworks).
+
 ## CKB Networks
 
-A CKB node can be set up to connect and interact with one of the following CKB networks:
+The CKB node connects and interact with one of the following CKB networks:
 
 - **Mainnet (Lina)**: The Mainnet is the main CKB public network. The real-time information of the Lina Mainnet can be checked on the [CKB Explorer](https://explorer.nervos.org/) page.
 
@@ -52,7 +54,7 @@ The following examples are verified on **Ubuntu 20.04.2**. Steps on the other pl
 
 The following example downloads the CKB version 0.39.0. All releases can be found on the [CKB releases](https://github.com/nervosnetwork/ckb/releases) page.
 
-```bash {1-4}
+```bash
 $ export TOP=$(pwd)
 $ curl -LO https://github.com/nervosnetwork/ckb/releases/download/v0.39.0/ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
 $ tar xzf ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
@@ -161,7 +163,7 @@ create ckb-miner.toml
 
 <p><b>2. Start the CKB Mainnet node.</b></p>
 
-```bash
+```bash {1}
 $ ckb run -C mainnet
 ```
 

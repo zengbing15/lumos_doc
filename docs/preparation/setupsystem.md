@@ -6,7 +6,7 @@ This guide will help you get your system set up for building DApps with Lumos. I
 
 ## System Recommendations
 
-CKB DApps can be developed on all major platforms including Linux, Windows, and Mac. 
+CKB DApps can be developed upon Lumos on all major platforms including Linux, Windows, and Mac. 
 :::note
 CKB nodes are required during the development process. The support on Windows for CKB nodes is experimental. To be more performant, we recommend to use a Linux or Unix-based (Mac) operating system. For more information, see [Get CKB Binary on Windows (experimental)](https://docs.nervos.org/docs/basics/guides/ckb-on-windows).
 :::
@@ -21,7 +21,7 @@ Node.js is the runtime environment that must be installed on the system before u
     {label: 'Ubuntu 20.04', value: 'ubuntu'},
     {label: 'macOS and Windows 10', value: 'macoswin'},
   ]}>
-<TabItem value="ubuntu"><p>Install Node.js with Apt by Using a NodeSource PPA:</p>
+<TabItem value="ubuntu"><p>Install Node.js with Apt by Using a NodeSource PPA:</p><p>The following commands installs Node.js 14.x.</p>
 
 ```bash
 $ curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
@@ -56,8 +56,8 @@ import TabItem from '@theme/TabItem';
   defaultValue="ubuntu"
   values={[
     {label: 'Ubuntu 20.04', value: 'ubuntu'},
-    {label: 'Windows 10', value: 'windows'},
     {label: 'macOS', value: 'macos'},
+    {label: 'Windows 10', value: 'windows'},
   ]}>
     <TabItem value="ubuntu">The development dependencies for Ubuntu 20.04 LTS are as follows:<ul><li>Python v3.6, v3.7, v3.8, or v3.9 (Ubuntu 20.04 and other versions of Debian Linux ship with Python 3 pre-installed)</li><li>make</li><li>A proper C/C++ compiler toolchain, like <a href="https://gcc.gnu.org/">GCC</a></li></ul><p>To install <code>GCC</code> and <code>make</code> on Ubuntu 20.04, run the following command as root or user with sudo privileges:</p>
 

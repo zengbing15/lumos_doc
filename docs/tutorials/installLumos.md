@@ -31,8 +31,9 @@ This command prompts questions about the name and version of the project and the
 $ yarn init
 ```
 
-<details><summary>CLICK ME</summary>
+<details><summary>OUTPUT</summary>
 <p>
+
 
 
 
@@ -63,10 +64,8 @@ The following example installs the indexer, the common-scripts, the config-manag
 $ yarn add @ckb-lumos/indexer@0.15.0 @ckb-lumos/common-scripts@0.15.0 @ckb-lumos/config-manager@0.15.0
 ```
 
-<details><summary>CLICK ME</summary>
+<details><summary>OUTPUT</summary>
 <p>
-
-
 
 ```shell
 yarn add v1.22.5

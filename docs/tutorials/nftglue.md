@@ -30,7 +30,7 @@ dapps-on-ckb-workshop-code/
 The following prerequisites apply for this example:
 
 - The CKB node is running on DEV chain. For more information, see [Install a CKB Node](../preparation/installckb).
-- The account to deploy the NFT script is created with enough CKB capacity (33613.0 CKB).
+- The account to deploy the NFT script is created with enough CKB capacity (33,613.0 CKB).
 
 ## Deploy the NFT Script on DEV Chain
 
@@ -87,6 +87,7 @@ To install Capsule by using the pre-built installer:
   ```
   <details><summary>Output</summary>
   <p>
+  
   ```shell
   ------------------------------
   docker  installed
@@ -313,7 +314,7 @@ Firstly, let us check out how the nft-glue implements these operations by using 
 
 #### **Generate NFT tokens**
 
-The generateNftToken() function firstly inserts a dummy NFT output cell. The dummy cell is exactly the same as a normal cell, except that the cell uses all zeros as NFT ID. 
+The `generateNftToken()` function firstly inserts a dummy NFT output cell. The dummy cell is exactly the same as a normal cell, except that the cell uses all zeros as NFT ID. 
 
 ```typescript title="nft-glue/src/index.ts"
 export async function generateNftToken(
@@ -439,7 +440,7 @@ const FEE = BigInt(1*10**8);
 skeleton = await common.payFee(skeleton, [fromAddress], FEE);
 ```
 
-The common.prepareSigningEntries function generates messages that are required in transaction signing phase.
+The [common.prepareSigningEntries](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L434) function generates messages that are required in transaction signing phase.
 
 ```typescript title="nft-glue/src/index.ts"
 skeleton = common.prepareSigningEntries(skeleton, { config: CONFIG });
@@ -469,7 +470,7 @@ export async function listNftTokens(
 
 #### **Transfer NFT tokens from one user to another user**
 
-The transferNftToken() function transfers NFT tokens from one user to another user.
+The `transferNftToken()` function transfers NFT tokens from one user to another user.
 
 For simplicity, the original token sender will pay for the transaction fee. This means the token sender must have spare CKB capacities in addition to the NFT tokens.
 
@@ -531,7 +532,7 @@ skeleton = await common.payFee(
 );
 ```
 
-The common.prepareSigningEntries function generates messages that are required in transaction signing phase.
+The [common.prepareSigningEntries](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L434) function generates messages that are required in transaction signing phase.
 
 ```typescript title="nft-glue/src/index.ts"
  skeleton = common.prepareSigningEntries(skeleton, { config: CONFIG });
@@ -540,7 +541,7 @@ The common.prepareSigningEntries function generates messages that are required i
 
 #### **Sign and seal the transaction**
 
-The signAndSendTransactionSkeleton() function signs the prepared transaction skeleton from the returned result of generateNftToken() or transferNftToken(), and then send the signed transaction skeleton to the CKB node.
+The `signAndSendTransactionSkeleton()` function signs the prepared transaction skeleton from the returned result of `generateNftToken()` or `transferNftToken()`, and then send the signed transaction skeleton to the CKB node.
 
 :::note
 

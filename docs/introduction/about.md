@@ -3,7 +3,7 @@ id: about
 title: About This Guide
 sidebar_label: Home
 ---
-This documentation guide offers informational content to help you get started developing CKB DApps on the Lumos framework.
+This documentation guide offers the informational content to help you get started developing CKB DApps on the Lumos framework.
 
 The recommended reading path for the Lumos documentation is as follows:
 

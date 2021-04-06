@@ -26,7 +26,7 @@ The connection with the CKB node is established by the setup of the config manag
 
 The query functions on cells and transactions are all facilitated based on the Lumos framework. For more information, see [Query on Cells](../tutorials/querycells) and [Query on Transactions](../tutorials/querytransactions).
 
-The <u>buildTXs.ts</u> file implements several sample functions by utilizing Lumos utilities for assembling common transfer transactions, DAO deposit and withdraw transactions. For more information, see [Assembling Transactions](../tutorials/buildtransactions).
+The <u>buildTXs.ts</u> file implements several sample functions by utilizing Lumos utilities for assembling common transfer transactions, Nervos DAO transactions, and locktime pool transfer transactions. For more information, see [Assembling Transactions](../tutorials/buildtransactions).
 
 ## Prerequisites
 
@@ -82,8 +82,9 @@ $ cd hellolumos
 $ yarn install
 ```
 
-<details><summary>CLICK ME</summary>
+<details><summary>OUTPUT</summary>
 <p>
+
 
 ```shell
 yarn install v1.22.10
@@ -172,7 +173,7 @@ Step 1. Get the account information of Alice and Bob.
 }
 ```
 
-Step 2. Get the balance for the accounts of Alice and Bob.
+Step 2. Check the balance for the accounts of Alice and Bob.
 
 ```javascript {1,3}
 > const balance1 = querycells.getBalancebyLock(script1);
@@ -183,7 +184,7 @@ Step 2. Get the balance for the accounts of Alice and Bob.
 
 Step 3. Transfer 200 CKB from Alice to Bob. 
 
-For more information, see [Transfer CKB in a Common Transaction](../tutorials/buildtransactions#transfer-ckb-in-a-common-transaction).
+For more information about building a common transaction by using Lumos, see [Transfer CKB in a Common Transaction](../tutorials/buildtransactions#transfer-ckb-in-a-common-transaction).
 
 ```javascript {1}
 > const txskeleton = await buildTXs.commonTransfer([alice.ADDRESS], bob.ADDRESS,20000000000n,10000000n,alice.PRIVATE_KEY);
@@ -195,9 +196,11 @@ Step 4. Check the transaction status.
 
 :::note
 
-The CKB miner must be started to commit the transaction on chain. For more information about transaction status, see [Get Transaction Status and Block Hash](../tutorials/querytransactions#get-transaction-status-and-block-hash).
+The CKB miner must be started to commit the transaction on chain.
 
 :::
+
+For more information about getting transaction information by using Lumos, see [Get Transaction Status and Block Hash](../tutorials/querytransactions#get-transaction-status-and-block-hash). 
 
 ```javascript {1}
 > await querytransactions.getTXbyHash("0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e");
@@ -207,6 +210,8 @@ The transaction status is committed
 Step 5. Check the new balance of Bob.
 
 When the transaction is committed, the new balance appears in the result.
+
+For more information about getting balance by a lock script, see [Get the Balance of an Account](../tutorials/querycells#get-the-balance-of-an-account).
 
 ```javascript {1}
 > await querycells.getBalancebyLock(script2);

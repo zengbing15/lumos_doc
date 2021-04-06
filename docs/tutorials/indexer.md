@@ -28,20 +28,22 @@ For Electron applications, you can install the pre-built native module of the CK
 
 :::
 
+## Prerequisites
+
+The following prerequisites apply for setting up the Lumos indexer:
+
+- Node.js and Yarn are installed.
+- Dependencies for build tools are installed.
+
 ## Environment
 
 The following examples are verified on Ubuntu 20.04.2. Steps on the other platforms can be adjusted accordingly.
 
 ## Set Up the RocksDB Backed Indexer
 
-The following prerequisites apply for setting up the RocksDB backed indexer:
-
-- Node.js and Yarn are installed.
-- Dependencies for build tools are installed.
-
 ### Step 1. Install the indexer package.
 
-The following example installs the RocksDB backed indexer as a dependency for a project.
+The following commands install the RocksDB backed indexer as a dependency for <var>mydapp</var>.
 
 ```shell
 $ cd mydapp
@@ -50,7 +52,7 @@ $ yarn add @ckb-lumos/indexer
 
 ### Step 2. Start the indexer.
 
-The following example starts the RocksDB backed indexer. The default RPC URL of the local CKB node is http://127.0.0.1:8114. 
+The following commands initialize and start the RocksDB backed indexer. The Indexer URI, for example, http://127.0.0.1:8114 (the default RPC URL), is the <var>listen_address</var> configuration in the `ckb.toml` file of the CKB node.
 
 ```typescript title="mydapp/src/index.ts"
 import { Indexer } from "@ckb-lumos/indexer";
@@ -62,11 +64,6 @@ INDEXER.startForever();
 ## Set Up the SQL Backed Indexer
 
 To be Updated...
-
-The following prerequisites apply for setting up the SQL backed indexer:
-
-- Node.js and Yarn are installed.
-- Dependencies for build tools are installed.
 
 ### Step 1. Install Docker.
 
@@ -110,11 +107,15 @@ $ npx knex migrate:up
 
 ### Step 4. Check the Current Indexed Tip
 
-To check the current indexed tip after the indexer is started:
+Enter the Node.js REPL mode to check the current indexed tip after the indexer is started:
 
 ```
+$ cd hellolumos
+$ node --experimental-repl-await
+Welcome to Node.js v14.0.0.
+Type ".help" for more information.
 > const { Indexer, CellCollector, TransactionCollector } = require("@ckb-lumos/sql-indexer");
-> const indexer = new Indexer("http://127.0.0.1:5432", "/tmp/indexed-data");
+> const indexer = new Indexer("http://127.0.0.1:5432", "/sql-indexed-data");
 > indexer.startForever();
 > await indexer.tip()
 {

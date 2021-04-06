@@ -19,24 +19,25 @@ module.exports = {
     navbar: {
 		hideOnScroll: true,
 		title: 'Lumos Documentation',
+		style: 'dark',
 		logo: {
 			alt: 'Lumos',
 			src: 'img/favicon.png',
       },
       items: [
         {
+          href: 'https://github.com/nervosnetwork/lumos',
+		  className: 'header-github-link',
+          'aria-label': 'GitHub',
+          position: 'right',
+        },
+		{
           to: 'docs/introduction/intro',
           activeBasePath: 'docs',
           label: 'Docs',
           position: 'right',
         },
-        {href: 'https://nervosnetwork.github.io/lumos/globals.html', label: 'API Documenation', position: 'right'},
-        {
-          href: 'https://github.com/nervosnetwork/lumos',
-		  className: 'github-link',
-          'aria-label': 'GitHub',
-          position: 'right',
-        },
+        {href: 'https://nervosnetwork.github.io/lumos/globals.html', label: 'API Documenation', position: 'right'}
       ],
     },
 /*     footer: {
