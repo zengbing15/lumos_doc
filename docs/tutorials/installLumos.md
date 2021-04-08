@@ -8,8 +8,9 @@ This guide shows how to install Lumos packages that a DApp requires as dependenc
 
 The following prerequisites apply for installing Lumos packages as dependencies for a project:
 
-- Node.js and Yarn are installed.
-- Dependencies for build tools are installed.
+- The development environment is set up. 
+
+  For more information, see [Set Up the Development Environment](../preparation/setupsystem).
 
 ## Environment
 

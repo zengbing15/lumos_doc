@@ -4,7 +4,15 @@ title: Query on Transactions
 ---
 > Transactions are the most fundamental entities for a DApp to interact with Nervos CKB. For more information about CKB transactions, see [Transaction](https://docs.nervos.org/docs/reference/transaction#docsNav) and [CKB RFC](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0019-data-structures/0019-data-structures.md#transaction).
 
-Lumos provides the [TransactionCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L479) class to support querying on transactions according to specific query options.
+Lumos provides the [TransactionCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L479) class to support querying on transactions for specific query options.
+
+## Prerequisites
+
+The following prerequisites apply for querying on transactions by using Lumos:
+
+- The development environment is set up. For more information, see [Set Up the Development Environment](http://localhost:3000/lumos_doc/docs/preparation/setupsystem).
+- The CKB node is installed and started on DEV chain. For more information, see [Install a CKB Node](http://localhost:3000/lumos_doc/docs/preparation/installckb).
+- The Lumos packages (@ckb-lumos/base, @ckb-lumos/indexer, @ckb-lumos/helpers, @ckb-lumos/config-manager, @ckb-lumos/rpc) are installed.
 
 ## Environment
 
@@ -14,7 +22,9 @@ The following examples are verified on Ubuntu 20.04.2. Steps on the other platfo
 
 ### Query Transactions by a Lock Script
 
-The following example creates a new TransactionCollector to collect transactions for a specific lock script and returns the result with status.
+The [indexer.TransactionCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/base/lib/indexer.js#L9) function of the @ckb-lumos/indexer package can be used to query transactions by specific query options (lock, type, argsLen, fromBlock, toBlock, order, skip) and returns the transactions as the result.
+
+The following example creates a new TransactionCollector to collect transactions for a specific lock script and returns the transactions with status.
 
 Example:
 
@@ -46,7 +56,7 @@ Try the `getTxsbyLock` function in the Node.js REPL mode:
 <details><summary>CLICK ME</summary>
 <p>
 
-```shell
+```shell {1,4,6-12}
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
 Type ".help" for more information.
@@ -92,7 +102,7 @@ Get transactions by lock script:
 
 ### Query Transactions between Given Block Numbers
 
-The following example fetches the transactions between `[fromBlock, toBlock]`. Both `fromBlock` and `toBlock` are included in the queryOptions.
+The following example fetches the transactions between `[fromBlock, toBlock]`. Both `fromBlock` and `toBlock` are included in the `QueryOptions`.
 
 Example:
 
@@ -114,7 +124,7 @@ Try the `getTxsbetweenBlocks` function in the Node.js REPL mode:
 <details><summary>CLICK ME</summary>
 <p>
 
-```shell
+```shell {1-3}
 > const from="0x801";
 > const to="0x804";
 > await querytransactions.getTxsbetweenBlocks(script,from,to);
@@ -259,7 +269,7 @@ You can specify <var>argsLen</var> with a value other than the default value to 
 
 :::info
 
-It is recommended to specify an explicit length for the <var>argsLen</var> parameter. For example, the length is **20** in normal scenarios and **28** in the multisig scenario for the lock script. When the length is not certain, the <var>argsLen</var> parameter can be set as `any`. But there is performance lost when using `any` rather than an explicit length.
+It is recommended to specify an explicit length for the <var>argsLen</var> parameter for prefix search. For example, the length is **20** in normal scenarios and **28** in the multisig scenario for the lock script. When the length is not certain, the <var>argsLen</var> parameter can be set as `any`. But there is performance lost when using `any` rather than an explicit length.
 
 :::
 
@@ -316,7 +326,7 @@ A transaction can be in one of the following status:
 - A **proposed** result means the node sees a transaction included in a block candidate that is not yet mined.
 - A **committed** result means that the block involving the transaction has been mined and is officially on chain.
 
-The following example uses the get_transaction function to get the transaction information (status, block_hash) for a specific transaction hash.
+The following example uses the [get_transaction](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/rpc/src/index.ts#L196) function of the @ckb-lumos/rpc package to get the transaction information (status, block_hash) for a specific transaction hash.
 
 Example: 
 
@@ -330,9 +340,9 @@ export async function getTxsbyHash  (
   const txWithStatus = await rpc.get_transaction(txHash);
   
   const status = txWithStatus?.tx_status.status;
-  const blockhash = txWithStatus?.tx_status.block_hash;
+  const blockHash = txWithStatus?.tx_status.block_hash;
   console.log("The transaction status is",status);
-  console.log("The block hash for the transaction is",blockhash);
+  console.log("The block hash for the transaction is",blockHash);
 }
 ```
 

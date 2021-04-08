@@ -2,7 +2,7 @@
 id: indexer
 title: Set Up the Lumos Indexer
 ---
-Lumos is designed based on the [`Index-Query-Assemble`](https://docs.nervos.org/docs/reference/cell#index-query-assemble-pattern) pattern. The Lumos indexer polls blocks from a CKB node, indexes them and stores the indexed data in a local database to provide optimal queries.
+Lumos is designed based on the [Index-Query-Assemble](https://docs.nervos.org/docs/reference/cell#index-query-assemble-pattern) pattern. The Lumos indexer polls blocks from a CKB node, indexes them and stores the indexed data in a local database to provide optimal queries.
 
 <!--Dapps built with Lumos must have an indexer configured and running.-->
 
@@ -32,8 +32,9 @@ For Electron applications, you can install the pre-built native module of the CK
 
 The following prerequisites apply for setting up the Lumos indexer:
 
-- Node.js and Yarn are installed.
-- Dependencies for build tools are installed.
+- The development environment is set up. 
+
+  For more information, see [Set Up the Development Environment](../preparation/setupsystem).
 
 ## Environment
 

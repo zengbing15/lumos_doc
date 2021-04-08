@@ -340,10 +340,14 @@ export async function generateNftToken(
   });
 ```
 
-Lumos can generate smaller transactions for optimizations of a normal workflow. That means the following two cases may happen: 
+:::info
 
-1. Multiple output cells with the same owner might be merged together.
-2. Transferring to an address which has input cells in the transaction, might result in the input cells being removed to cancel the transfer operation.
+Lumos can generate smaller transactions for optimizations of a normal workflow. That means the following two cases may happen:
+
+1. Multiple output cells with the same owner will be merged into one single output cell.
+2. If the transfer operation transfers the assets from the owner to himself/herself, the transfer operation will be canceled.
+
+:::
 
 Because NFT requires special output cell and stable input cell. To avoid further optimizations altering those fields, `fixedEntries` can be used to mark the fields as fixed.
 

@@ -10,7 +10,11 @@ module.exports = {
   projectName: 'lumos_doc', // Usually your repo name.
 
   themeConfig: {
-
+    colorMode: {
+      defaultMode: 'light',
+      disableSwitch: true,
+      respectPrefersColorScheme: false,
+    },
 	
 	hideableSidebar: true,
 	prism: {
@@ -18,16 +22,17 @@ module.exports = {
     },
     navbar: {
 		hideOnScroll: true,
-		title: 'Lumos Documentation',
-		style: 'dark',
+		
+		
 		logo: {
 			alt: 'Lumos',
-			src: 'img/favicon.png',
+			src: 'img/nervoslumos.svg',
+			
       },
       items: [
         {
           href: 'https://github.com/nervosnetwork/lumos',
-		  className: 'header-github-link',
+		  className: 'github-link',
           'aria-label': 'GitHub',
           position: 'right',
         },

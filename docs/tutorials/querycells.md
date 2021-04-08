@@ -5,7 +5,15 @@ title: Query on Cells
 
 > A Cell is the most basic structure that represents a single piece of data in Nervos. The data contained in a cell can take many forms, including CKBytes, tokens, code like JavaScript code, or even serialized data like JSON strings. For more information about the cell model, see [Cell Data Structure](https://docs.nervos.org/docs/reference/cell) and [CKB RFC](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#42-cell).
 
-Querying on cells are the fundamental functions for a DApp to respond to user queries and transaction requests. Lumos provides the `collector` function in the Lumos indexer and the transaction manager modules, and the `CellCollector` class in the modules of common scripts to support queries fulfilling specific query options.
+Querying on cells are the fundamental functions for a DApp to respond to user queries and transaction requests. The `collector` function of the Lumos indexer and the transaction manager, and the `CellCollector` class of the modules in the common scripts support the queries on cells with specific query options.
+
+## Prerequisites
+
+The following prerequisites apply for querying on cells by using Lumos:
+
+- The development environment is set up. For more information, see [Set Up the Development Environment](http://localhost:3000/lumos_doc/docs/preparation/setupsystem).
+- The CKB node is installed and started on DEV chain. For more information, see [Install a CKB Node](http://localhost:3000/lumos_doc/docs/preparation/installckb).
+- The Lumos packages (@ckb-lumos/base, @ckb-lumos/indexer, @ckb-lumos/helpers, @ckb-lumos/config-manager, @ckb-lumos/common-scripts, @ckb-lumos/transaction-manager, @ckb-lumos/hd-cache) are installed.
 
 ## Environment
 
@@ -14,6 +22,10 @@ The following examples are verified on Ubuntu 20.04.2. Steps on the other platfo
 ## Examples
 
 ### Query Cells by a Lock Script
+
+The [indexer.collector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L242) function of the @ckb-lumos/indexer package can be used to collect cells by specific query options (<var>lock</var>, <var>type</var>, <var>argsLen</var>, <var>data</var>, <var>fromBlock</var>, <var>toBlock</var>, <var>skip</var>) and returns the cells as the result.
+
+The following example collect the cells for a specific lock script.
 
 Example:
 
@@ -35,8 +47,6 @@ export const findCellsbyLock = async (
   };
 ```
 
-The [Indexer.collector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L242) function of the @ckb-lumos/indexer package can be used to collect cells by specific query options (<var>lock</var>, <var>type</var>, <var>argsLen</var>, <var>data</var>, <var>fromBlock</var>, <var>toBlock</var>, <var>skip</var>) and returns the cells as the result.
-
 Try the `findCellsbyLock` function in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
@@ -44,7 +54,7 @@ Try the `findCellsbyLock` function in the Node.js REPL mode:
 
 
 
-```shell
+```shell {1,2,5,7-13}
 $ cd hellolumos
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
@@ -98,7 +108,7 @@ Find the cells by lock script:
 
 ### Query Cells by Specific Lock and Type Script
 
-The following example collects the cells for a specific lock script and type script, and returns the cells as the result.
+The following example collects the cells for a specific lock script and a type script, and returns the cells as the result.
 
 Example:
 
@@ -124,7 +134,7 @@ Try the `findCellsbyLockandType` function in the Node.js REPL mode:
 <p>
 
 
-```shell
+```shell {2-9}
 //Leverage the configurations for DAO script from the config manager defined in the hellolumos/src/index.ts file.
 > const { CONFIG }=require(".");
 > const template = CONFIG.SCRIPTS["DAO"];
@@ -164,7 +174,7 @@ Find the cells by Lock and Type script
 
 ### Query Cells between Given Block Numbers
 
-The following example fetches the cells between `[fromblock, toblock]`. Both `fromBlock` and `toBlock` are included in the query options.
+The following example fetches the cells between `[fromblock, toblock]`. Both `fromBlock` and `toBlock` are included in the `QueryOptions`.
 
 Example:
 
@@ -194,7 +204,7 @@ Try the `findCellsBetweenBlocks` function in the Node.js REPL mode:
 
 
 
-```shell
+```shell {1-3}
 > const from = "0x81";
 > const to = "0x83";
 > await querycells.findCellsBetweenBlocks(script,from,to);
@@ -259,13 +269,58 @@ return cells;
 };
 ```
 
-The following example skips the first 100 cells and returns the result from the 101st. cell.
+Skip the first 20 cells and get the result from the 21st. cell by using the `findCellsandSkip` function in the Node.js REPL mode: 
 
 
-```shell
-> await querycells.findCellsandSkip(script,100);
+<details><summary>CLICK ME</summary>
+<p>
+
+
+
+
+```shell {1}
+> await querycells.findCellsandSkip(script,20);
+{
+  cell_output: {
+    capacity: '0x1247656167b4',
+    lock: {
+      code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+      hash_type: 'type',
+      args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
+    },
+    type: undefined
+  },
+  out_point: {
+    tx_hash: '0xdcd898c29a2d9dcbaca6c5112bb681d55acb5a557aaf2cbaa1ea2fe561ba3b36',
+    index: '0x0'
+  },
+  block_hash: '0x8030e31e760905f4e2c220f45b653ed73d0bdea5962bd34ca96bc3ea50cbc725',
+  block_number: '0x9a',
+  data: '0x'
+}
+{
+  cell_output: {
+    capacity: '0x124764f7f310',
+    lock: {
+      code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+      hash_type: 'type',
+      args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
+    },
+    type: undefined
+  },
+  out_point: {
+    tx_hash: '0x0913fd98eb1a56c9b7a460cf46f6c447d0a5048c5f2ad955c3ae7c74d3d55bbf',
+    index: '0x0'
+  },
+  block_hash: '0x19b16cd024c8d3ae06a5cd20db7f86a04b0b3160d499145d8fdee659c959f70d',
+  block_number: '0x9b',
+  data: '0x'
+}
 ...
 ```
+
+</p>
+</details>
 
 ### Prefix Search on <var>args</var>
 
@@ -275,7 +330,7 @@ You can specify <var>argsLen</var> with a value other than the default value to 
 
 :::info
 
-It is recommended to specify an explicit length for the <var>argsLen</var> parameter. For example, the length is **20** in normal scenarios and **28** in the multisig scenario for the lock script.  When the length is not certain, the <var>argsLen</var> parameter can be set as `any`. But there is performance lost when using `any` rather than an explicit length.
+It is recommended to specify an explicit length for the <var>argsLen</var> parameter for prefix search. For example, the length is **20** in normal scenarios and **28** in the multisig scenario for the lock script.  When the length is not certain, the <var>argsLen</var> parameter can be set as `any`. But there is performance lost when using `any` rather than an explicit length.
 
 :::
 
@@ -303,7 +358,7 @@ Fine grained query for cells can be achieved by using [ScriptWrapper](https://gi
 
 The value for the <var>ioType</var> field is among `input | output | both`.
 
-If the <var>argsLen</var>is not specified in the function, the outside <var>argsLen</var>config or the default value -1 will be used.
+If the <var>argsLen</var>is not specified in the function, the outside <var>argsLen</var> config or the default value -1 will be used.
 
 Example:
 
@@ -335,7 +390,7 @@ Try the `finegrainedSearch` function in Node.js REPL mode:
 
 
 
-```shell
+```shell {1-9}
 > const { CONFIG }=require(".");
 > const template = CONFIG.SCRIPTS["DAO"];
 > const typescript={
@@ -353,7 +408,7 @@ Try the `finegrainedSearch` function in Node.js REPL mode:
 
 ### Order Cells by Block Number
 
-The [CellCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L324) class of the @ckb-lumos/indexer package supports query on cells  by specific query options (<var>lock</var>, <var>type</var>, <var>argsLeng</var>, <var>data</var>, <var>fromBlock</var>, <var>toBlock</var>, <var>skip</var>, <var>order</var>) and returns the cells as the result.
+The [CellCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L324) class of the @ckb-lumos/indexer package supports query on cells with specific query options (<var>lock</var>, <var>type</var>, <var>argsLeng</var>, <var>data</var>, <var>fromBlock</var>, <var>toBlock</var>, <var>skip</var>, <var>order</var>) and returns the cells as the result.
 
 The following example creates a new [CellCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L324) and uses the CellCollector to collect cells in order of block numbers for a specific lock script. If the order is not specified, the default order is "asc" for the returned result.
 
@@ -384,7 +439,7 @@ The following example gets the live cells for Alice and returns the result in de
 
 
 
-```shell
+```shell {1-8}
 > const { accounts, querycells }=require(".");
 > const alice = accounts.ALICE;
 > const script={
@@ -433,7 +488,7 @@ Find Cells in descending desc order of block numbers:
 
 ### Get the Cell Minimal Capacity
 
-A CKB cell has three fields and itself all take up capacity. The cell must have the capacity that is equal or more than the total size of information stored in the cell. For more information, see [Cell](https://nervosnetwork.github.io/docs-new/docs/reference/cell).
+The three fields of a CKB cell and the cell itself all take up CKB capacity. The cell must have the capacity that is equal or more than the total size of information stored in the cell. For more information, see [Cell](https://nervosnetwork.github.io/docs-new/docs/reference/cell).
 
 For example, the minimum CKB capacity requirement is 61 CKB (6100000000n) for a common transaction, and 102 CKB (10200000000n) for a DAO deposit transaction.
 
@@ -441,48 +496,43 @@ The [minimalCellCapacity](https://github.com/nervosnetwork/lumos/blob/c3bd18e6ba
 
 Example:
 
-```typescript title="hellolumos/src/querycells.ts/getMinimalCellCapacity()" {7}
+```typescript title="hellolumos/src/querycells.ts/getMinimalCellCapacity()" {6}
 import { minimalCellCapacity } from "@ckb-lumos/helpers";
 
 export async function getMinimalCellCapacity(
  fullcell:Cell
 ) {
-  console.log("The full cell is", fullcell);
   const result = minimalCellCapacity(fullcell);
   console.log("The minimal cell capacity is",result);
 };
 ```
 
-Try the `getMinimalCellCapacity` function in the Node.js REPL mode:
+Choose one cell with the full structure from the previous queries and get the minimal capacity for the cell by using the `getMinimalCellCapacity` function in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
 
-```shell
-> const depositcell ={
+```shell {1-19}
+> const cell ={
   cell_output: {
-    capacity: '0x4a817c800',
+    capacity: '0x1247656167b4',
     lock: {
       code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
       hash_type: 'type',
       args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
     },
-    type: {
-      code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
-      hash_type: 'type',
-      args: '0x'
-    }
+    type: undefined
   },
   out_point: {
-    tx_hash: '0xa48a3a34bf2c1b660722cab0df7be13a85222d282966e185fde785647b5a7944',
+    tx_hash: '0xdcd898c29a2d9dcbaca6c5112bb681d55acb5a557aaf2cbaa1ea2fe561ba3b36',
     index: '0x0'
   },
-  block_hash: '0x1a59e0832a7123a1b134496e799c0257023c2cec29a38b0ad76c7447931ed25e',
-  block_number: '0x76e',
-  data: '0x0000000000000000'
+  block_hash: '0x8030e31e760905f4e2c220f45b653ed73d0bdea5962bd34ca96bc3ea50cbc725',
+  block_number: '0x9a',
+  data: '0x'
 }
-> await querycells.getMinimalCellCapacity(depositcell);
-The minimal cell capacity is 10200000000n
+> await querycells.getMinimalCellCapacity(cell);
+The minimal cell capacity is 6100000000n
 ```
 </p>
 </details>
@@ -520,9 +570,9 @@ Try the `GetBalancebyLock` function in the Node.js REPL mode:
 <details><summary>CLICK ME</summary>
 <p>
 
-```shell
+```shell {1}
 > await querycells.getBalancebyLock(script);
-The balance of the account is 41027155650775568n
+The balance of the account is 522545522203302n
 ```
 </p>
 </details>
@@ -562,17 +612,17 @@ You can get uncommitted outputs by the `collector` of the transaction manager.
 Example:
 
 ```typescript title="hellolumos/src/querycells.ts/getUncommittedCells()"
-import TransactionManager = require ("@ckb-lumos/transaction-manager");
+export const transactionManager = new TransactionManager(INDEXER);
+transactionManager.start();
+
 export async function getUncommittedCells(
   lockScript:Script
 ): Promise<Cell[]>  {
-
   const cells:Cell[] = [];
   console.log("Get uncommitted cells");
   const collector = transactionManager.collector( {lock:lockScript});
   for await (const cell of collector.collect()) {
     cells.push(cell);
-    //console.log(cell)
   }
   return cells;
 }

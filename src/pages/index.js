@@ -3,16 +3,17 @@ import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 import Link from "@docusaurus/Link";
 import Layout from "@theme/Layout";
-
+import lumos from './lumos'
 function Hero() {
   const context = useDocusaurusContext();
   const { siteConfig = {} } = context;
   return (
-    <header className="hero">
-      <div className="container margin-vert--lg">
-	
-        <h1 className="hero__title">{siteConfig.title}</h1>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
+    <header className="masthead">
+     
+      <div className="content">
+        <h1>{siteConfig.title}</h1>
+       <h3>{siteConfig.tagline}</h3>
+
         <Link
           to={useBaseUrl("docs/introduction/about")}
           className="button button--primary button--outline button--lg"
@@ -39,7 +40,9 @@ function Feature({ title, children, color = "primary" }) {
 function Body() {
   return (
     <main className="container">
+	
       <div className="row margin-vert--xl">
+
         <Feature title="Powerful">
           The <b>Lumos</b> framework saves you the hassle of creating code for CKB queries and transactions, and offers powerful modules that make the DApp development easier.
         </Feature>

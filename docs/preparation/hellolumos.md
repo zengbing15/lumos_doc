@@ -26,7 +26,7 @@ The connection with the CKB node is established by the setup of the config manag
 
 The query functions on cells and transactions are all facilitated based on the Lumos framework. For more information, see [Query on Cells](../tutorials/querycells) and [Query on Transactions](../tutorials/querytransactions).
 
-The <u>buildTXs.ts</u> file implements several sample functions by utilizing Lumos utilities for assembling common transfer transactions, Nervos DAO transactions, and locktime pool transfer transactions. For more information, see [Assembling Transactions](../tutorials/buildtransactions).
+The <u>buildTXs.ts</u> file implements several sample functions by utilizing Lumos utilities for assembling common transfer transactions, Nervos DAO transactions, and locktime pool transfer transactions. For more information, see [Assemble Transactions](../tutorials/buildtransactions).
 
 ## Prerequisites
 
@@ -187,7 +187,7 @@ Step 3. Transfer 200 CKB from Alice to Bob.
 For more information about building a common transaction by using Lumos, see [Transfer CKB in a Common Transaction](../tutorials/buildtransactions#transfer-ckb-in-a-common-transaction).
 
 ```javascript {1}
-> const txskeleton = await buildTXs.commonTransfer([alice.ADDRESS], bob.ADDRESS,20000000000n,10000000n,alice.PRIVATE_KEY);
+> await buildTXs.commonTransfer([alice.ADDRESS], bob.ADDRESS,20000000000n,10000000n,alice.PRIVATE_KEY);
 [warn] ANYONE_CAN_PAY script info not found in config!
 The transaction hash is 0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e
 ```

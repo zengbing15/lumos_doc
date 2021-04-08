@@ -8,6 +8,18 @@ This guide introduces the general workflow of assembling transactions. The workf
 
 <!--[TransactionSkeleton](https://github.com/nervosnetwork/lumos/blob/develop/packages/helpers/src/index.ts#L212) supports transaction assembling with the following conveniences:--><!--A well designed component must be able to query and include cells automatically to provide capacities required by the transaction.--><!--Individual script logic must be managed and respected by the general transaction skeleton.--><!--Scripts sharing the same behavior must be managed together in a unified interface. Developers can rely on abstractions instead of catering for every single detail.-->
 
+## Prerequisites
+
+The following prerequisites apply for building transactions by using Lumos:
+
+- The development environment is set up. For more information, see [Set Up the Development Environment](http://localhost:3000/lumos_doc/docs/preparation/setupsystem).
+- The CKB node is installed and started on DEV chain. For more information, see [Install a CKB Node](http://localhost:3000/lumos_doc/docs/preparation/installckb).
+- The Lumos packages (@ckb-lumos/base, @ckb-lumos/indexer, @ckb-lumos/helpers, @ckb-lumos/config-manager, @ckb-lumos/common-scripts, @ckb-lumos/rpc) are installed.
+
+## Environment
+
+The following examples are verified on Ubuntu 20.04.2. Steps on the other platforms can be adjusted accordingly.
+
 ## General Workflow
 
 1. **The DApp creates a transaction skeleton**.
@@ -37,15 +49,31 @@ This guide introduces the general workflow of assembling transactions. The workf
 
 The @ckb-lumos/common-scripts package includes a `common` script that can transfer capacity from `fromInfos` to an address, add the transaction fee and signing entries to the transaction.
 
-**Step 1. Create a transaction skeleton.**
+#### **Step 1. Create a transaction skeleton.**
 
-The [common.transfer()](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L175) function can be used to create a common transfer transaction.
+The [common.transfer](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L175) function can be used to create a common transfer transaction.
 
 **Constructor**
 
-`common.transfer`(txSkeleton: TransactionSkeletonType, fromInfos: FromInfo[], toAddress: Address,  amount: bigint, changeAddress?: Address, tipHeader?: Header, {  config = undefined,  useLocktimeCellsFirst = true,  LocktimePoolCellCollector = locktimePool.CellCollector,}: {   config?: Config;   useLocktimeCellsFirst?: boolean;  LocktimePoolCellCollector?: any;  } = {})
+```typescript
+common.transfer(
+    txSkeleton: TransactionSkeletonType, 
+    fromInfos: FromInfo[], 
+    toAddress: Address,  
+    amount: bigint, 
+    changeAddress?: Address, 
+    tipHeader?: Header, 
+    {  
+        config = undefined,  
+        useLocktimeCellsFirst = true,  
+        LocktimePoolCellCollector = locktimePool.CellCollector,
+    }: {   config?: Config;   useLocktimeCellsFirst?: boolean;  LocktimePoolCellCollector?: any;  } = {}
+)
+```
 
-The <var>fromInfos</var> parameter used for generating signing messages can be a [MultisigScript](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/from_info.ts#L20) | Address (string) | [ACP](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/from_info.ts#L31) | [CustomScript](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/from_info.ts#L36). MultisigScript is used for the secp256k1_blake160_multisig lock script (the transactions that require multi-signatures).
+
+
+Lumos supports gathering input cells from multiple wallets as a single unit by using the <var>fromInfos</var> parameter. It is a array of wallet parameters of a [MultisigScript](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/from_info.ts#L20), Address (string), [ACP](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/from_info.ts#L31) or [CustomScript](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/from_info.ts#L36) type. MultisigScript is used for the secp256k1_blake160_multisig lock script (the transactions that require multi-signatures).
 
 An example of <var>fromInfos</var> including MultisigScript:
 
@@ -84,9 +112,28 @@ txSkeleton = await common.transfer(
             );
 ```
 
-**Step 2. Add the fee for the transaction.**
+#### **Step 2. Add the fee for the transaction.**
 
 The [common.payFee](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L412) function is used in the following example to add the transaction fee to the transaction skeleton.
+
+**Constructor**
+
+```typescript
+common.payFee(
+  txSkeleton: TransactionSkeletonType,
+  fromInfos: FromInfo[],
+  amount: bigint,
+  tipHeader?: Header,
+  {
+    config = undefined,
+    useLocktimeCellsFirst = true,
+    enableDeductCapacity = true,
+  }: {
+    config?: Config;
+    useLocktimeCellsFirst?: boolean;
+    enableDeductCapacity?: boolean;
+  } = {}
+```
 
 Example:
 
@@ -98,7 +145,18 @@ txSkeleton = await common.payFee(
 )
 ```
 
-**Step 3. Prepare the signing entries.** 
+#### **Step 3. Prepare the signing entries.** 
+
+The [common.prepareSigningEntries](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L434) function is used to add the signing entries to the transaction skeleton. The result is a raw transaction that requires signatures.
+
+**Constructor**
+
+```typescript
+prepareSigningEntries(
+  txSkeleton: TransactionSkeletonType,
+  { config = undefined }: Options = {}
+)
+```
 
 Example:
 
@@ -106,9 +164,7 @@ Example:
 skeleton = common.prepareSigningEntries(txSkeleton);
 ```
 
-The [common.prepareSigningEntries](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L434) function is used to add the signing entries to the transaction skeleton. The result is a raw transaction that requires signatures.
-
-**Step 4. Sign and seal the transaction.**
+#### **Step 4. Sign and seal the transaction.**
 
 :::note
 
@@ -145,7 +201,9 @@ The following is a signature output example：
 
 To seal the transaction, the example uses the [sealTransaction](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/helpers/src/index.ts#L257) function of the @ckb-lumos/helpers package to add the transaction signatures to the transaction skeleton.
 
-**Step 5. Send this finalized transaction to the CKB network.**
+#### **Step 5. Send this finalized transaction to the CKB network.**
+
+The [send_transaction](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/rpc/src/index.ts#L339) function of the @ckb-lumos/rpc package can be used to send the transaction to the CKB network. The function sends the transaction to chain and returns a hash for the transaction. The hash can then be used to track the transactions.
 
 Example:
 
@@ -156,9 +214,7 @@ const hash = await rpc.send_transaction(tx);
 console.log("The transaction hash is",hash);
 ```
 
-The [send_transaction](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/rpc/src/index.ts#L339) function of the @ckb-lumos/rpc package is used to send the transaction. The function sends the transaction to chain and returns a hash for the transaction. The hash can then be used to track the transactions.
-
-The following is a transaction hash output example:
+A transaction hash output example:
 
 ```shell {1}
 The transaction hash is 0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e
@@ -172,9 +228,11 @@ The earlier versions before 0.16.0 require the Anyone-Can-Pay (ACP) script for s
 
 **Step 6. (Optional) Get the Transaction Status.**
 
+The [get_transaction](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/rpc/src/index.ts#L196) function of the @ckb-lumos/rpc package can be used to get the transaction with status. 
+
 Example:
 
-```typescript
+```typescript title="hellolumos/src/buildTXs.ts/commonTransfer()" {3}
 import {RPC} from ("@ckb-lumos/rpc");
 const rpc = new RPC("http://127.0.0.1:8114");
 const txWithStatus= await rpc.get_transaction(hash);
@@ -185,7 +243,25 @@ console.log("Transaction status is:",txWithStatus.tx_status.status);
 
 > Nervos DAO is a smart contract. Users can interact the same way as any smart contract on CKB with Nervos DAO. One function of Nervos DAO is to provide an dilution counter-measure for CKByte holders. By deposit in Nervos DAO, holders get proportional secondary rewards, which guarantee their holding are only affected by hardcapped primary issuance as in Bitcoin. For more information about Nervos DAO, see [RFC: Nervos DAO](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0023-dao-deposit-withdraw/0023-dao-deposit-withdraw.md).
 
-**Step 1. Create a transaction skeleton with the DAO script.**
+#### **Step 1. Create a transaction skeleton with the DAO script.**
+
+The [dao.deposit](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/dao.ts#L112) is used to deposit CKB to DAO. The deposited cells are frozen after the deposit operation.
+
+**Constructor**
+
+```typescript
+dao.deposit(
+  txSkeleton: TransactionSkeletonType,
+  fromInfo: FromInfo,
+  toAddress: Address,
+  amount: bigint,
+  { config = undefined }: Options = {}
+)
+```
+
+The <var>fromInfo</var> parameter must be specified when it is a [MultisigScript](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/from_info.ts#L20) script. The same address can be used as the `fromInfo` and `toAddress` in the [deposit](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/dao.ts#L112) function.
+
+The following example creates a transaction skeleton for the deposit action with the cells provided by the indexer. 
 
 Example:
 
@@ -195,16 +271,6 @@ console.log("Deposit to DAO transaction");
 skeleton = await dao.deposit(skeleton,fromInfo,toAddress,BigInt(amount));
 ```
 
-The example creates a transaction skeleton for the deposit action with the cells provided by the indexer. 
-
-**Constructor**
-
-[dao.deposit](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/dao.ts#L112)(<var>txSkeleton</var>, <var>fromInfo</var>, <var>toAddress</var>, <var>amount</var>, { <var>config</var> }?)
-
-The <var>fromInfo</var> parameter must be specified when it is a [MultisigScript](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/from_info.ts#L20) script.
-
-The same address is used as the `fromInfo` and `toAddress` in the [deposit](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/dao.ts#L112) function. The deposited cells are frozen after the deposit operation.
-
 Use the [createTransactionFromSkeleton](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/helpers/src/index.ts#L224) function to view the current skeleton. 
 
 ```typescript title="hellolumos/src/buildTXs.ts/deposit2DAO()" {2}
@@ -212,7 +278,11 @@ import { createTransactionFromSkeleton } from "@ckb-lumos/helpers";
 console.log(JSON.stringify(createTransactionFromSkeleton(skeleton), null, 2));
 ```
 
-**Step 2. Add the fee for the deposit transaction.**
+#### **Step 2. Add the fee for the deposit transaction.**
+
+The `secp256k1_blake160`, `secp256k1_blake160_multisig` and `locktime_pool` script are similar to the `common` script. It is recommended to use the `common` script to deal with those lock scripts for the `payFee` action and the `prepareSigningEntries` action.
+
+The `deposit` action and the `payFee` action are using the same address. If you checked the transaction skeleton after incurring fees, you can notice that the transaction skeleton has only one input for the two actions. Lumos can intelligently rewrite the change cells generated in the deposit action to pay enough transaction fee. 
 
 Example:
 
@@ -220,11 +290,7 @@ Example:
 skeleton = await common.payFee(skeleton,[fromInfo],BigInt(txFee));
 ```
 
-The `secp256k1_blake160`, `secp256k1_blake160_multisig` and `locktime_pool` script are similar to `common`. It is recommended to use the `common` script that deals with those lock scripts for the `payFee` action and the `prepareSigningEntries` action.
-
-The deposit action and the paying transaction fee action are using the same address. If you checked the transaction skeleton after incurring fees, you can notice that the transaction skeleton has only one input for the two actions. Lumos can intelligently rewrite the change cells generated in the deposit action to pay enough transaction fee. 
-
-**Step 3. Prepare the signing entries.** 
+#### **Step 3. Prepare the signing entries.** 
 
 Example:
 
@@ -234,7 +300,7 @@ skeleton = common.prepareSigningEntries(skeleton);
 
 This example loops through the skeleton, and creates `signingEntries` by using the `common` script.
 
-**Step 4. Sign and seal the transaction.**
+#### **Step 4. Sign and seal the transaction.**
 
 :::note
 
@@ -246,7 +312,7 @@ For simplicity and demonstration, the example uses the [key.signRecoverable](htt
 
 For more information, see Step 4 in the common transaction section.
 
-**Step 5. Send this finalized transaction to the CKB network**
+#### **Step 5. Send this finalized transaction to the CKB network**
 
 Example:
 
@@ -371,17 +437,24 @@ The [dao.listDaoCells](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9
 
 **Constructor**
 
-[dao.listDaoCells](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/dao.ts#L87)(cellProvider: CellProvider, fromAddress: string, cellType: "deposit" | "all" | "withdraw", { config }?: Options | undefined)
+```typescript
+dao.listDaoCells(
+  cellProvider: CellProvider,
+  fromAddress: Address,
+  cellType: "all" | "deposit" | "withdraw",
+  { config = undefined }: Options = {}
+)
+```
 
 Example:
 
 ```typescript title="hellolumos/src/buildTXs.ts/listDAOCells()" {6}
 export async function listDAOCells(
-    fromaddress: string,
-    celltype: "deposit" | "all" | "withdraw"
+    fromAddress: string,
+    cellType: "deposit" | "all" | "withdraw"
 ) {
-    console.log("List the",celltype,"cells for the address", fromaddress);
-    for await (const cell of dao.listDaoCells(INDEXER,fromaddress,celltype)) {
+    console.log("List the",cellType,"cells for the address", fromAddress);
+    for await (const cell of dao.listDaoCells(INDEXER,fromAddress,cellType)) {
          console.log(cell); 
     }
 }
@@ -392,12 +465,12 @@ You can also use the collect function of the [dao.CellCollector](https://github.
 ```typescript {5}
 export async function listDAOCells2(
      fromInfo: FromInfo,
-     celltype: "deposit" | "all" | "withdraw"
+     cellType: "deposit" | "all" | "withdraw"
 ) {
     const CellCollector = new dao.CellCollector(
       fromInfo,
       INDEXER,
-      celltype,
+      cellType,
     )
     for await (const cell of CellCollector.collect()) {
          console.log(cell); 
