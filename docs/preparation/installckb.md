@@ -50,7 +50,7 @@ The following examples are verified on **Ubuntu 20.04.2**. Steps on the other pl
 
 ### **Step 1. Download the CKB Pre-built Installer Package.**
 
-The following example downloads the CKB version 0.39.0. All releases can be found on the [CKB releases](https://github.com/nervosnetwork/ckb/releases) page.
+The following example downloads the CKB version 0.39.0. All releases can be found on the <a title="Download" href="https://github.com/nervosnetwork/ckb/releases"><i class="feather icon-download"></i>CKB releases</a> page.
 
 ```bash
 $ export TOP=$(pwd)

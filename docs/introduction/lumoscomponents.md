@@ -6,7 +6,7 @@ Lumos provides a set of fully comprehensive features and utilities with the comp
 
 The **HD cache manager** and the **HD wallet manager** components provide the functions that consolidate the strength of the Lumos framework. 
 
-Lumos components (packages) can be classified into several groups according to their features:
+Lumos components (packages) can be classified into several groups according to their features.
 
 ## Helper and Config
 

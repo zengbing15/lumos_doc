@@ -7,6 +7,7 @@
 
 /* You can override the default Infima variables here. */
 @import url("custom2.css");
+@import url("https://at-ui.github.io/feather-font/css/iconfont.css");
 /*:root {
   --ifm-color-primary: #3578e5;
   --ifm-color-primary-dark: rgb(29, 107, 225);
@@ -42,51 +43,107 @@
 
 .masthead {
   min-height: 350px;
-
- background-color: var(--ifm-color-primary-dark);
- /*background-image: url("data:image/svg+xml,%3Csvg viewBox='-349.391 4.813 885.571 406.564' width='2000' height='410' xmlns='http://www.w3.org/2000/svg' xmlns:bx='https://boxy-svg.com'%3E%3Cdefs%3E%3Cfilter id='a' primitiveUnits='objectBoundingBox' x='-500%25' y='-500%25' width='1000%25' height='1000%25' bx:preset='point-light 1 0.5 0.5 0.5 20 0.69 0.35 0 %23ffffff'%3E%3CfeSpecularLighting result='specular-lighting' lighting-color='%23fff' specularConstant='.69' specularExponent='20'%3E%3CfePointLight x='.5' y='.5' z='.5'/%3E%3C/feSpecularLighting%3E%3CfeDiffuseLighting result='diffuse-lighting' lighting-color='%23fff' diffuseConstant='.35'%3E%3CfePointLight x='.5' y='.5' z='.5'/%3E%3C/feDiffuseLighting%3E%3CfeMerge result='lighting'%3E%3CfeMergeNode in='diffuse-lighting'/%3E%3CfeMergeNode in='specular-lighting'/%3E%3C/feMerge%3E%3CfeComposite in='SourceGraphic' in2='lighting' operator='arithmetic' k1='1'/%3E%3C/filter%3E%3C/defs%3E%3Cpath bx:origin='0.4975 -0.003205' fill='%23f8f2f2' filter='url(%23a)' d='M-348.724.874h884.451v410h-884.451z'/%3E%3C/svg%3E");*/
-  background-repeat: no-repeat;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    max-width: var(--ifm-container-width);
+    width: 100%;
+ /*background-color: var(--ifm-color-primary-dark);*/
+    margin-left: auto;
+    margin-right: auto;
+/*   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center; 
-  background-size: cover;
+  background-size: cover; */
+
 }
-.masthead > .content {
+.masterhead > .row {
+	display: flex;
+    flex-direction: row;
+	flex-wrap: wrap;
+	margin-left: calc(var(--ifm-spacing-horizontal)*-1);
+	margin-right: calc(var(--ifm-spacing-horizontal)*-1);
+}
+.masthead >.row > div {
+  order: -1;
+  height: 3em;
+  margin: 0 !important;
+  text-align: right;
+}
+.masthead > .row > .col >.content > div  {
+  order: -1;
+  height: 3em;
+  margin: 0 !important;
+  text-align: right;
+    display: flex;
+  flex-direction: column;
+}
+.masthead > .row > .col {
+display: block;
+    flex: 1 0;
+    margin-left: 0;
+    max-width: 100%;
+    padding-left: var(--ifm-spacing-horizontal);
+    padding-right: var(--ifm-spacing-horizontal);
     padding-top: 20px;
-    text-align: center;
-
+    text-align: left;
 }
-.masthead > .content > h1 {
-    color: rgb(255, 255, 255);
-    font-weight: bold;
 
-    font-family: Arial;
-    font-style: italic;
-    font-size: 100px;
+.masthead > .row > .col > object {
+	border-style: none;
+    box-sizing: content-box;
+    max-width: 100%;
+	margin-block-start: 2.67em;
+}
 
+.masthead > .row > .col > h1 {
+    /* color: rgb(0, 0, 0); */
+    /* font-weight: bold; */
+    max-width: 12em;
+    font-family: Kanit,sans-serif;
+    color: #4c4c4c;
+    font-size: 3em;
+    line-height: 1.2em;
+    font-weight: 700;
+    text-align: left;
+
+    margin-top: 20px;
     margin-bottom: 10px;
+	margin-block-start: 0.67em;
+    margin-block-end: 0.67em;
+    margin-inline-start: 5px;
+    margin-inline-end: 5px;
+	
   }
-.masthead > .content > h3 {
+.masthead > .row > .col > h3 {
     font-weight: normal;
     font-size: 28px;
     font-family: Arial;
-    color: rgb(255, 255, 255);
-
+    color: #4c4c4c;
+    text-align: left;
     margin-bottom: 50px;
+	margin-top: 30px;
+	line-height: 1.2em;
+	max-width: 20em;
+	margin-block-start: 1.67em;
+    margin-block-end: 0.67em;
+    margin-inline-start: 5px;
+    margin-inline-end: 5px;
   }
-.masthead > .content > .button--lg {
+.masthead > .row > .col > .button--lg {
     background-color: #fff;
     color: var(--ifm-color-primary);
 	--ifm-button-size-multiplier: 1.35;
+	   align: center;
 }
-.masthead > .content >.button--outline {
+.masthead > .row > .col >.button--outline {
     --ifm-button-background-color: transparent;
     --ifm-button-color: var(--ifm-button-border-color);
 }
-.masthead > .content >.button:hover {
+.masthead > .row > .col >.button:hover {
    color:var(--ifm-color-primary-darker);
 
 }
-.masthead > .content >.h2__title {
+.masthead > .row > .col  >.h2__title {
     background-size: 110%;
     color: transparent;
     width: 100%;
@@ -120,3 +177,18 @@ ol > li:before {
     background: #c6c6c6;
 }
 
+.feather {
+    font-family: 'feather' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-download:before {
+    content: "\e864";
+}

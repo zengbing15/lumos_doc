@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'Lumos',
+  title: 'TypeScript and JavaScript Framework for CKB DApps',
   tagline: 'The Development Framework for Nervos CKB DApps',
   url: 'https://github.com/xying21/lumos_doc',
   baseUrl: '/lumos_doc/',
@@ -9,6 +9,8 @@ module.exports = {
   organizationName: 'xying21', // Usually your GitHub org/user name.
   projectName: 'lumos_doc', // Usually your repo name.
 
+  plugins: ['docusaurus-plugin-sass'],
+  
   themeConfig: {
     colorMode: {
       defaultMode: 'light',

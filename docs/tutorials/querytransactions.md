@@ -4,15 +4,33 @@ title: Query on Transactions
 ---
 > Transactions are the most fundamental entities for a DApp to interact with Nervos CKB. For more information about CKB transactions, see [Transaction](https://docs.nervos.org/docs/reference/transaction#docsNav) and [CKB RFC](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0019-data-structures/0019-data-structures.md#transaction).
 
-Lumos provides the [TransactionCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L479) class to support querying on transactions for specific query options.
+Lumos provides functions to support querying on transactions for specific query options.
+
+## Functions
+
+### TransactionCollector
+
+The [indexer.TransactionCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/base/lib/indexer.js#L9) function of the `@ckb-lumos/indexer` package can be used to query transactions by specific query options (lock, type, argsLen, fromBlock, toBlock, order, skip) and returns the transactions as the result.
+
+The [indexer.TransactionCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/sql-indexer/lib/index.js#L811) function of the `@ckb-lumos/sql-indexer` package can be used to query transactions by specific query options (lock, type, argsLen, fromBlock, toBlock, order, skip) and returns the transactions as the result.
+
+### rpc.get_transaction
+
+The [get_transaction](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/rpc/src/index.ts#L196) function of the `@ckb-lumos/rpc` package can be used to get the transaction information (<var>status</var>, <var>block_hash</var>) for a specific transaction hash.
+
+A transaction can be in one of the following status:
+
+- A **pending** result means the node is aware of the transaction but the transaction is not confirmed yet.
+- A **proposed** result means the node sees a transaction included in a block candidate that is not yet mined.
+- A **committed** result means that the block involving the transaction has been mined and is officially on chain.
 
 ## Prerequisites
 
-The following prerequisites apply for querying on transactions by using Lumos:
+The following prerequisites apply for the examples in this guide:
 
 - The development environment is set up. For more information, see [Set Up the Development Environment](http://localhost:3000/lumos_doc/docs/preparation/setupsystem).
 - The CKB node is installed and started on DEV chain. For more information, see [Install a CKB Node](http://localhost:3000/lumos_doc/docs/preparation/installckb).
-- The Lumos packages (@ckb-lumos/base, @ckb-lumos/indexer, @ckb-lumos/helpers, @ckb-lumos/config-manager, @ckb-lumos/rpc) are installed.
+- The Lumos packages (`@ckb-lumos/base`, `@ckb-lumos/indexer`, `@ckb-lumos/helpers`, `@ckb-lumos/config-manager`, `@ckb-lumos/rpc`) are installed.
 
 ## Environment
 
@@ -21,8 +39,6 @@ The following examples are verified on Ubuntu 20.04.2. Steps on the other platfo
 ## Examples
 
 ### Query Transactions by a Lock Script
-
-The [indexer.TransactionCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/base/lib/indexer.js#L9) function of the @ckb-lumos/indexer package can be used to query transactions by specific query options (lock, type, argsLen, fromBlock, toBlock, order, skip) and returns the transactions as the result.
 
 The following example creates a new TransactionCollector to collect transactions for a specific lock script and returns the transactions with status.
 
@@ -102,7 +118,7 @@ Get transactions by lock script:
 
 ### Query Transactions between Given Block Numbers
 
-The following example fetches the transactions between `[fromBlock, toBlock]`. Both `fromBlock` and `toBlock` are included in the `QueryOptions`.
+The following example fetches the transactions between `[fromBlock, toBlock]`. Both `fromBlock` and `toBlock` are included in the [QueryOptions](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/base/index.d.ts#L337).
 
 Example:
 
@@ -320,13 +336,7 @@ export async function finegrainedSearch  (
 
 ### Get Transaction Status and Block Hash
 
-A transaction can be in one of the following status:
-
-- A **pending** result means the node is aware of the transaction but the transaction is not confirmed yet.
-- A **proposed** result means the node sees a transaction included in a block candidate that is not yet mined.
-- A **committed** result means that the block involving the transaction has been mined and is officially on chain.
-
-The following example uses the [get_transaction](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/rpc/src/index.ts#L196) function of the @ckb-lumos/rpc package to get the transaction information (status, block_hash) for a specific transaction hash.
+The following example uses the [get_transaction](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/rpc/src/index.ts#L196) function of the `@ckb-lumos/rpc` package to get the transaction information for a specific transaction hash.
 
 Example: 
 

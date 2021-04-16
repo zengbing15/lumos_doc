@@ -6,18 +6,10 @@ The config manager  (`@ckb-lumos/config-manager`) supports the DApp to boot with
 
 A DApp can set up the config manger by one of the following variables:
 
-- **LUMOS_CONFIG_NAME**:  To boot the DApp with the configurations of the ***Mainnet*** or ***Testnet*** network, specify the <var>LUMOS_CONFIG_NAME</var> variable with the pre-defined configurations.
-
-  The pre-defined configurations includes: 
-
-  - `LINA`: Mainnet pre-defined configurations
-  - `AGGRON4`: Testnet pre-defined configurations 
-
-  For more information, see [Set Up the Config Manager by Using Pre-defined Configurations](../tutorials/config#set-up-the-config-manager-by-using-pre-defined-configurations). 
-
-- **LUMOS_CONFIG_FILE**: To boot the DApp with the configurations of the ***DEV chain***, specify the <var>LUMOS_CONFIG_FILE</var> variable with a local config file. 
-
-  For more information, see [Set Up the Config Manager by Using a Local Config File](../tutorials/config#set-up-the-config-manager-by-using-a-local-config-file).
+| Variable                     | Value                                                        |
+| ---------------------------- | ------------------------------------------------------------ |
+| <var>LUMOS_CONFIG_NAME</var> | <div><ul><li> `LINA`: To boot the DApp with the configurations of the ***Mainnet*** network.</li><li>`AGGRON4`: To boot the DApp with the configurations of the ***Testnet*** network</li></ul></div><p>For more information, see [Set Up the Config Manager by Using Pre-defined Configurations](../tutorials/config#set-up-the-config-manager-by-using-pre-defined-configurations).</p> |
+| <var>LUMOS_CONFIG_FILE</var> | A local config file, for example, config.json: To boot the DApp with the configurations of the ***DEV chain***, specify the <var>LUMOS_CONFIG_FILE</var> variable with a local config file. <br/>For more information, see [Set Up the Config Manager by Using a Local Config File](../tutorials/config#set-up-the-config-manager-by-using-a-local-config-file). |
 
 ## Prerequisites
 

@@ -8,18 +8,6 @@ This guide introduces the general workflow of assembling transactions. The workf
 
 <!--[TransactionSkeleton](https://github.com/nervosnetwork/lumos/blob/develop/packages/helpers/src/index.ts#L212) supports transaction assembling with the following conveniences:--><!--A well designed component must be able to query and include cells automatically to provide capacities required by the transaction.--><!--Individual script logic must be managed and respected by the general transaction skeleton.--><!--Scripts sharing the same behavior must be managed together in a unified interface. Developers can rely on abstractions instead of catering for every single detail.-->
 
-## Prerequisites
-
-The following prerequisites apply for building transactions by using Lumos:
-
-- The development environment is set up. For more information, see [Set Up the Development Environment](http://localhost:3000/lumos_doc/docs/preparation/setupsystem).
-- The CKB node is installed and started on DEV chain. For more information, see [Install a CKB Node](http://localhost:3000/lumos_doc/docs/preparation/installckb).
-- The Lumos packages (@ckb-lumos/base, @ckb-lumos/indexer, @ckb-lumos/helpers, @ckb-lumos/config-manager, @ckb-lumos/common-scripts, @ckb-lumos/rpc) are installed.
-
-## Environment
-
-The following examples are verified on Ubuntu 20.04.2. Steps on the other platforms can be adjusted accordingly.
-
 ## General Workflow
 
 1. **The DApp creates a transaction skeleton**.
@@ -41,6 +29,18 @@ The following examples are verified on Ubuntu 20.04.2. Steps on the other platfo
 6. **The DApp forwards this finalized transaction to the CKB network**. The DApp forwards the sealed transaction to the CKB network through the RPC interface. Upon successful receipt, the CKB network returns the transaction hash to the DApp. The transaction hash is sent back to the client such that the client can track the transactions.
 
 7. **(Optional) The DApp gets the transaction status.**
+
+## Prerequisites
+
+The following prerequisites apply for the examples in this guide:
+
+- The development environment is set up. For more information, see [Set Up the Development Environment](http://localhost:3000/lumos_doc/docs/preparation/setupsystem).
+- The CKB node is installed and started on DEV chain. For more information, see [Install a CKB Node](http://localhost:3000/lumos_doc/docs/preparation/installckb).
+- The Lumos packages (`@ckb-lumos/base`, `@ckb-lumos/indexer`, `@ckb-lumos/helpers`, `@ckb-lumos/config-manager`, `@ckb-lumos/common-scripts`, `@ckb-lumos/rpc`) are installed.
+
+## Environment
+
+The following examples are verified on Ubuntu 20.04.2. Steps on the other platforms can be adjusted accordingly.
 
 
 ## Examples

@@ -16,6 +16,7 @@
   --ifm-leading: calc(1em * var(--ifm-leading-number));
   --ra-color-text-dark: #1c1e21 !important;
   --ifm-navbar-background-color:#dadde1;
+  --ifm-container-width: 1200px;
 }
 .header-github-link:hover,
 
@@ -31,7 +32,10 @@ table th:first-child:empty {
   opacity: 0;
   border: none;
 }
-
+.container{
+	/* max-width: 1200px; */
+	display: block;
+}
 .container > .row > .col > div {
   display: flex;
   flex-direction: column;
@@ -210,7 +214,23 @@ body .markdown {
   line-height: 1.4;
   letter-spacing: 0;
 }
-
+.markdown .code-explanation {
+    margin-top: calc(var(--ifm-spacing-vertical)*-1 - 5px);
+    padding-top: calc(var(--ifm-pre-padding)/3 + 5px);
+    background: rgba(var(--ifm-color-primary-rgb),.15)!important;
+    border-bottom-left-radius: var(--ifm-global-radius);
+    border-bottom-right-radius: var(--ifm-global-radius);
+    color: var(--ifm-color-primary);
+    font-size: .8em;
+    font-weight: 500;
+    margin-bottom: var(--ifm-spacing-vertical);
+    padding: var(--ifm-pre-padding);
+}
+.markdown .code-explanation--toggle {
+    color: var(--ifm-color-primary);
+    cursor: pointer;
+    font-size: .9em;
+}
 video {
   width: 100%;
 }

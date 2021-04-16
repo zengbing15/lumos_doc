@@ -1,6 +1,6 @@
 ---
 id: installlumos
-title: Install Lumos
+title: Install Lumos Packages
 ---
 This guide shows how to install Lumos packages that a DApp requires as dependencies. <!--For the projects that have already listed Lumos packages as dependencies, just run `yarn install` in the projects directly to install the packages.--> 
 

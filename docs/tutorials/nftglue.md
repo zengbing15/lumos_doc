@@ -36,66 +36,71 @@ The following prerequisites apply for this example:
 
 ### **Step 1. Install Docker on Ubuntu and manage Docker as a non-root user.**
 
+**Docker** must be installed for building and deploying smart contracts. 
+
 1. To install Docker engine on **Ubuntu**, see the Docker documentations of [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/).
 2. To manage Docker as a non-root user, see the Docker documentations of [Manage Docker as a non-root user](https://docs.docker.com/engine/install/linux-postinstall/).
 
 ### **Step 2. Install Capsule.** 
 
-Capsule is the tool for building deploying scripts (contracts) on Nervos CKB. The Capsule tool can be installed from source or the pre-built installer.
+**Capsule** is the tool for building and deploying scripts (contracts) on Nervos CKB. The Capsule tool can be installed from source or the pre-built installer.
 
 The following example installs Capsule on Ubuntu by using the [pre-built installer](https://github.com/nervosnetwork/capsule/releases/tag/v0.1.3) of Capsule. For more information about installation from source, see the [Readme](https://github.com/nervosnetwork/capsule) of Capsule.
 
 To install Capsule by using the pre-built installer:
 
-- Download the pre-built installer of capsule_v0.1.3_x86_64-linux.tar.gz.
+1. Download the pre-built installer of capsule_v0.1.3_x86_64-linux.tar.gz.
 
-  :::note
+   :::note
 
-  There are some versions of Capsule that are incompatible with the NFT integration code example. Version **0.1.3** is verified and recommended for walking through this NFT integration example.
+   There are some versions of Capsule that are incompatible with the NFT integration code example. Version **0.1.3** is verified and recommended for walking through this NFT integration example.
 
-  :::
+   :::
 
-  ```shell
-  $ curl -LO https://github.com/nervosnetwork/capsule/releases/download/v0.1.3/capsule_v0.1.3_x86_64-linux.tar.gz
-  $ tar xzf capsule_v0.1.3_x86_64-linux.tar.gz
-  ```
+   ```shell
+   $ curl -LO https://github.com/nervosnetwork/capsule/releases/download/v0.1.3/capsule_v0.1.3_x86_64-linux.tar.gz
+   $ tar xzf capsule_v0.1.3_x86_64-linux.tar.gz
+   ```
 
-- Add ckb-cli and Capsule to the PATH environment variable.
+2. Add ckb-cli and Capsule to the PATH environment variable.
 
-  To add the PATH variables, add the lines `export PATH=$PATH:/<path to the file>` of ckb-cli and Capsule to the end of the **~/.bashrc** file for Bash shell.
+   To add the PATH variables, add the lines `export PATH=$PATH:/<path to the file>` of ckb-cli and Capsule to the end of the **~/.bashrc** file for Bash shell.
 
-  For example:
+   For example:
 
-  - ckb-cli: `export PATH=$PATH:/home/user1/ckb_v0.39.0_x86_64-unknown-linux-gnu`
+   - ckb-cli: `export PATH=$PATH:/home/user1/ckb_v0.39.0_x86_64-unknown-linux-gnu`
 
-    The folder /home/user1/ckb_v0.40.0_x86_64-unknown-linux-gnu contains the ckb tools installed in **step 1**.
+     The folder /home/user1/ckb_v0.40.0_x86_64-unknown-linux-gnu contains the ckb tools installed in **step 1**.
 
-  - Capsule: `export PATH=$PATH:/home/user1/capsule_v0.1.3_x86_64-linux`
+   - Capsule: `export PATH=$PATH:/home/user1/capsule_v0.1.3_x86_64-linux`
 
-    The folder /home/user1/capsule_v0.1.3_x86_64-linux contains the Capsule tools installed in **step 2**.
+     The folder /home/user1/capsule_v0.1.3_x86_64-linux contains the Capsule tools installed in **step 2**.
 
-  :::note
+     :::note
 
-  The current user must have permissions to run ckb-cli and Capsule. If the execution of ckb-cli or Capsule requires sudo commands, that may cause issues during the deployment process.
+     The current user must have permissions to run ckb-cli and Capsule. If the execution of ckb-cli or Capsule requires sudo commands, that may cause issues during the deployment process.
 
-  :::
+     :::
 
-- Check the Capsule installation.
+3. Check the Capsule installation.
 
-  ```shell
-  $ capsule check
-  ```
-  <details><summary>Output</summary>
-  <p>
-  
-  ```shell
-  ------------------------------
-  docker  installed
-  ckb-cli installed v0.39.0
-  ------------------------------
-  ```
-  </p>
-  </details>
+   ```shell
+   $ capsule check
+   ```
+
+   <details><summary>Output</summary>
+   <p>
+   
+   ```
+   ------------------------------
+   docker  installed
+   ckb-cli installed v0.39.0
+   ------------------------------
+   ```
+   
+   </p>
+   
+   </details>
 
 ### **Step 3. Download the example code.**
 
@@ -137,8 +142,6 @@ Building contract nft-validator
 Done
 ```
 
-
-
 </p>
 </details>
 
@@ -152,102 +155,115 @@ The CKB node and the miner must start running before the deployment of the NFT s
 
 To deploy the NFT script:
 
-- Update the `[lock]` section in the nft-validator/`deployment.toml` file with the `lock_arg`  "0x212ba22e768ff87c9f58e8af9f5290da8214e641" of the account created in preparation phase. For more information about creating an account, see [Create Accounts](../preparation/createaccount).
+1. Update the `[lock]` section in the nft-validator/`deployment.toml` file with the `lock_arg`  of the account that is created in the preparation phase. For more information about creating an account, see [Create Accounts](../preparation/createaccount).
 
-  ```toml title="nft-validator/deployment.toml"
-  # [[cells]]
-  # name = "my_cell"
-  # enable_type_id = false
-  # location = { file = "build/release/my_cell" }
-  
-  # # Dep group cells
-  # [[dep_groups]]
-  # name = "my_dep_group"
-  # cells = [
-  #   "my_cell",
-  #   "secp256k1_data"
-  # ]
-  
-  # # Replace with your own lock if you want to unlock deployed cells.
-  # # The deployment code_hash is secp256k1 lock
-  [lock]
-  code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
-  args = "0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e"
-  hash_type = "type"
-  ```
+   :::note
 
-- Generate the release binary.
+   The account must have enough CKB capacity (33,613.0 CKB) for the deployment.
 
-  ```shell
-  $ capsule build --release
-  ```
+   :::
 
-  <details><summary>Output</summary>
-  <p>   
-  
-  ```
-  Building contract nft-validator
-       Compiling cc v1.0.58
-       Compiling cfg-if v0.1.10
-       Compiling buddy-alloc v0.3.0
-       Compiling blake2b-ref v0.1.0
-       Compiling molecule v0.6.0
-       Compiling ckb-allocator v0.1.1
-       Compiling ckb-standalone-types v0.0.1-pre.1
-       Compiling ckb-std v0.4.1
-       Compiling nft-validator v0.1.0 (/code/contracts/nft-validator)
-        Finished release [optimized] target(s) in 17.31s
-    Done
-  ```
-  </p>
-  </details>
+   ```toml title="nft-validator/deployment.toml"
+   # [[cells]]
+   # name = "my_cell"
+   # enable_type_id = false
+   # location = { file = "build/release/my_cell" }
+   
+   # # Dep group cells
+   # [[dep_groups]]
+   # name = "my_dep_group"
+   # cells = [
+   #   "my_cell",
+   #   "secp256k1_data"
+   # ]
+   
+   # # Replace with your own lock if you want to unlock deployed cells.
+   # # The deployment code_hash is secp256k1 lock
+   [lock]
+   code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+   args = "0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e"
+   hash_type = "type"
+   ```
 
-- Deploy the NFT binary program to DEV chain by using the "<code>capsule deploy --address <var>the testnet address of the account created in step 2</var></code>" command.
+2. Generate the release binary.
 
-  A cell is created with the binary program as cell data on the DEV chain. Transactions on NFT tokens reference the cell by cell deps, and use the NFT script in the transactions.
-  
-  ```shell
-  $ capsule deploy --address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
-  ```
-  
-  <details><summary>Output</summary>
-  <p>
-  
-  
-  
-  :::note
-  
-  The `data_hash` and `tx_hash` will be used in later NFT operations.
-  
-  :::
-  
-  
-  ```shell
-  Create directory "/home/xy/dapps-on-ckb-workshop-code/nft-validator/migrations/dev"
-  Deployment plan:
-  ---
-  migrated_capacity: 0.0 (CKB)
-  new_occupied_capacity: 33613.0 (CKB)
-  txs_fee_capacity: 0.0001 (CKB)
-  total_occupied_capacity: 33613.0 (CKB)
-  recipe:
-    cells:
-      - name: nft
-        index: 0
-        tx_hash: 0xec41ba0c9aa59383481aca20b713ba37413478e0a2c6c258c1a2bc489c713a33
-        occupied_capacity: 33613.0 (CKB)
-        data_hash: 0x790420c4244a42e732f8065c275b541695a66c7348f885bb3d9b52d83b279115
-        type_id: ~
-    dep_groups: []
-  Confirm deployment? (Yes/No)
-  yes 
-  Password: 
-  send cell_tx ec41ba0c9aa59383481aca20b713ba37413478e0a2c6c258c1a2bc489c713a33
-  Deployment complete
-  ```
-  
-  </p>
-  </details>
+   ```shell
+   $ capsule build --release
+   ```
+   
+   <details><summary>Output</summary>
+   <p>   
+   
+   
+   
+   ```
+   Building contract nft-validator
+      Compiling cc v1.0.58
+      Compiling cfg-if v0.1.10
+      Compiling buddy-alloc v0.3.0
+      Compiling blake2b-ref v0.1.0
+      Compiling molecule v0.6.0
+      Compiling ckb-allocator v0.1.1
+      Compiling ckb-standalone-types v0.0.1-pre.1
+      Compiling ckb-std v0.4.1
+      Compiling nft-validator v0.1.0 (/code/contracts/nft-validator)
+       Finished release [optimized] target(s) in 17.31s
+   Done
+   ```
+   
+   </p>
+   </details>
+
+3. Deploy the NFT binary program to DEV chain by using the "<code>capsule deploy --address <var>the testnet address of the account created in step 2</var></code>" command.
+
+   A cell is created with the binary program as cell data on the DEV chain. Transactions on NFT tokens reference the cell by cell deps, and use the NFT script in the transactions.
+
+   ```shell
+   $ capsule deploy --address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
+   ```
+
+   :::note
+   
+   The `data_hash` and `tx_hash` will be used in later NFT operations.
+   
+   :::
+   
+
+   <details><summary>Output</summary>
+   <p>
+   
+   
+   
+
+   
+   
+   ```shell
+   Create directory "/home/xy/dapps-on-ckb-workshop-code/nft-validator/migrations/dev"
+   Deployment plan:
+   ---
+   migrated_capacity: 0.0 (CKB)
+   new_occupied_capacity: 33613.0 (CKB)
+   txs_fee_capacity: 0.0001 (CKB)
+   total_occupied_capacity: 33613.0 (CKB)
+   recipe:
+     cells:
+       - name: nft
+         index: 0
+         tx_hash: 0xec41ba0c9aa59383481aca20b713ba37413478e0a2c6c258c1a2bc489c713a33
+         occupied_capacity: 33613.0 (CKB)
+         data_hash: 0x790420c4244a42e732f8065c275b541695a66c7348f885bb3d9b52d83b279115
+         type_id: ~
+     dep_groups: []
+   Confirm deployment? (Yes/No)
+   yes 
+   Password: 
+   send cell_tx ec41ba0c9aa59383481aca20b713ba37413478e0a2c6c258c1a2bc489c713a33
+   Deployment complete
+   ```
+   
+   </p>
+   </details>
+
 
 ## Operate on NFT Tokens by Using Lumos
 
