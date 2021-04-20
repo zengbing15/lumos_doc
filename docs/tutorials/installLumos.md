@@ -2,7 +2,7 @@
 id: installlumos
 title: Install Lumos Packages
 ---
-This guide shows how to install Lumos packages that a DApp requires as dependencies. <!--For the projects that have already listed Lumos packages as dependencies, just run `yarn install` in the projects directly to install the packages.--> 
+When creating a new project or adding necessary Lumos components (packages) to an existing project, follow the instruction in this guide to install the Lumos packages that a DApp requires as dependencies. <!--For the projects that have already listed Lumos packages as dependencies, just run `yarn install` in the projects directly to install the packages.--> 
 
 ## Prerequisites
 
@@ -19,6 +19,8 @@ The following examples are verified on Ubuntu 20.04.2. Steps on the other platfo
 ## Steps
 
 ### **Step 1. Navigate into the directory of the project.**
+
+To navigate into a project directory, run the `cd <project folder name>` command:
 
 ```
 $ cd mydapp
@@ -57,12 +59,12 @@ Done in 44.54s.
 
 ### **Step 3. Install Lumos packages as dependencies for the project.**
 
-A Lumos package can be installed by using the `yarn add` command or the `npm install` command according to the application requirements.
+A Lumos package can be installed by using the `yarn add @ckb-lumos/<package name> ` command according to the application requirements.
 
 The following example installs the indexer, the common-scripts, the config-manager packages and their dependencies for the project.
 
 ```shell
-$ yarn add @ckb-lumos/indexer@0.15.0 @ckb-lumos/common-scripts@0.15.0 @ckb-lumos/config-manager@0.15.0
+$ yarn add @ckb-lumos/indexer@0.16.0 @ckb-lumos/common-scripts@0.16.0 @ckb-lumos/config-manager@0.16.0
 ```
 
 <details><summary>OUTPUT</summary>
@@ -82,15 +84,15 @@ warning @ckb-lumos/indexer > request > har-validator@5.1.5: this library is no l
 success Saved lockfile.
 success Saved 167 new dependencies.
 info Direct dependencies
-├─ @ckb-lumos/common-scripts@0.15.0
-├─ @ckb-lumos/config-manager@0.15.0
-└─ @ckb-lumos/indexer@0.15.0
+├─ @ckb-lumos/common-scripts@0.16.0
+├─ @ckb-lumos/config-manager@0.16.0
+└─ @ckb-lumos/indexer@0.16.0
 info All dependencies
-├─ @ckb-lumos/common-scripts@0.15.0
-├─ @ckb-lumos/config-manager@0.15.0
-├─ @ckb-lumos/helpers@0.15.0
-├─ @ckb-lumos/indexer@0.15.0
-├─ @ckb-lumos/rpc@0.15.0
+├─ @ckb-lumos/common-scripts@0.16.0
+├─ @ckb-lumos/config-manager@0.16.0
+├─ @ckb-lumos/helpers@0.16.0
+├─ @ckb-lumos/indexer@0.16.0
+├─ @ckb-lumos/rpc@0.16.0
 ├─ abbrev@1.1.1
 ├─ ...
 ├─ ...
@@ -109,8 +111,8 @@ Done in 125.02s.
 
 ### gyp Error About Missing Dependencies for node-gyp
 
-If any gyp error about missing dependencies for node-gyp is encountered, go to check the details in [Install Dependencies for node-gyp](../preparation/setupsystem#install-dependencies-for-node-gyp) or the instructions on [node-gyp](https://github.com/nodejs/node-gyp) to fix the error.
+If any gyp error about missing dependencies for node-gyp is encountered, check the details of [Install Dependencies for node-gyp](../preparation/setupsystem#install-dependencies-for-node-gyp) or the instructions on [node-gyp](https://github.com/nodejs/node-gyp) to fix the error.
 
 ### Error While Rebuilding the xxhash Package
 
-node-gyp rebuilds the xxhash package during the `yarn add` process. Incompatible Node.js may cause the rebuilding failure. Reinstall a lower version of Node.js, for example, Node.js 12, and then install Lumos packages.
+node-gyp rebuilds the xxhash package during the `yarn add` installation process. Incompatible Node.js may cause the rebuilding failure. Reinstall a lower version of Node.js, for example, Node.js 12, and then install Lumos packages.

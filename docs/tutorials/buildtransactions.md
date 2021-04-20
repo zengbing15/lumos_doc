@@ -10,6 +10,8 @@ This guide introduces the general workflow of assembling transactions. The workf
 
 ## General Workflow
 
+The DApp can assemble a transaction in the following steps:
+
 1. **The DApp creates a transaction skeleton**.
 
 2. **The DApp adds the fee for the transaction**. The sender or someone other than the sender can pay the fee. 
@@ -47,7 +49,7 @@ The following examples are verified on Ubuntu 20.04.2. Steps on the other platfo
 
 ### Transfer CKB in a Common Transaction
 
-The @ckb-lumos/common-scripts package includes a `common` script that can transfer capacity from `fromInfos` to an address, add the transaction fee and signing entries to the transaction.
+The @ckb-lumos/common-scripts package includes a `common` script that can transfer capacity from `fromInfos` to an address, add the transaction fee and prepare signing entries for the transaction.
 
 #### **Step 1. Create a transaction skeleton.**
 
@@ -282,7 +284,7 @@ console.log(JSON.stringify(createTransactionFromSkeleton(skeleton), null, 2));
 
 The `secp256k1_blake160`, `secp256k1_blake160_multisig` and `locktime_pool` script are similar to the `common` script. It is recommended to use the `common` script to deal with those lock scripts for the `payFee` action and the `prepareSigningEntries` action.
 
-The `deposit` action and the `payFee` action are using the same address. If you checked the transaction skeleton after incurring fees, you can notice that the transaction skeleton has only one input for the two actions. Lumos can intelligently rewrite the change cells generated in the deposit action to pay enough transaction fee. 
+The `deposit` action and the `payFee` action are using the same address in the example. If you checked the transaction skeleton after incurring fees, you can notice that the transaction skeleton has only one input for the two actions. Lumos can intelligently rewrite the change cells generated in the deposit action to pay enough transaction fee. 
 
 Example:
 

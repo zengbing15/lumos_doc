@@ -66,7 +66,7 @@ $ yarn add @ckb-lumos/indexer
 
 ### Step 2. Start the indexer.
 
-The following commands initialize and start the RocksDB backed indexer. The Indexer URI, for example, http://127.0.0.1:8114 (the default RPC URL), is the <var>listen_address</var> configuration in the `ckb.toml` file of the CKB node.
+The following example initializes and starts the RocksDB backed indexer. The Indexer URI, for example, http://127.0.0.1:8114 (the default RPC URL), is the <var>listen_address</var> configuration in the `ckb.toml` file of the CKB node.
 
 Example:
 

@@ -13,9 +13,9 @@ Lumos provides the<!--`indexer.collector` function and the `TransactionManager.c
 
 ### Indexer.collector 
 
-The [Indexer.collector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L242) function of the `@ckb-lumos/indexer` package can be used to collect cells by specific query options (<var>lock</var>, <var>type</var>, <var>argsLen</var>, <var>data</var>, <var>fromBlock</var>, <var>toBlock</var>, <var>skip</var>) and returns the cells as the result.
+The [Indexer.collector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L242) function of the `@ckb-lumos/indexer` package can be used to collect cells by specific query options (<var>lock</var>, <var>type</var>, <var>argsLen</var>, <var>data</var>, <var>fromBlock</var>, <var>toBlock</var>, <var>skip</var>) and return the cells as the result.
 
-The [Indexer.collector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/sql-indexer/lib/index.js#L571) function of the `@ckb-lumos/sql-indexer` package can be used to collect cells by specific query options (<var>lock</var>, <var>type</var>, <var>argsLen</var>, <var>data</var>) and returns the cells as the result.
+The [Indexer.collector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/sql-indexer/lib/index.js#L571) function of the `@ckb-lumos/sql-indexer` package can be used to collect cells by specific query options (<var>lock</var>, <var>type</var>, <var>argsLen</var>, <var>data</var>) and return the cells as the result.
 
 ### CellCollector
 
@@ -27,7 +27,7 @@ The CellCollector class of each common script (smart contract), for example, [an
 
 ### TransactionManager.collector
 
-There is one problem with UTXO based blockchains: pending transactions require a certain amount of period before the transactions are accepted by the blockchain. During this period, new cells created by the pending transaction are not available for new transactions.<br/>The `@ckb-lumos/transaction-manager` package deals with this problem. The transaction manager wraps an indexer instance, and makes sure the cells that are created in pending transactions, are also exposed and available for new transactions.
+For UTXO based blockchains, pending transactions require a certain amount of period before the transactions are accepted by the blockchain. During this period, new cells created by the pending transaction are not available for new transactions.<br/>The `@ckb-lumos/transaction-manager` package deals with this problem. The transaction manager wraps an indexer instance, and makes sure the cells that are created in pending transactions, are also exposed and available for new transactions.
 
 ## Prerequisites
 
@@ -508,9 +508,9 @@ Find Cells in descending desc order of block numbers:
 
 The three fields of a CKB cell and the cell itself all take up CKB capacity. The cell must have the capacity that is equal or more than the total size of information stored in the cell. For more information, see [Cell](https://nervosnetwork.github.io/docs-new/docs/reference/cell).
 
-For example, the minimum CKB capacity requirement is 61 CKB (6100000000n) for a common transaction, and 102 CKB (10200000000n) for a DAO deposit transaction.
+For example, the minimum CKB capacity requirement is 61 CKB (6,100,000,000 shannons) for a common transaction, and 102 CKB (10,200,000,000 shannons) for a DAO deposit transaction.
 
-The [minimalCellCapacity](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/helpers/src/index.ts#L44) function of the @ckb-lumos/helpers package can be used to get the minimal capacity for a cell.
+The [minimalCellCapacity](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/helpers/src/index.ts#L44) function of the `@ckb-lumos/helpers` package can be used to get the minimal capacity for a cell.
 
 Example:
 
@@ -594,30 +594,6 @@ The balance of the account is 522545522203302n
 ```
 </p>
 </details>
-
-### Get the Balance by Using the HD Cache Manager
-
-To be updated...
-
-```typescript title="/mydapp/src/querycells.ts/getBalancebyHDCache()"
-export async function getBalancebyHDCache(
- m:string
-)  {
-  
-  const cacheManager = CacheManager.fromMnemonic(INDEXER,m,getDefaultInfos(CONFIG)); 
-  cacheManager.startForever();
-  // const masterPubkey = cacheManager.getMasterPublicKeyInfo();
-  // const nextReceivingPubkey = cacheManager.getNextReceivingPublicKeyInfo();
-  // const nextChangePubkey = cacheManager.getNextChangePublicKeyInfo();
-  // console.log("Get HD Wallet Balance");
-  // const cellCollector = new CellCollector(cacheManager);
-   //@ts-ignore
-   await cacheManager.cache.loop();
-   const balance = await getBalance(new CellCollector(cacheManager))
-  //const balance = await getBalance(cellCollector);
-  console.log("The HD wallet balance is", balance);
-}
-```
 
 ### Get Uncommitted Cells
 

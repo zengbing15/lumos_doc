@@ -16,7 +16,7 @@ A CKB node can be set up to connect and interact with one of the following CKB n
 
 - **Mainnet (Lina)**: The Mainnet is the main CKB public network. The real-time information of the Lina Mainnet can be checked on the [CKB Explorer](https://explorer.nervos.org/) page.
 
-- **Testnet (Aggron4)**: The Testnet is used to test applications integration and smart contracts in real environment with actual data. To get CKB capacity for an account on the Testnet, go to [https://faucet.nervos.org](https://faucet.nervos.org/) and paste the Testnet address of the address in the address input box, then click the **Claim** button. For more information, see [Create Accounts](../preparation/createaccount).
+- **Testnet (Aggron4)**: The Testnet is used to test applications integration and smart contracts in real environment with actual data. To get CKB capacity for an account on the Testnet, go to [https://faucet.nervos.org](https://faucet.nervos.org/) and paste the Testnet address of the account in the address input box, then click the **Claim** button. For more information, see [Create Accounts](../preparation/createaccount).
 
   :::info
 
@@ -35,7 +35,7 @@ There are two options for installing a CKB node:
 
   - **ckb**: The ckb tool is the main tool that initiates configurations, run CKB nodes, synching block data and mining. 
 
-  - **ckb-cli**: ckb-cli is a command line tool that provides the functions of rpc requests, creating CKB addresses, managing wallets, sending transactions, and depositing to Nervos DAO etc.
+  - **ckb-cli**: ckb-cli is a command line tool that provides the functions of RPC requests, creating CKB addresses, managing wallets, sending transactions, and depositing to Nervos DAO etc.
 
 - **Install a CKB node by using Tippy.**
 
@@ -48,7 +48,7 @@ There are two options for installing a CKB node:
 
 The following examples are verified on **Ubuntu 20.04.2**. Steps on the other platforms can be adjusted accordingly.
 
-### **Step 1. Download the CKB Pre-built Installer Package.**
+### Step 1. Download the CKB Pre-built Installer Package.
 
 The following example downloads the CKB version 0.39.0. All releases can be found on the <a title="Download" href="https://github.com/nervosnetwork/ckb/releases"><i class="feather icon-download"></i>CKB releases</a> page.
 
@@ -59,14 +59,14 @@ $ tar xzf ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
 $ export PATH=$PATH:$TOP/ckb_v0.39.0_x86_64-unknown-linux-gnu
 ```
 
-### **Step 2. Verify the binaries are working and check versions.**
+### Step 2. Verify the binaries are working and check versions.
 
 ```bash {1}
 $ ckb -V
 ckb 0.39.0
 ```
 
-### **Step 3. Choose a CKB network and run the CKB node.**
+### Step 3. Choose a CKB network and run the CKB node.
 
 **DEV chain** is the recommended network for the later examples and CKB starters. For more information about CKB networks, see [CKB Networks](../preparation/installckb#ckb-networks).
 

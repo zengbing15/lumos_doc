@@ -2,7 +2,11 @@
 id: hellolumos
 title: Hello Lumos
 ---
-The Hello Lumos example is designed to serve as the starting point for learning Lumos. To walk through this example can help you to get a general idea about the usage of Lumos through a common transaction. The full code of the example can be found here. 
+The Hello Lumos example is designed as a simple "DApp" that implemented the most basic functions, such as the query functions, the common transfer function, the DAO operations etc., based on Lumos functionalities.
+
+You can follow the steps in this guide to perform a common transfer with the function provided by the Hello Lumos "DApp".
+
+The sections in the later guides, for example, [Query on Cells](../tutorials/querycells), [Query on Transactions](../tutorials/querytransactions), and [Assemble Transactions](../tutorials/buildtransactions), explain the usage of Lumos by using the code examples of Hello Lumos. The full code of the example can be found here. 
 
 The  example has the following structure:
 
@@ -20,13 +24,9 @@ hellolumos/
 └── yarn.lock
 ```
 
-All required dependencies for the Hello Lumos example are listed in package.json. To install the other Lumos packages, see [Install Lumos](../tutorials/installlumos).
+<!--The query functions on cells and transactions are all facilitated based on the Lumos framework. For more information, see [Query on Cells](../tutorials/querycells) and [Query on Transactions](../tutorials/querytransactions).-->
 
-The connection with the CKB node is established by the setup of the config manager and the Lumos indexer in the <u>index.ts</u> file. The Lumos indexer indexes cells locally to provide cells for queries and transaction requests. For more information about setting up the config manager, see [Set Up the Config Manger](../tutorials/config). For more information about setting up the Lumos indexer, see [Set Up the Lumos Indexer](../tutorials/indexer).
-
-The query functions on cells and transactions are all facilitated based on the Lumos framework. For more information, see [Query on Cells](../tutorials/querycells) and [Query on Transactions](../tutorials/querytransactions).
-
-The <u>buildTXs.ts</u> file implements several sample functions by utilizing Lumos utilities for assembling common transfer transactions, Nervos DAO transactions, and locktime pool transfer transactions. For more information, see [Assemble Transactions](../tutorials/buildtransactions).
+<!--The <u>buildTXs.ts</u> file implements several sample functions by utilizing Lumos utilities for assembling common transfer transactions, Nervos DAO transactions, and locktime pool transfer transactions. For more information, see [Assemble Transactions](../tutorials/buildtransactions).-->
 
 ## Prerequisites
 
@@ -75,7 +75,13 @@ $ git clone https://github.com/nervosnetwork/hellolumos
 
 ### Install dependencies.
 
-The Lumos packages required by the Hello Lumos example are installed during this step. To install other Lumos packages, see [Install Lumos](../tutorials/installlumos). 
+All required dependencies for the Hello Lumos example are listed in package.json. The dependencies can be installed by running the `yarn install` command. <!--For information about installing a specific Lumos package, see [Install Lumos](../tutorials/installlumos).-->
+
+:::note
+
+The development environment must be set up correctly for installing the dependencies successfully. For more information, see [Set Up the Development Environment](../preparation/setupsystem).
+
+:::
 
 ```shell
 $ cd hellolumos
@@ -99,7 +105,7 @@ Done in 52.70s.
 </p>
 </details>
 
-### Update the account information.
+### Update the account information in the account.ts file.
 
 Replace the value of `PRIVATE_KEY`, `ADDRESS`, `ARGS` and `LOCKHASH` for ALICE and BOB in the `accounts.ts` file with the account information you have prepared when creating accounts. For more information about creating accounts, see [Create Accounts](../preparation/createaccount).
 
@@ -156,64 +162,64 @@ For more information about setting up the config manager, see [Set Up the Config
 
 ### Perform a common transfer transaction.
 
-Step 1. Get the account information of Alice and Bob.
+1. Get the account information of Alice and Bob.
 
-```javascript {1-7}
-> const { accounts, querycells, buildTXs}=require(".");
-> const alice = accounts.ALICE;
-> const bob = accounts.BOB;
-> const { parseAddress } = require("@ckb-lumos/helpers");
-> const script1 = parseAddress(alice.ADDRESS);
-> const script2 = parseAddress(bob.ADDRESS);
-> console.log(script1);
-{
-  code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-  hash_type: 'type',
-  args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
-}
-```
+   ```javascript {1-7}
+   > const { accounts, querycells, buildTXs, querytransactions }=require(".");
+   > const alice = accounts.ALICE;
+   > const bob = accounts.BOB;
+   > const { parseAddress } = require("@ckb-lumos/helpers");
+   > const script1 = parseAddress(alice.ADDRESS);
+   > const script2 = parseAddress(bob.ADDRESS);
+   > console.log(script1);
+   {
+     code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+     hash_type: 'type',
+     args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
+   }
+   ```
 
-Step 2. Check the balance for the accounts of Alice and Bob.
+2. Check the balance for the accounts of Alice and Bob.
 
-```javascript {1,3}
-> const balance1 = querycells.getBalancebyLock(script1);
-> The balance of the account is 1386763373620166n
-> const balance2 = querycells.getBalancebyLock(script2);
-> The balance of the account is 0n
-```
+   ```javascript {1,3}
+   > const balance1 = querycells.getBalancebyLock(script1);
+   > The balance of the account is 1386763373620166n
+   > const balance2 = querycells.getBalancebyLock(script2);
+   > The balance of the account is 0n
+   ```
 
-Step 3. Transfer 200 CKB from Alice to Bob. 
+3. Transfer 200 CKB from Alice to Bob. 
 
-For more information about building a common transaction by using Lumos, see [Transfer CKB in a Common Transaction](../tutorials/buildtransactions#transfer-ckb-in-a-common-transaction).
+   For more information about building a common transaction by using Lumos, see [Transfer CKB in a Common Transaction](../tutorials/buildtransactions#transfer-ckb-in-a-common-transaction).
 
-```javascript {1}
-> await buildTXs.commonTransfer([alice.ADDRESS], bob.ADDRESS,20000000000n,10000000n,alice.PRIVATE_KEY);
-[warn] ANYONE_CAN_PAY script info not found in config!
-The transaction hash is 0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e
-```
+   ```javascript {1}
+   > await buildTXs.commonTransfer([alice.ADDRESS], bob.ADDRESS,20000000000n,10000000n,alice.PRIVATE_KEY);
+   [warn] ANYONE_CAN_PAY script info not found in config!
+   The transaction hash is 0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e
+   ```
 
-Step 4. Check the transaction status.
+4. Check the transaction status.
 
-:::note
+   :::note
 
-The CKB miner must be started to commit the transaction on chain.
+   The CKB miner must be started to commit the transaction on chain.
 
-:::
+   :::
 
-For more information about getting transaction information by using Lumos, see [Get Transaction Status and Block Hash](../tutorials/querytransactions#get-transaction-status-and-block-hash). 
+   For more information about getting transaction information by using Lumos, see [Get Transaction Status and Block Hash](../tutorials/querytransactions#get-transaction-status-and-block-hash). 
 
-```javascript {1}
-> await querytransactions.getTXbyHash("0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e");
-The transaction status is committed
-```
+   ```javascript {1}
+   > await querytransactions.getTXbyHash("0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e");
+   The transaction status is committed
+   ```
 
-Step 5. Check the new balance of Bob.
+5. Check the new balance of Bob.
 
-When the transaction is committed, the new balance appears in the result.
+   When the transaction is committed, the new balance appears in the result.
 
-For more information about getting balance by a lock script, see [Get the Balance of an Account](../tutorials/querycells#get-the-balance-of-an-account).
+   For more information about getting balance by a lock script, see [Get the Balance of an Account](../tutorials/querycells#get-the-balance-of-an-account).
 
-```javascript {1}
-> await querycells.getBalancebyLock(script2);
-> The balance of the account is 20000000000n
-```
+   ```javascript {1}
+   > await querycells.getBalancebyLock(script2);
+   > The balance of the account is 20000000000n
+   ```

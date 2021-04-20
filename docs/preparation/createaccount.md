@@ -76,7 +76,7 @@ Password:
 message: "Success exported account as extended privkey to: \"alice\", please use this file carefully"
 ```
 
-<b>Step 5. Get CKB Capacity for the account of Alice.</b> (to be updated)
+<b>Step 5. Get CKB Capacity for the account of Alice.</b>
 
 The process of getting CKB capacity varies for the accounts on different networks (chains). 
 
@@ -109,7 +109,7 @@ The process of getting CKB capacity varies for the accounts on different network
     $ ckb miner -C devnet
     ```
 
-  - If the CKB node is installed by Tippy, specify **Block Assembler Lock Arg** in the Edit Chain form with the `lock_arg` of the account.
+  - If the CKB node is installed by Tippy, specify **Block Assembler Lock Arg** in the Edit Chain form with the `lock_arg` of the account. (to be updated)
 
     After the miner is specified, restart the CKB node and start the CKB miner on the Tippy dashboard.
 

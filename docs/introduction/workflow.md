@@ -2,12 +2,20 @@
 id: workflow
 title: Workflow
 ---
-The basic steps for developing a CKB DApp are as follows:
+The DApp development generally follows the following basic steps:
 
 1. Learn the prerequisite basic knowledge of CKB.
-2. Set up the development environment.
-3. Install a CKB Node. 
-4. Create accounts.
-5. Walk through the Hello Lumos example.
-6. Go through basic program tasks. The DApps built with Lumos mainly deal with user queries and transaction requests, such as transferring CKB, DAO deposits, withdrawals, and other operations of the user assets.
 
+2. Set up the development environment.
+
+3. Install and start the CKB node.
+
+4. Create accounts.
+
+5. Install Lumos packages.
+
+6. Establish the connection with the CKB network by the setup of the config manager and the Lumos indexer. <!--The Lumos indexer indexes cells locally to provide cells for queries and transaction requests.--> 
+
+   For more information about setting up the config manager, see [Set Up the Config Manger](../tutorials/config). For more information about setting up the Lumos indexer, see [Set Up the Lumos Indexer](../tutorials/indexer).
+
+7. Program the DApp functions by using Lumos to deal with user queries and transaction requests.

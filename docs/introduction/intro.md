@@ -9,9 +9,9 @@ Lumos is an open-source framework that was developed by the Nervos Developer Too
 
 ## How It Works?
 
-According to [the programming model of CKB](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#4-programming-model), DApps running on CKB separate functionally into two parts: computation and verification. <!--For more information about the CKB programming model, see [CKB whitepaper](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md).-->
+According to [the programming model of CKB](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#4-programming-model), DApps running on CKB separate functionally into two parts, **computation** and **verification**. <!--For more information about the CKB programming model, see [CKB whitepaper](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md).-->
 
-The applications that run in the Node.js environment and serve as the **off-chain computation** part can be developed on top of Lumos. The DApp built upon Lumos polls the block information from the CKB network,  indexes cells locally, and provides the cells for queries and transactions corresponding to user requests.
+The applications that run in the Node.js environment and serve as the ***off-chain computation*** part can be developed on top of Lumos. The DApp built upon Lumos polls the block information from the CKB network,  indexes cells locally, and provides the cells for queries and transactions corresponding to user requests.
 
 For more information, see [Lumos Components](../introduction/lumoscomponents).
 
@@ -25,7 +25,7 @@ Figure 1 Architecture of a CKB DApp Built with Lumos
 
 ## Contact & Support
 
-- Create a [GitHub issue](https://github.com/nervosnetwork/lumos/issues) for bug reports, feature requests, or questions
+- Create a [GitHub issue](https://github.com/nervosnetwork/lumos/issues) for bug reports, feature requests, or questions.
 - Star ⭐️ Lumos on [GitHub](https://github.com/nervosnetwork/lumos) to support the project!
 
 ## References

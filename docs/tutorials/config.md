@@ -9,14 +9,17 @@ A DApp can set up the config manger by one of the following variables:
 | Variable                     | Value                                                        |
 | ---------------------------- | ------------------------------------------------------------ |
 | <var>LUMOS_CONFIG_NAME</var> | <div><ul><li> `LINA`: To boot the DApp with the configurations of the ***Mainnet*** network.</li><li>`AGGRON4`: To boot the DApp with the configurations of the ***Testnet*** network</li></ul></div><p>For more information, see [Set Up the Config Manager by Using Pre-defined Configurations](../tutorials/config#set-up-the-config-manager-by-using-pre-defined-configurations).</p> |
-| <var>LUMOS_CONFIG_FILE</var> | A local config file, for example, config.json: To boot the DApp with the configurations of the ***DEV chain***, specify the <var>LUMOS_CONFIG_FILE</var> variable with a local config file. <br/>For more information, see [Set Up the Config Manager by Using a Local Config File](../tutorials/config#set-up-the-config-manager-by-using-a-local-config-file). |
+| <var>LUMOS_CONFIG_FILE</var> | A local config file, for example, `config.json`: To boot the DApp with the configurations of the ***DEV chain***, specify the <var>LUMOS_CONFIG_FILE</var> variable with a local config file. <br/>For more information, see [Set Up the Config Manager by Using a Local Config File](../tutorials/config#set-up-the-config-manager-by-using-a-local-config-file). |
 
 ## Prerequisites
 
 The following prerequisites apply for setting up the config manager:
 
-- Node.js is installed.
-- The @ckb-lumos/config-manager package is installed.
+- The development environment is set up.
+
+  For more information, see [Set Up the Development Environment](../preparation/setupsystem).
+
+- The `@ckb-lumos/config-manager` package is installed.
 
 ## Set Up the Config Manager by Using Pre-defined Configurations
 
@@ -56,7 +59,9 @@ If the <var>LUMOS_CONFIG_FILE</var> variable is not set, Lumos reads configurati
 
 ### Step 1. Prepare the `config.json` file in the project root directory.
 
-Prepare the file with the following content (the configurations of **DEV chain**):
+The following example prepares the file with the following content (the configurations of **DEV chain**).
+
+Example:
 
 ```json title="hellolumos/config.json" {1-28}
 {
