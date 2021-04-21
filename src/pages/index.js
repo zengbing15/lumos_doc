@@ -45,7 +45,7 @@ function Body() {
 
     <main className="container">
 	  
-      <div className="row margin-vert--xl">
+      <div className="row">
 
         <Feature title="Powerful">
           The <b>Lumos</b> framework with powerful modules saves you the hassle of creating code for CKB queries and transactions.
@@ -57,6 +57,7 @@ function Body() {
           The <b>Lumos</b> framework is open source, and can be used on Mac, Linux and windows machines.
         </Feature>
       </div>
+	  
     </main>
   );
 }

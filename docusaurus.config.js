@@ -107,10 +107,12 @@ module.exports = {
       '@docusaurus/preset-classic',
       {
         docs: {
+		
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           editUrl:
             'https://github.com/xying21/lumos_doc/tree/master',
+		  showLastUpdateTime: true,
         },
         /*blog: {
           showReadingTime: true,

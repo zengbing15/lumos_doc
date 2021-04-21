@@ -57,7 +57,7 @@ The following examples are verified on Ubuntu 20.04.2. Steps on the other platfo
 
 ### Step 1. Install the indexer package.
 
-The following commands install the RocksDB backed indexer as a dependency for <var>mydapp</var>.
+To install the RocksDB backed indexer as a dependency for a project:
 
 ```shell
 $ cd mydapp
@@ -66,9 +66,9 @@ $ yarn add @ckb-lumos/indexer
 
 ### Step 2. Start the indexer.
 
-The following example initializes and starts the RocksDB backed indexer. The Indexer URI, for example, http://127.0.0.1:8114 (the default RPC URL), is the <var>listen_address</var> configuration in the `ckb.toml` file of the CKB node.
+The Indexer URI, for example, http://127.0.0.1:8114 (the default RPC URL), is the <var>listen_address</var> configuration in the `ckb.toml` file of the CKB node.
 
-Example:
+To initialize and start the RocksDB backed indexer:
 
 ```typescript
 import { Indexer } from "@ckb-lumos/indexer";
@@ -85,11 +85,15 @@ Docker is required for setting up the SQL backed indexer. For more information a
 
 ### Step 2. Create a PostgreSQL instance.
 
+To create a postgreSQL instance: 
+
 ```shell
-$ docker run --name postgres -e POSTGRES_USER=user -e POSTGRES_DB=lumos -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres
+$ docker run --name postgres -e POSTGRES_USER=user -e POSTGRES_DB=lumos -e POSTGRES_PASSWORD=mypassword -d -p 5432:5432 postgres
 ```
 
 ### Step 3. Install dependencies for the DApp project.
+
+To install the SQL backed indexer as a dependency for a project:
 
 ```shell
 $ cd mydapp
@@ -97,6 +101,8 @@ $ yarn add @ckb-lumos/sql-indexer@0.16.0 knex pg
 ```
 
 ### Step 3. Initialize the SQL database.
+
+To initialize the SQL database:
 
 ```shell
 $ cd mydapp/node-modules/@ckb-lumos/packages/sql-indexer
@@ -107,7 +113,7 @@ module.exports = {
     connection: {
       database: 'lumos',
       user:     'user',
-      password: 'password'
+      password: 'mypassword'
     },
     pool: {
       min: 2,
@@ -124,7 +130,7 @@ $ npx knex migrate:up
 
 ### Step 4. Start the Indexer.
 
-Example:
+To start the indexer:
 
 ```typescript
 import { Indexer } from "@ckb-lumos/sql-indexer";
@@ -135,7 +141,7 @@ const knex = Knex({
 	connection: {
   		host: "127.0.0.1",
   		database: "lumos",
-  		password: "password",
+  		password: "mypassword",
   		user: "user",
   	},
 });

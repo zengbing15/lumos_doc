@@ -18,7 +18,7 @@ The following examples are verified on Ubuntu 20.04.2. Steps on the other platfo
 
 ## Steps
 
-### **Step 1. Navigate into the directory of the project.**
+### Step 1. Navigate into the directory of the project.
 
 To navigate into a project directory, run the `cd <project folder name>` command:
 
@@ -26,7 +26,7 @@ To navigate into a project directory, run the `cd <project folder name>` command
 $ cd mydapp
 ```
 
-### **Step 2. If this is a new project, initialize the project by using the `yarn init` command.**
+### Step 2. If this is a new project, initialize the project by using the `yarn init` command.
 
 This command prompts questions about the name and version of the project and the name of the initial entry point file (by default this is **index.js**). Just accept the defaults by hitting enter or type answers for each of the questions.
 
@@ -57,7 +57,7 @@ Done in 44.54s.
 </p>
 </details>
 
-### **Step 3. Install Lumos packages as dependencies for the project.**
+### Step 3. Install Lumos packages as dependencies for the project.
 
 A Lumos package can be installed by using the `yarn add @ckb-lumos/<package name> ` command according to the application requirements.
 

@@ -4,7 +4,7 @@ title: Assemble Transactions
 ---
 The goal and core functionality of a DApp built on top of Lumos is to build transactions in response to user requests. Lumos provides the [TransactionSkeleton](https://github.com/nervosnetwork/lumos/blob/develop/packages/helpers/src/index.ts#L212) interface that significantly simplifies the transaction assembling process. Each transaction skeleton corresponds to an action, and will be built into a single transaction that is ready to be submitted to CKB.
 
-This guide introduces the general workflow of assembling transactions. The workflow applies to the following examples of a common transfer operation, DAO deposit and withdraw operations, and a transfer operation with the `locktimepool`.
+This guide introduces the general workflow of assembling transactions. The workflow applies to the following examples of a common transfer operation, DAO operations, a transfer operation with the `locktimepool`, and SUDT operations.
 
 <!--[TransactionSkeleton](https://github.com/nervosnetwork/lumos/blob/develop/packages/helpers/src/index.ts#L212) supports transaction assembling with the following conveniences:--><!--A well designed component must be able to query and include cells automatically to provide capacities required by the transaction.--><!--Individual script logic must be managed and respected by the general transaction skeleton.--><!--Scripts sharing the same behavior must be managed together in a unified interface. Developers can rely on abstractions instead of catering for every single detail.-->
 
@@ -893,11 +893,20 @@ The SUDT script needs to be deployed to DEV chain before operating on SUDT token
 
 :::
 
-The [sudt.issueToken()](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/sudt.ts#L43) function can be used to generate SUDT tokens.
+The [sudt.issueToken](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/sudt.ts#L43) function can be used to generate SUDT tokens.
 
 **Constructor**
 
-`issueToken`(txSkeleton: TransactionSkeletonType, fromInfo: FromInfo, amount: bigint, capacity?: bigint, tipHeader?: Header, { config = undefined }: Options = {})
+```typescript
+sudt.issueToken(
+  txSkeleton: TransactionSkeletonType,
+  fromInfo: FromInfo,
+  amount: bigint,
+  capacity?: bigint,
+  tipHeader?: Header,
+  { config = undefined }: Options = {}
+)
+```
 
 The <var>amount</var> parameter means the amount of SUDT tokens to be generated. The <var>capacity</var> parameter is an optional, and it means the amount of CKB capacity used for the generation. If <var>capacity</var> is not defined, the `sudt.issueToken` function will use 142 CKB (the minimal CKB capacity of a SUDT cell) to generate SUDT tokens. 
 
@@ -1029,14 +1038,26 @@ The [sudt.transfer()](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c
 
 **Constructor**
 
-`sudt.transfer`(txSkeleton: TransactionSkeletonType, fromInfos: FromInfo[], sudtToken: Token, toAddress: Address, amount: bigint, changeAddress?: Address, capacity?: bigint,  tipHeader?: Header,  {
+```typescript
+sudt.transfer(
+  txSkeleton: TransactionSkeletonType,
+  fromInfos: FromInfo[],
+  sudtToken: Token,
+  toAddress: Address,
+  amount: bigint,
+  changeAddress?: Address,
+  capacity?: bigint,
+  tipHeader?: Header,
+  {
     config = undefined,
     LocktimePoolCellCollector = LocktimeCellCollector,
     splitChangeCell = false,
   }: Options & {
     LocktimePoolCellCollector?: any;
     splitChangeCell?: boolean;
-  } = {})
+  } = {}
+)
+```
 
 The <var>sudtToken</var> parameter is the lock hash of the SUDT tokens owner. You can use [sudt.ownerForSudt](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/sudt.ts#L699) to get the lock hash.
 

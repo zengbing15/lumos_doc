@@ -20,8 +20,8 @@ The [get_transaction](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c
 
 A transaction can be in one of the following status:
 
-- A **pending** result means the node is aware of the transaction but the transaction is not confirmed yet.
-- A **proposed** result means the node sees a transaction included in a block candidate that is not yet mined.
+- A **pending** result means the transaction is in the pool, and not proposed yet.
+- A **proposed** result means the transaction is in the pool, and can be committed in the next block.
 - A **committed** result means that the block involving the transaction has been mined and is officially on chain.
 
 ## Prerequisites

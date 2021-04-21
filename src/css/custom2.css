@@ -43,16 +43,16 @@ table th:first-child:empty {
 }
 
 /* Button: Edit this page */
-.container > .row > .col > div > .margin-vert--xl {
+.margin-vert--xl > .row > .col {
   order: -1;
   height: 3em;
   margin: 0 !important;
-  text-align: right;
+
 
 }
 
 /* Button: Edit this page */
-.container > .row > .col > div > .margin-vert--xl a {
+.margin-vert--xl> .row > .col a {
   padding: 0.3em 0.5em;
   background: var(--ifm-color-primary-lighter);
   color: #fff;
@@ -61,12 +61,17 @@ table th:first-child:empty {
   border-radius: 4px;
   text-decoration: none;
   transition: background-color 0.3s;
-
+  text-align: left;
 }
 
 /* Button: Edit this page */
-.container > .row > .col > div > .margin-vert--xl a:hover {
+.margin-vert--xl> .row > .col a:hover {
   background: var(--ifm-color-primary);
+}
+
+.margin-vert--xl> .row > .col .text--right{
+	text-align: right;
+	
 }
 
 .docusaurus-highlight-code-line {
