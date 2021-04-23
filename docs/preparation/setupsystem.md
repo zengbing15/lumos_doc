@@ -7,9 +7,6 @@ This guide will help you get your system set up for building DApps with Lumos. I
 ## System Recommendations
 
 CKB DApps can be developed upon Lumos on all major platforms including Linux, Windows, and Mac. 
-:::note
-CKB nodes are required during the development process. The support on Windows for CKB nodes is experimental. To be more performant, we recommend to use a Linux or Unix-based (Mac) operating system. For more information, see [Get CKB Binary on Windows (experimental)](https://docs.nervos.org/docs/basics/guides/ckb-on-windows).
-:::
 
 ## Install Node.js
 

@@ -16,6 +16,7 @@
   --ifm-leading: calc(1em * var(--ifm-leading-number));
   --ra-color-text-dark: #1c1e21 !important;
   --ifm-navbar-background-color:#dadde1;
+  --ifm-footer-background-color: #dadde1;
   --ifm-container-width: 1200px;
 }
 .header-github-link:hover,
@@ -35,6 +36,7 @@ table th:first-child:empty {
 .container{
 	/* max-width: 1200px; */
 	display: block;
+	min-height: 220px;
 }
 .container > .row > .col > div {
   display: flex;

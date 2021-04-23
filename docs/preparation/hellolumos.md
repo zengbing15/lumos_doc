@@ -12,12 +12,12 @@ The  example has the following structure:
 
 ```
 hellolumos/
-├── src|accounts.ts
-├── src|buildTXs.ts
-├── src|index.ts
-├── src|manageaccounts.ts
-├── src|querycells.ts
-├── src|querytransactions.ts
+├── src/accounts.ts
+├── src/buildTXs.ts
+├── src/index.ts
+├── src/manageaccounts.ts
+├── src/querycells.ts
+├── src/querytransactions.ts
 ├── config.json
 ├── package.json
 ├── tsconfig.json

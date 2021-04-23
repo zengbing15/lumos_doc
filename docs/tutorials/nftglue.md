@@ -30,18 +30,18 @@ dapps-on-ckb-workshop-code/
 The following prerequisites apply for this example:
 
 - The CKB node is running on DEV chain. For more information, see [Install a CKB Node](../preparation/installckb).
-- The account to deploy the NFT script is created with enough CKB capacity (33,613.0 CKB).
+- The account to deploy the NFT script owns enough CKB capacity (33,613.0 CKB). For more information about creating accounts, see [Create Accounts](../preparation/createaccount).
 
 ## Deploy the NFT Script on DEV Chain
 
-### **Step 1. Install Docker on Ubuntu and manage Docker as a non-root user.**
+### Step 1. Install Docker on Ubuntu and manage Docker as a non-root user.
 
 **Docker** must be installed for building and deploying smart contracts. 
 
 1. To install Docker engine on **Ubuntu**, see the Docker documentations of [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/).
 2. To manage Docker as a non-root user, see the Docker documentations of [Manage Docker as a non-root user](https://docs.docker.com/engine/install/linux-postinstall/).
 
-### **Step 2. Install Capsule.** 
+### Step 2. Install Capsule. 
 
 **Capsule** is the tool for building and deploying scripts (contracts) on Nervos CKB. The Capsule tool can be installed from source or the pre-built installer.
 
@@ -102,13 +102,13 @@ To install Capsule by using the pre-built installer:
    
    </details>
 
-### **Step 3. Download the example code.**
+### Step 3. Download the example code.
 
 ```
 $ git clone https://github.com/nervosnetwork/dapps-on-ckb-workshop-code.git
 ```
 
-### **Step 4. Build the NFT script.**
+### Step 4. Build the NFT script.
 
 This step compiles and generates the NFT source script to an RISC-V binary program into the `dapps-on-ckb-workshop-code/nft-validator/build/debug` folder.
 
@@ -145,7 +145,7 @@ Done
 </p>
 </details>
 
-### **Step 5. Deploy the script.**
+### Step 5. Deploy the script.
 
 :::note
 
@@ -269,7 +269,7 @@ To deploy the NFT script:
 
 After the NFT script is deployed on DEV chain, perform the following steps to interact with and operate on NFT tokens by using Lumos.
 
-### **Step 1. Install dependencies in the nft-glue project.**
+### Step 1. Install dependencies in the nft-glue project.
 
 ```
 $ cd dapps-on-ckb-workshop-code/nft-glue
@@ -291,7 +291,7 @@ Done in 13.02s.
 </p>
 </details>
 
-### **Step 2. Update the config.json file.**
+### Step 2. Update the config.json file.
 
 To update the config.json file, add the NFT configuration for the NFT script under the "DAO" script.
 
@@ -317,7 +317,7 @@ $ cd nft-glue
 $ tsc
 ```
 
-### Step 4. Operate on NFT
+### Step 4. Operate on NFT.
 
 The `index.ts` file under the nft-glue project includes the following operations:
 
@@ -326,11 +326,11 @@ The `index.ts` file under the nft-glue project includes the following operations
 - [Transfer NFT tokens from one user to another user](../tutorials/integratenft#transfer-nft-tokens-from-one-user-to-another-user).
 - [Sign and seal the transaction](../tutorials/integratenft#sign-and-seal-the-transaction).
 
-Firstly, let us check out how the nft-glue implements these operations by using Lumos. The [execution](../tutorials/integratenft#run-the-functions-in-the-nodejs-repl-mode) of these operations can be found at the end of this guide.
+Let us check out how the nft-glue project implements these operations by using Lumos. The [execution](../tutorials/integratenft#run-the-functions-in-the-nodejs-repl-mode) of these operations can be found at the end of this guide.
 
 #### **Generate NFT tokens**
 
-The `generateNftToken()` function firstly inserts a dummy NFT output cell. The dummy cell is exactly the same as a normal cell, except that the cell uses all zeros as NFT ID. 
+The following code snippet firstly inserts a dummy NFT output cell. The dummy cell is exactly the same as a normal cell, except that the cell uses all zeros as NFT ID. 
 
 ```typescript title="nft-glue/src/index.ts"
 export async function generateNftToken(
@@ -360,8 +360,8 @@ export async function generateNftToken(
 
 Lumos can generate smaller transactions for optimizations of a normal workflow. That means the following two cases may happen:
 
-1. Multiple output cells with the same owner will be merged into one single output cell.
-2. If the transfer operation transfers the assets from the owner to himself/herself, the transfer operation will be canceled.
+- Multiple output cells with the same owner will be merged into one single output cell.
+- If the transfer operation transfers the assets from the owner to himself/herself, the transfer operation will be canceled.
 
 :::
 
@@ -446,19 +446,19 @@ skeleton = skeleton.update("cellDeps", (cellDeps) => {
   });
 ```
 
-Lumos also provides methods in the common-scripts package to inject fee. The common script is used in the following code snippet to add fee for this transaction.
-
-:::info
-
-The main purpose of this example is to explain the integrations for NFT. The example only gathers capacities from one single wallet. The [common](https://github.com/nervosnetwork/lumos/blob/develop/packages/common-scripts/src/common.ts#L414) module, [locktime_pool](https://github.com/nervosnetwork/lumos/blob/develop/packages/common-scripts/src/locktime_pool.ts) and [sudt](https://github.com/nervosnetwork/lumos/blob/develop/packages/common-scripts/src/sudt.ts#L136) module of the common-scripts package can treat multiple different wallets as a single unit. 
-
-:::
+The common script is used in the following code snippet to add fee for this transaction.
 
 ```typescript title="nft-glue/src/index.ts"
 // For simplicity, we hardcode 0.1 CKB as transaction fee here.
 const FEE = BigInt(1*10**8); 
 skeleton = await common.payFee(skeleton, [fromAddress], FEE);
 ```
+
+:::info
+
+The [common](https://github.com/nervosnetwork/lumos/blob/develop/packages/common-scripts/src/common.ts#L414) module, [locktime_pool](https://github.com/nervosnetwork/lumos/blob/develop/packages/common-scripts/src/locktime_pool.ts) and [sudt](https://github.com/nervosnetwork/lumos/blob/develop/packages/common-scripts/src/sudt.ts#L136) module of the common-scripts package can treat multiple different wallets as a single unit. The example only gathers capacities from one single wallet to demonstrate the integrations for NFT. 
+
+:::
 
 The [common.prepareSigningEntries](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L434) function generates messages that are required in transaction signing phase.
 

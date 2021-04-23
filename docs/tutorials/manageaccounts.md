@@ -2,7 +2,11 @@
 id: manageaccounts
 title: Manage Accounts
 ---
-The ownership of CKB is established through keys, the lock script and addresses. Lumos also provides the functions to manage the keys, addresses and the lock script of [a CKB account](../preparation/createaccount). <!--For more information about CKB accounts, see [CKB Accounts](../concepts/ckbaccounts).--> 
+Lumos also provides the functions to manage the keys, addresses and the lock script of a [CKB Account](../preparation/createaccount).
+
+The following figure shows the Lumos functions for the conversion between private key, public key, Lock Script, and CKB address.
+
+<img src="../../img/conversion.png"/>
 
 ## Prerequisites
 

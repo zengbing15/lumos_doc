@@ -9,7 +9,7 @@ module.exports = {
   organizationName: 'xying21', // Usually your GitHub org/user name.
   projectName: 'lumos_doc', // Usually your repo name.
 
-  plugins: ['docusaurus-plugin-sass'],
+  plugins: ['docusaurus-plugin-sass' ],
   
   themeConfig: {
     colorMode: {
@@ -17,7 +17,18 @@ module.exports = {
       disableSwitch: true,
       respectPrefersColorScheme: false,
     },
-	
+	algolia: {
+      apiKey: '4271cb4b044b51b74fd4bfab962db5ed',
+      indexName: 'lumos',
+
+      // Optional: see doc section below
+      contextualSearch: true,
+
+      // Optional: Algolia search parameters
+      searchParameters: {},
+
+      //... other Algolia params
+    },
 	hideableSidebar: true,
 	prism: {
       theme: require('prism-react-renderer/themes/nightOwlLight'),
@@ -47,60 +58,61 @@ module.exports = {
         {href: 'https://nervosnetwork.github.io/lumos/globals.html', label: 'API Documenation', position: 'right'}
       ],
     },
-/*     footer: {
-      style: 'dark',
+    footer: {
+      style: 'light',
       links: [
         {
-          title: 'Docs',
+          title: 'About',
           items: [
             {
-              label: 'Style Guide',
-              to: 'docs/',
+              label: 'About This Guide',
+              to: 'docs/introduction/about',
             },
             {
-              label: 'Second Doc',
-              to: 'docs/doc2/',
+              label: 'What is Lumos?',
+              to: 'docs/introduction/intro',
             },
           ],
         },
         {
-          title: 'Community',
+          title: 'Setup',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+              label: 'Set Up the Development Environment',
+              to: 'docs/preparation/setupsystem',
             },
             {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'Twitter',
-              href: 'https://twitter.com/docusaurus',
-            },
+              label: 'Install Lumos Packages',
+              to: 'docs/tutorials/installlumos',
+            }
           ],
         },
         {
-          title: 'More',
+          title: 'Config',
           items: [
             {
-              label: 'Blog',
-              to: 'blog',
+              label: 'Set Up the Config Manager',
+              to: 'docs/tutorials/config',
             },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+			{
+              label: 'Set Up the Lumos Indexer',
+              to: 'docs/tutorials/indexer',
             },
           ],
-        },
+        }
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
-    }, */
-       footer: {
+	  logo: {
+                alt: 'Lumos Documentation',
+                src: '/img/nervoslumos.svg',
+                
+            },
+      copyright: `Copyright © ${new Date().getFullYear()} Nervos Foundation. All Rights Reserved.`,
+    },
+/*        footer: {
       links: [],
       logo: {},
       copyright: `Copyright © ${new Date().getFullYear()} Nervos`,
-    },
+    }, */
   },
   presets: [
     [

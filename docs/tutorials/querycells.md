@@ -45,7 +45,7 @@ The following examples are verified on Ubuntu 20.04.2. Steps on the other platfo
 
 ### Query Cells by a Lock Script
 
-The following example collects the cells for a specific lock script by using the indexer.collector function of the `@ckb-lumos/indexer` package.
+The following example collects the cells for a specific lock script by using the indexer.collector function of the `@ckb-lumos/indexer` package. The `INDEXER` is initiated in the hellolumos/src/index.ts file. For more information about setting up the Lumos indexer, see [Set Up the Lumos Indexer](../tutorials/indexer).
 
 Example:
 
@@ -194,7 +194,7 @@ Find the cells by Lock and Type script
 
 ### Query Cells between Given Block Numbers
 
-The following example fetches the cells between `[fromblock, toblock]`. Both `fromBlock` and `toBlock` are included in the `QueryOptions`.
+The following example fetches the cells between [<var>fromblock</var>, <var>toblock</var>]. Both <var>fromBlock</var> and <var>toBlock</var> are included in the <var>QueryOptions</var>.
 
 Example:
 

@@ -53,7 +53,27 @@ The @ckb-lumos/common-scripts package includes a `common` script that can transf
 
 #### **Step 1. Create a transaction skeleton.**
 
-The [common.transfer](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L175) function can be used to create a common transfer transaction.
+The following example firstly creates a new transaction skeleton with the Lumos indexer as the cell provider `TransactionSkeleton({cellProvider: INDEXER})` that provides cells for assembling the transaction. 
+
+Then the [common.transfer](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L175 "(txSkeleton: TransactionSkeletonType, fromInfos: FromInfo[], toAddress: string, amount: bigint, changeAddress?: string | undefined, tipHeader?: Header | undefined, { config, useLocktimeCellsFirst</var>, <var>LocktimePoolCellCollector</var>, }?)") function is used to add the input cells and output cells to the transaction skeleton according to the specified parameters.
+
+Example:
+
+```typescript title="hellolumos/src/buildTXs.ts/commonTransfer()" {1,4}
+let txSkeleton:TransactionSkeletonType = TransactionSkeleton({cellProvider: INDEXER});
+const tipheader = await rpc.get_tip_header();
+
+txSkeleton = await common.transfer(
+            txSkeleton,
+            fromInfos,
+            toAddress,
+            BigInt(amount),
+            undefined,
+            tipheader
+            );
+```
+
+The [common.transfer](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L175) function creates a common transfer transaction.
 
 **Constructor**
 
@@ -73,8 +93,6 @@ common.transfer(
 )
 ```
 
-
-
 Lumos supports gathering input cells from multiple wallets as a single unit by using the <var>fromInfos</var> parameter. It is a array of wallet parameters of a [MultisigScript](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/from_info.ts#L20), Address (string), [ACP](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/from_info.ts#L31) or [CustomScript](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/from_info.ts#L36) type. MultisigScript is used for the secp256k1_blake160_multisig lock script (the transactions that require multi-signatures).
 
 An example of <var>fromInfos</var> including MultisigScript:
@@ -92,31 +110,25 @@ const fromInfos = [
 
  If <var>changeAddress</var> is not specified, the first element of <var>fromInfos</var> is used as the change address. 
 
-The `common.transfer` function can use cells with lock period in priority over other cells by specifying <var>tipHeader</var> in the transfer function.
+The `common.transfer` function can use cells with lock period in priority over other cells by specifying <var>tipHeader</var> in the `transfer` function.
 
 To use the cells without lock period, just use `undefined` for <var>tipHeader</var> or specify the <var>useLocktimeCellsFirst</var> parameter as false.
 
-The following example creates a transaction skeleton with the [common.transfer](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L175 "(txSkeleton: TransactionSkeletonType, fromInfos: FromInfo[], toAddress: string, amount: bigint, changeAddress?: string | undefined, tipHeader?: Header | undefined, { config, useLocktimeCellsFirst</var>, <var>LocktimePoolCellCollector</var>, }?)") function.
+To use uncommitted cells for assembling a new transaction, the transaction manager is a good choice as the cell provider that can filter the input cells from live cells and add the uncommitted output cells into live cells. 
 
 Example:
 
-```typescript title="hellolumos/src/buildTXs.ts/commonTransfer()"
-let txSkeleton:TransactionSkeletonType = TransactionSkeleton({cellProvider: INDEXER});
-const tipheader = await rpc.get_tip_header();
+```typescript {5}
+import TransactionManager = require ("@ckb-lumos/transaction-manager");
+export const transactionManager = new TransactionManager(INDEXER);
+transactionManager.start();
 
-txSkeleton = await common.transfer(
-            txSkeleton,
-            fromInfos,
-            toAddress,
-            BigInt(amount),
-            undefined,
-            tipheader
-            );
+let txSkeleton:TransactionSkeletonType = TransactionSkeleton({ cellProvider: transactionManager })
 ```
 
 #### **Step 2. Add the fee for the transaction.**
 
-The [common.payFee](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L412) function is used in the following example to add the transaction fee to the transaction skeleton.
+The [common.payFee](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L412) function can be used to add the transaction fee to the transaction skeleton.
 
 **Constructor**
 
@@ -136,6 +148,12 @@ common.payFee(
     enableDeductCapacity?: boolean;
   } = {}
 ```
+
+The `common.payFee` function can use cells with lock period in priority over other cells by specifying <var>tipHeader</var> in the `payFee` function.
+
+To use the cells without lock period, just use `undefined` for <var>tipHeader</var> or specify the <var>useLocktimeCellsFirst</var> parameter as false.
+
+The following example uses the cells without lock period to add the pay fee to the transaction skeleton created from Step 1.
 
 Example:
 
@@ -216,10 +234,17 @@ const hash = await rpc.send_transaction(tx);
 console.log("The transaction hash is",hash);
 ```
 
+Instead of the `RPC.send_transaction` function, the [TransactionManager.send_transaction](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/transaction-manager/lib/index.js#L106) function supports validation on the transaction before sending the transaction to the CKB network. The function checks whether spent cells are used as input cells in the transaction. If any spent cell is used, it will throw an error. If no spent cells is used, the function will send the transaction to the CKB network and return the transaction hash as the result.
+
+```typescript {1}
+const hash = await transactionManager.send_transaction(tx);
+console.log("The transaction hash is",hash);
+```
+
 A transaction hash output example:
 
 ```shell {1}
-The transaction hash is 0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e
+0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e
 ```
 
 :::info

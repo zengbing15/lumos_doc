@@ -2,7 +2,7 @@
 id: installlumos
 title: Install Lumos Packages
 ---
-When creating a new project or adding necessary Lumos components (packages) to an existing project, follow the instruction in this guide to install the Lumos packages that a DApp requires as dependencies. <!--For the projects that have already listed Lumos packages as dependencies, just run `yarn install` in the projects directly to install the packages.--> 
+To add necessary Lumos components (packages) to a project, follow the instruction in this guide to install the Lumos packages that a DApp requires as dependencies. <!--For the projects that have already listed Lumos packages as dependencies, just run `yarn install` in the projects directly to install the packages.--> 
 
 ## Prerequisites
 
@@ -16,7 +16,7 @@ The following prerequisites apply for installing Lumos packages as dependencies 
 
 The following examples are verified on Ubuntu 20.04.2. Steps on the other platforms can be adjusted accordingly.
 
-## Steps
+## Install Lumos
 
 ### Step 1. Navigate into the directory of the project.
 

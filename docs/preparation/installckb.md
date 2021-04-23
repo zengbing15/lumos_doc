@@ -29,145 +29,17 @@ A CKB node can be set up to connect and interact with one of the following CKB n
 
 There are two options for installing a CKB node:
 
-- **Install a CKB node by using the pre-built installer package.**
+- [**Install a CKB node by using Tippy**](../preparation/installckb#install-a-ckb-node-by-using-tippy)
+
+  **Tippy** is a tool that helps set up and manage CKB nodes. It can install and start running a CKB node by one simple click.
+
+- [**Install a CKB node by using the pre-built installer package**](../preparation/installckb#install-a-ckb-node-by-using-the-pre-built-installer-package)
 
   The pre-built installer package contains the following tools: 
 
   - **ckb**: The ckb tool is the main tool that initiates configurations, run CKB nodes, synching block data and mining. 
 
   - **ckb-cli**: ckb-cli is a command line tool that provides the functions of RPC requests, creating CKB addresses, managing wallets, sending transactions, and depositing to Nervos DAO etc.
-
-- **Install a CKB node by using Tippy.**
-
-  **Tippy** is a tool that helps set up and manage CKB nodes. It can install and start running a CKB node by one simple click.
-
-  :::note
-  Tippy is currently in the development and experimental stage. (To be updated)
-  :::
-## Install a CKB Node by Using the Pre-built Installer Package
-
-The following examples are verified on **Ubuntu 20.04.2**. Steps on the other platforms can be adjusted accordingly.
-
-### Step 1. Download the CKB Pre-built Installer Package.
-
-The following example downloads the CKB version 0.39.0. All releases can be found on the <a title="Download" href="https://github.com/nervosnetwork/ckb/releases"><i class="feather icon-download"></i>CKB releases</a> page.
-
-```bash
-$ export TOP=$(pwd)
-$ curl -LO https://github.com/nervosnetwork/ckb/releases/download/v0.39.0/ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
-$ tar xzf ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
-$ export PATH=$PATH:$TOP/ckb_v0.39.0_x86_64-unknown-linux-gnu
-```
-
-### Step 2. Verify the binaries are working and check versions.
-
-```bash {1}
-$ ckb -V
-ckb 0.39.0
-```
-
-### Step 3. Choose a CKB network and run the CKB node.
-
-**DEV chain** is the recommended network for the later examples and CKB starters. For more information about CKB networks, see [CKB Networks](../preparation/installckb#ckb-networks).
-
-<Tabs
-  defaultValue="dev"
-  values={[
-    {label: 'DEV Chain', value: 'dev'},
-    {label: 'Testnet', value: 'testnet'},
-    {label: 'Mainnet', value: 'mainnet'}, 
-  ]}>
-<TabItem value="dev"><p><b>1. Initialize the CKB node on the DEV blockchain.</b></p>
-
-```bash {1}
-$ ckb init -C devnet -c dev
-WARN: mining feature is disabled because of lacking the block assembler config options
-Initialized CKB directory in devnet
-create specs/dev.toml
-create ckb.toml
-create ckb-miner.toml
-create default.db-options
-```
-
-<p><b>2. (Optional) Adjust the parameters to shorten the block interval.</b></p>
-
-<ul><li><p>Modify <code>genesis_epoch_length</code> and <code>permanent_difficulty_in_dummy</code>  in the /ckb_v0.39.0_x86_64-unknown-linux-gnu/specs/<b>dev.toml</b> config file.</p>
-
-<p>The default value for the <code>genesis_epoch_length</code> parameter is <code>1000</code>. That means each epoch contains 1000 blocks by default. The value 10 or 100 can be used for testing Nervos DAO operations.</p>
-
-<p>When <code>permanent_difficulty_in_dummy</code> is set to <code>true</code>, all epochs skip the difficulty adjustment. This parameter is typically used in combination with <code>genesis_epoch_length</code>.</p>
-
-<p>To modify <code>genesis_epoch_length</code> and <code>permanent_difficulty_in_dummy</code>:</p>
-
-```bash {1-8}
-$ ed devnet/specs/dev.toml <<EOF
-91d
-90a
-genesis_epoch_length = 10  # The unit of meansurement is "block".
-permanent_difficulty_in_dummy = true
-.
-wq
-EOF
-```
-
-</li><li><p>Modify the <code>value</code> parameter under the <code>miner.workers</code> section  in the <b>ckb-miner.toml</b> file.</p>
-
-<p>The default mining interval is 5000 milliseconds (5 seconds). That means a new block is generated at intervals of every 5 seconds.</p>
-
-<p>To modify the value to generate a new block every second (1000 milliseconds):</p>
-
-```bash {1-4}
-$ ed devnet/ckb-miner.toml <<EOF
-39s/5000/1000/
-wq
-EOF
-```
-
-</li></ul>
-
-<p><b>3. Start the CKB node with the dev chain.</b></p>
-
-```bash {1}
-$ ckb run -C devnet
-```
-
-</TabItem>
-    <TabItem value="testnet"><p><b>1. Initialize the Testnet node.</b></p>
-
-```bash {1}
-$ ckb init --chain testnet -C testnet
-WARN: mining feature is disabled because of lacking the block assembler config options
-Initialized CKB directory in testnet
-create ckb.toml
-create ckb-miner.toml
-```
-
-<p><b>2. Start the CKB Testnet node.</b></p>
-
-```bash {1}
-$ ckb run -C testnet
-```
-
-</TabItem>
-    <TabItem value="mainnet"><p><b>1. Initialize the Mainnet node.</b></p>
-
-```bash {1}
-$ ckb init --chain mainnet -C mainnet
-WARN: mining feature is disabled because of lacking the block assembler config options
-Initialized CKB directory in mainnet
-create ckb.toml
-create ckb-miner.toml
-```
-
-<p><b>2. Start the CKB Mainnet node.</b></p>
-
-```bash {1}
-$ ckb run -C mainnet
-```
-
-</TabItem>
-</Tabs>
-
 ## Install a CKB Node by Using Tippy
 
 CKB nodes can be installed by using Tippy on all major platforms including Linux, Windows, and Mac. The following installation steps are verified on Ubuntu 20.04 LTS and Windows 10.
@@ -179,23 +51,20 @@ import TabItem from '@theme/TabItem';
   defaultValue="ubuntu"
   values={[
     {label: 'Ubuntu 20.04', value: 'ubuntu'},
+    {label: 'macOS', value: 'macos'},
     {label: 'Windows 10', value: 'windows'},
   ]}>
-<TabItem value="ubuntu"><p><b>Step 1. Install Tippy</b></p>
+<TabItem value="ubuntu"><p><b>Step 1. Install Tippy.</b></p>
 
-<p>Tippy can be installed by using the pre-built installer or built from <a href="https://github.com/nervosnetwork/tippy">source</a>. The following example installs Tippy version 0.1.6 by using the pre-built installer. For more information about the installation from source, see the <a href="https://github.com/nervosnetwork/tippy">Readme</a> of Tippy.</p>
+<p>The following example installs Tippy version 0.1.8 by using the pre-built installer. All versions can be found on the <a href="https://github.com/nervosnetwork/tippy/releases"><i class="feather icon-download"></i>Tippy Releases</a> page.</p>
 
 <p>To install Tippy by using the pre-built installer on Ubuntu 20.04:</p>
 
 ```bash {1}
-$ curl -LO https://github.com/nervosnetwork/tippy/releases/download/v0.1.6/tippy-linux-x64.tar.gz
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   625  100   625    0     0    625      0  0:00:01 --:--:--  0:00:01  1481
-100 61.4M  100 61.4M    0     0  1612k      0  0:00:39  0:00:39 --:--:-- 1642k
+$ curl -LO https://github.com/nervosnetwork/tippy/releases/download/v0.1.8/tippy-linux-x64.tar.gz
 ```
 
-<p><b>Step 2. Run the Tippy tool</b></p>
+<p><b>Step 2. Run the Tippy tool.</b></p>
 
 <p>To run the Tippy tool in the command line:</p>
 
@@ -217,34 +86,196 @@ $ ./tippy-linux-x64/Tippy
 
 <p>To create a CKB node on the <b>other</b> networks, click <b>Create a customized chain</b> to choose the network in the <b>Chain Type</b> dropdown list of the <b>Create Chain</b> form.</p>
 
-<p>The CKB node starts running just after it is created. It can be stopped or restarted on the Dashboard. Details of blocks and transactions of the chain can be checked on the Blocks and Transaction pages.</p>
+<p>The CKB node starts running just after it is created. It can be stopped or restarted on the Tippy <b>Dashboard</b>. Details of blocks and transactions of the chain can be checked on the <b>Blocks</b> and <b>Transactions</b> pages that are visible when the node is started.</p>
 
-</TabItem>
-    <TabItem value="windows"><p><b>Step 1. Download the Pre-built Installer.</b></p>
+</TabItem><TabItem value="macos"><p><b>Step 1. Install Tippy.</b></p>
 
-The following example downloads the 0.1.6 version. You can find all versions on the <a href="https://github.com/nervosnetwork/tippy/releases">Tippy Releases</a> page.
+<p>The following example installs Tippy version 0.1.8 by using the pre-built installer. All versions can be found on the <a href="https://github.com/nervosnetwork/tippy/releases"><i class="feather icon-download"></i>Tippy Releases</a> page.</p>
+
+<p>To install Tippy by using the pre-built installer on macOS:</p>
 
 ```bash {1}
-C:> curl -LO https://github.com/nervosnetwork/tippy/releases/download/v0.1.6/tippy-win-x64.zip
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   625  100   625    0     0    625      0  0:00:01 --:--:--  0:00:01  1481
-100 61.4M  100 61.4M    0     0  1612k      0  0:00:39  0:00:39 --:--:-- 1642k
+$ curl -LO https://github.com/nervosnetwork/tippy/releases/download/v0.1.8/Tippy.dmg
 ```
 
-<p><b>Step 2. Unzip the tippy-win-x64.zip file.</b></p>
+<p><b>Step 2. Run the Tippy tool.</b></p>
 
-<p><b>Step 3. Double click the Tippy file under the tippy-win-x64 folder to run Tippy.</b></p>
+<p>To run the Tippy tool, open the dmg file and drag Tippy.app to /Applications folder. Click Tippy.app in /Applications to run Tippy.</p>
 
-<p>A web page on <a>http://localhost:5000/Home</a> will be opened in a browser after the double click. If the page is not opened, open the browser and type <a>http://localhost:5000/Home</a> in the address field to open it.</p>
+<p>A web page on <a>http://localhost:5000/Home</a> will be opened in a browser after the execution or the double click. If the page is not opened, open the browser and type <a>http://localhost:5000/Home</a> in the address field to open it.</p>
 
-<p><b>Step 4. Create a CKB node.</b></p>
+<p><b>Step 3. Create a CKB node.</b></p>
+
+<p>To create a CKB node on <b>DEV chain</b>, click the <b>Launch a CKB devnet instantly</b> button on the home page.</p>
 
 <img src="../../img/tippycreate.png"/>
 
 <p>To create a CKB node on the <b>other</b> networks, click <b>Create a customized chain</b> to choose the network in the <b>Chain Type</b> dropdown list of the <b>Create Chain</b> form.</p>
 
 <p>The CKB node starts running just after it is created. It can be stopped or restarted on the Dashboard. Details of blocks and transactions of the chain can be checked on the Blocks and Transaction pages.</p>
+
+</TabItem>
+
+<TabItem value="windows"><p><b>Step 1. Install Tippy.</b></p>
+
+<p>This example downloads the 0.1.8 version. All versions can be found on the <a href="https://github.com/nervosnetwork/tippy/releases"><i class="feather icon-download"></i>Tippy Releases</a> page.</p>
+
+<p><b>Step 2. Run the Tippy tool.</b></p><p>Unzip the tippy-win-x64.zip file and double click the Tippy.exe file under the tippy-win-x64 folder to run Tippy.</p>
+
+<p>A web page on <a>http://localhost:5000/Home</a> will be opened in a browser after the double click. If the page is not opened, open the browser and type <a>http://localhost:5000/Home</a> in the address field to open it.</p>
+
+<p><b>Step 3. Create a CKB node.</b></p>
+<p>To create a CKB node on <b>DEV chain</b>, click the <b>Launch a CKB devnet instantly</b> button on the home page.</p>
+
+<img src="../../img/tippycreate.png"/>
+
+<p>To create a CKB node on the <b>other</b> networks, click <b>Create a customized chain</b> to choose the network in the <b>Chain Type</b> dropdown list of the <b>Create Chain</b> form.</p>
+
+<p>The CKB node starts running just after it is created. It can be stopped or restarted on the Dashboard. Details of blocks and transactions of the chain can be checked on the Blocks and Transaction pages.</p>
+
+</TabItem>
+</Tabs>
+
+## Install a CKB Node by Using the Pre-built Installer Package
+
+### Step 1. Download the CKB Pre-built Installer Package.
+
+The following example downloads the CKB version 0.39.0. All releases can be found on the <a title="Download" href="https://github.com/nervosnetwork/ckb/releases"><i class="feather icon-download"></i>CKB releases</a> page.
+
+<Tabs
+  defaultValue="ubuntu"
+  values={[
+    {label: 'Ubuntu 20.04', value: 'ubuntu'},
+    {label: 'macOS', value: 'macos'},
+    {label: 'Windows 10', value: 'windows'},
+  ]}>
+<TabItem value="ubuntu"><p>To download the CKB pre-built installer package:</p>
+
+```bash
+$ curl -LO https://github.com/nervosnetwork/ckb/releases/download/v0.39.0/ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
+$ tar xzf ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
+```
+
+</TabItem><TabItem value="macos">
+
+<p>To download the CKB pre-built installer package:</p>
+
+```bash {1}
+$ curl -LO https://github.com/nervosnetwork/ckb/releases/download/v0.39.0/ckb_v0.39.0_x86_64-apple-darwin.zip
+```
+
+<p>Double-click the ckb_v0.39.0_x86_64-apple-darwin.zip file to unzip the file.</p>
+
+</TabItem>
+
+<TabItem value="windows"><p>To download the CKB pre-built installer package:</p>
+
+Download the [ckb_v0.39.0_x86_64-pc-windows-msvc.zip](https://github.com/nervosnetwork/ckb/releases/download/v0.39.0/ckb_v0.39.0_x86_64-pc-windows-msvc.zip) file and unzip the file.
+
+</TabItem>
+</Tabs>
+
+### Step 2. Verify the CKB tool are working and check versions.
+
+To verify the CKB tool, navigate into the folder where the ckb tool locates and execute the following command:
+
+```bash {1}
+ckb -V
+ckb 0.39.0
+```
+
+### Step 3. Run the CKB node.
+
+**DEV chain** is the recommended network for the later examples and CKB starters. For more information about CKB networks, see [CKB Networks](../preparation/installckb#ckb-networks).
+
+<Tabs
+  defaultValue="dev"
+  values={[
+    {label: 'DEV Chain', value: 'dev'},
+    {label: 'Testnet', value: 'testnet'},
+    {label: 'Mainnet', value: 'mainnet'}, 
+  ]}>
+<TabItem value="dev"><p><b>1. Initialize the CKB node on the DEV blockchain.</b></p>
+
+```bash {1}
+ckb init -C devnet -c dev
+WARN: mining feature is disabled because of lacking the block assembler config options
+Initialized CKB directory in devnet
+create specs/dev.toml
+create ckb.toml
+create ckb-miner.toml
+create default.db-options
+```
+
+<p><b>2. (Optional) Adjust the parameters to shorten the block interval.</b></p>
+
+<ul><li><p>Modify <code>genesis_epoch_length</code> and <code>permanent_difficulty_in_dummy</code> in the ../devnet/specs/<b>dev.toml</b> config file.</p>
+
+<p>The default value for the <code>genesis_epoch_length</code> parameter is <var>1000</var>. That means each epoch contains 1000 blocks by default. The value 10 or 100 can be used for testing Nervos DAO operations.</p>
+
+<p>When <code>permanent_difficulty_in_dummy</code> is set to <code>true</code>, all epochs skip the difficulty adjustment. This parameter is typically used in combination with <code>genesis_epoch_length</code>.</p>
+
+<p>To modify <code>genesis_epoch_length</code> and <code>permanent_difficulty_in_dummy</code>:</p>
+
+```toml title="devnet/specs/dev.toml"
+genesis_epoch_length = 10  # The unit of meansurement is "block".
+permanent_difficulty_in_dummy = true
+```
+
+</li><li><p>Modify the <code>value</code> parameter under the <code>miner.workers</code> section  in the <b>ckb-miner.toml</b> file.</p>
+
+<p>The default mining interval is 5000 milliseconds (5 seconds). That means a new block is generated at intervals of every 5 seconds.</p>
+
+<p>To modify the value in the [miner.workers] section to generate a new block every second (1000 milliseconds):</p>
+
+```toml title="devnet/ckb-miner.toml" {4}
+[[miner.workers]]
+worker_type = "Dummy"
+delay_type = "Constant"
+value = 1000
+```
+
+</li></ul>
+
+<p><b>3. Start the CKB node with the dev chain.</b></p>
+
+```bash {1}
+ckb run -C devnet
+```
+
+</TabItem>
+    <TabItem value="testnet"><p><b>1. Initialize the Testnet node.</b></p>
+
+```bash {1}
+ckb init --chain testnet -C testnet
+WARN: mining feature is disabled because of lacking the block assembler config options
+Initialized CKB directory in testnet
+create ckb.toml
+create ckb-miner.toml
+```
+
+<p><b>2. Start the CKB Testnet node.</b></p>
+
+```bash {1}
+ckb run -C testnet
+```
+
+</TabItem>
+    <TabItem value="mainnet"><p><b>1. Initialize the Mainnet node.</b></p>
+
+```bash {1}
+ckb init --chain mainnet -C mainnet
+WARN: mining feature is disabled because of lacking the block assembler config options
+Initialized CKB directory in mainnet
+create ckb.toml
+create ckb-miner.toml
+```
+
+<p><b>2. Start the CKB Mainnet node.</b></p>
+
+```bash {1}
+ckb run -C mainnet
+```
 
 </TabItem>
 </Tabs>
