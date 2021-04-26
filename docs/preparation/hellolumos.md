@@ -6,7 +6,7 @@ The Hello Lumos example is designed as a simple "DApp" that implemented the most
 
 You can follow the steps in this guide to perform a common transfer with the function provided by the Hello Lumos "DApp".
 
-The sections in the later guides, for example, [Query on Cells](../tutorials/querycells), [Query on Transactions](../tutorials/querytransactions), and [Assemble Transactions](../tutorials/buildtransactions), explain the usage of Lumos by using the code examples of Hello Lumos. The full code of the example can be found here. 
+The sections in the later guides, for example, [Query on Cells](../tutorials/querycells), [Query on Transactions](../tutorials/querytransactions), and [Assemble Transactions](../tutorials/buildtransactions), explain the usage of Lumos by using the code examples of Hello Lumos. The full code of the example can be found [here](https://github.com/xying21/hellolumos). 
 
 The  example has the following structure:
 
@@ -107,7 +107,7 @@ Done in 52.70s.
 
 ### Update the account information in the account.ts file.
 
-Replace the value of `PRIVATE_KEY`, `ADDRESS`, `ARGS` and `LOCKHASH` for ALICE and BOB in the `accounts.ts` file with the account information you have prepared when creating accounts. For more information about creating accounts, see [Create Accounts](../preparation/createaccount).
+Replace the value of `PRIVATE_KEY`, `ADDRESS`, `ARGS` and `LOCKHASH` for ALICE and BOB in the `accounts.ts` file with the account information you have prepared when creating accounts. You can retrieve the `ADDRESS`, `ARGS` and `LOCKHASH` for ALICE and BOB by executing the `ckb-cli account list` command. The private keys are stored in the alice file and the bob file during the creation of the accounts. For more information about creating accounts, see [Create Accounts](../preparation/createaccount).
 
 :::note
 
@@ -123,7 +123,6 @@ export const ALICE = {
     "0xf2a91b1410f7308631b89603262448ba515cddac1ffe250265551c82fff3eb3a",
   ADDRESS: "ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf",
   ARGS: "0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e",
-  LOCKHASH: "0xf6ea009a4829de7aeecd75f3ae6bcdbaacf7328074ae52a48456a8793a4b1cca"
 };
 
 export const BOB = {
@@ -131,7 +130,6 @@ export const BOB = {
     "0x670ac6ac1ce8004b4220f0fb024179461f11989ff4d446816f78813b80b9c696",
   ADDRESS: "ckt1qyqwe03shn6udvhjmrkzm53f53sr5l3qdwvsytj4hs",
   ARGS: "0xecbe30bcf5c6b2f2d8ec2dd229a4603a7e206b99",
-  LOCKHASH: "0x34f085b5d2fa3f4ad2880713082a72864522a6ebffa1eb931b09e0407092eda5",
 };
 ```
 

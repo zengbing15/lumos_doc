@@ -3,11 +3,32 @@ id: querycells
 title: Query on Cells
 ---
 
-> A Cell is the most basic structure that represents a single piece of data in Nervos. The data contained in a cell can take many forms, including CKBytes, tokens, code like JavaScript code, or even serialized data like JSON strings. For more information about the cell model, see [Cell Data Structure](https://docs.nervos.org/docs/reference/cell) and [CKB RFC](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#42-cell).
+> Cells are the primary state units in CKB and assets owned by users. A cell is the most basic structure that represents a single piece of data in Nervos. The data contained in a cell can take many forms, including CKBytes, tokens, code like JavaScript code, or even serialized data like JSON strings. For more information about the cell model, see [Nervos Docs: Cell](https://docs.nervos.org/docs/reference/cell) and [CKB RFC: CKB Cell](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#42-cell).
 
-Querying on cells are the fundamental functions for a DApp to respond to user queries and transaction requests.
+A cell example:
 
-Lumos provides the<!--`indexer.collector` function and the `TransactionManager.collector` function, and the `CellCollector` class of the modules in the common scripts--> following functions for the queries on cells with specific query options.
+```typescript
+{
+  cell_output: {
+    capacity: '0x124788a824a4',
+    lock: {
+      code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+      hash_type: 'type',
+      args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
+    },
+    type: undefined
+  },
+  out_point: {
+    tx_hash: '0x86a613998a501777f2c3d808f235a8767d28d56868678dd17b53797f280b8b61',
+    index: '0x0'
+  },
+  block_hash: '0xd75069d050a530f8e670235bbcf6054e14326f81b37e5220bb3fc3513ef7e97c',
+  block_number: '0x45',
+  data: '0x'
+}
+```
+
+Querying on cells are the fundamental functions for a DApp to respond to user queries and transaction requests. Lumos provides <!--`indexer.collector` function and the `TransactionManager.collector` function, and the `CellCollector` class of the modules in the common scripts--> functions for the queries on cells with specific query options.
 
 ## Functions
 
@@ -45,7 +66,7 @@ The following examples are verified on Ubuntu 20.04.2. Steps on the other platfo
 
 ### Query Cells by a Lock Script
 
-The following example collects the cells for a specific lock script by using the indexer.collector function of the `@ckb-lumos/indexer` package. The `INDEXER` is initiated in the hellolumos/src/index.ts file. For more information about setting up the Lumos indexer, see [Set Up the Lumos Indexer](../tutorials/indexer).
+The following example collects the cells for a specific lock script by using the indexer.collector function of the `@ckb-lumos/indexer` package.
 
 Example:
 
@@ -66,6 +87,8 @@ export const findCellsbyLock = async (
     return cells;
   };
 ```
+
+The `INDEXER` of the example is a RockDB backed indexer that is initialized and started in the hellolumos/src/index.ts file. For more information about setting up the Lumos indexer, see [Set Up the RocksDB Backed Indexer](../tutorials/indexer#set-up-the-rocksdb-backed-indexer).
 
 Try the `findCellsbyLock` function in the Node.js REPL mode:
 
@@ -289,14 +312,14 @@ return cells;
 };
 ```
 
-Skip the first 20 cells and get the result from the 21st. cell by using the `findCellsandSkip` function in the Node.js REPL mode: 
+Try the `findCellsandSkip` function in the Node.js REPL mode: 
 
 
 <details><summary>CLICK ME</summary>
 <p>
 
 
-
+The example skips the first 20 cells and get the result from the 21st. cell by using the `findCellsandSkip` function.
 
 ```shell {1}
 > await querycells.findCellsandSkip(script,20);
@@ -348,9 +371,11 @@ The default value of <var>argsLen</var> is -1 for the query on a full slice of t
 
 You can specify <var>argsLen</var> with a value other than the default value to enable the prefix search on the args of a lock script.
 
+The length is **20** in normal scenarios and **28** in the multisig scenario for the lock script. When the length is not certain, the <var>argsLen</var> parameter can be set as `any`. 
+
 :::info
 
-It is recommended to specify an explicit length for the <var>argsLen</var> parameter for prefix search. For example, the length is **20** in normal scenarios and **28** in the multisig scenario for the lock script.  When the length is not certain, the <var>argsLen</var> parameter can be set as `any`. But there is performance lost when using `any` rather than an explicit length.
+Using explicit length has better performance than using `any` for <var>argsLen</var> in a prefix search. It is recommended to specify an explicit length for the <var>argsLen</var> parameter in a prefix search.
 
 :::
 
@@ -378,7 +403,7 @@ Fine grained query for cells can be achieved by using [ScriptWrapper](https://gi
 
 The value for the <var>ioType</var> field is among `input | output | both`.
 
-If the <var>argsLen</var>is not specified in the function, the outside <var>argsLen</var> config or the default value -1 will be used.
+If the <var>argsLen</var>is is not specified in the function, the outside <var>argsLen</var> config or the default value "**-1**" will be used.
 
 Example:
 
@@ -428,7 +453,7 @@ Try the `finegrainedSearch` function in Node.js REPL mode:
 
 ### Order Cells by Block Number
 
-The following example creates a new [CellCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L324) and uses the CellCollector to collect cells in order of block numbers for a specific lock script. If the order is not specified, the default order is "asc" for the returned result.
+The following example creates a new [CellCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L324) and uses the CellCollector to collect cells in order of block numbers for a specific lock script. The default order is "asc" for the returned result.
 
 Example:
 
@@ -450,11 +475,11 @@ return cells;
 };
 ```
 
-The following example gets the live cells for Alice and returns the result in descending order of block numbers.
+Try the `findCellsandOrder` function in Node.js REPL mode: 
 
 <details><summary>CLICK ME</summary>
 <p>
-
+The following example gets the live cells for Alice and returns the result in descending order of block numbers.
 
 
 ```shell {1-8}
@@ -506,7 +531,7 @@ Find Cells in descending desc order of block numbers:
 
 ### Get the Cell Minimal Capacity
 
-The three fields of a CKB cell and the cell itself all take up CKB capacity. The cell must have the capacity that is equal or more than the total size of information stored in the cell. For more information, see [Cell](https://nervosnetwork.github.io/docs-new/docs/reference/cell).
+The three fields of a CKB cell and the cell itself all take up CKB capacity. The cell must have the capacity that is equal to or more than the total size of information stored in the cell. For more information, see [Nervos Docs: Cell](https://nervosnetwork.github.io/docs-new/docs/reference/cell).
 
 For example, the minimum CKB capacity requirement is 61 CKB (6,100,000,000 shannons) for a common transaction, and 102 CKB (10,200,000,000 shannons) for a DAO deposit transaction.
 
@@ -525,12 +550,17 @@ export async function getMinimalCellCapacity(
 };
 ```
 
-Choose one cell with the full structure from the previous queries and get the minimal capacity for the cell by using the `getMinimalCellCapacity` function in the Node.js REPL mode:
+Try the `getMinimalCellCapacity` function in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
 
-```shell {1-19}
+```shell {1,4,6-24}
+> node --experimental-repl-await
+Welcome to Node.js v14.0.0.
+Type ".help" for more information.
+> const { querycells }=require(".");
+The server is started.
 > const cell ={
   cell_output: {
     capacity: '0x1247656167b4',
@@ -557,7 +587,9 @@ The minimal cell capacity is 6100000000n
 
 ### Get the Balance of an Account
 
-The following example uses the `Indexer.collector` function to collect live cells for a specific lock script and then calculates the total capacity as the balance of the account. 
+The balance of an account means the total CKB capacity of the account. For more information, see [CKB Capacity of an Account](../preparation/createaccount#ckb-capacity-of-an-account).
+
+The following example uses the `Indexer.collector` function to collect live (unspent) cells for a specific lock script (the lock args of the lock script is the ID of an account) and then calculates the total capacity as the balance of the account. 
 
 Example:
 

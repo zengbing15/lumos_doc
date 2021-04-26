@@ -2,11 +2,13 @@
 id: manageaccounts
 title: Manage Accounts
 ---
-Lumos also provides the functions to manage the keys, addresses and the lock script of a [CKB Account](../preparation/createaccount).
+Lumos also provides the functions to manage the keys, addresses and the lock script of a [CKB Account](../preparation/createaccount#ckb-account).
 
 The following figure shows the Lumos functions for the conversion between private key, public key, Lock Script, and CKB address.
 
-<img src="../../img/conversion.png"/>
+import useBaseUrl from "@docusaurus/useBaseUrl";
+
+<img src={useBaseUrl("img/conversion.png")}/>
 
 ## Prerequisites
 
@@ -28,8 +30,8 @@ The HD wallet manager (`@ckb-lumos/hd`) provides the following functions for gen
 
 - [mnemonic.generateMnemonic](https://github.com/nervosnetwork/lumos/blob/develop/packages/hd/src/mnemonic/index.ts#L173): Generates mnemonic words (12 words).
 - [mnemonic.mnemonicToSeedSync](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/hd/src/mnemonic/index.ts#L48): Generates a seed from mnemonic words.
-- [ExtendedPrivateKey.fromSeed](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/hd/src/extended_key.ts#L133): Generates an extended private key from a seed.
-- [ExtendedPrivateKey.toExtendedPublicKey](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/hd/src/extended_key.ts#L113): Generates an extended public key from an extended private key.
+- [ExtendedPrivateKey.fromSeed](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/hd/src/extended_key.ts#L133): Generates an extended private key (a private key and a chain code) from a seed.
+- [ExtendedPrivateKey.toExtendedPublicKey](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/hd/src/extended_key.ts#L113): Generates an extended public key (a public key and a chain code) from an extended private key.
 
 Example:
 
@@ -193,7 +195,7 @@ The extendedPrivateKey is ExtendedPrivateKey {
 
 ### Generate an XPub Key File from an Extended Private Key
 
-> An xPub Key (extended public key) can be used to derive a unique address for every transaction.
+> An xPub Key (extended public key) is a public key and chain code, which can be used to create child public keys.
 
 The [XPubStore](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/hd/src/xpub_store.ts#L4) class of the `@ckb-lumos/hd` package supports to generate xPub key files from extended private keys.
 
@@ -233,22 +235,22 @@ The server is started.
 > const chainCode = "0x568e6eba7d3be6edf051d5de2e0384637c82f1a2e5bab56f5431b2978bd73a27";
 > const extendedPrivateKey = new ExtendedPrivateKey(privateKey,chainCode);
 > await manageaccounts.generateXPubStore(extendedPK,"C:\\xpub",true);
->//The example generates a xpub file under the C:\ disk.
->//The generated content of this example is "{"xpubkey":"027f5e9f79ff3739990a0a4581304d3128cbe0f22ee6274c6601defc87c04986cbcd1efd7be4123e6cd9d15a434407661b30b570ef0b9d444553cfec4527ec8ee3"}".
 ```
+
+The example generates an xpub file under the <var>C:\\</var> disk. The content of the generated file is: <p>*{"xpubkey":"027f5e9f79ff3739990a0a4581304d3128cbe0f22ee6274c6601defc87c04986cbcd1efd7be4123e6cd9d15a434407661b30b570ef0b9d444553cfec4527ec8ee3"}*.</p>
 
 </p>
 </details>
 
-### Get the Balance by Using the HD Cache Manager
+### Get the Balance of an HD Wallet by Using the HD Cache Manager
 
 A DApp can serve queries on HD wallets in an efficient way by using the HD cache manager (`@ckb-lumos/hd-cache`) component that can store the following data of an HD wallet:
 
 - The master public key
 - The next receiving public key
 - The next change public key
-- The receiving keys
-- The change keys
+- 30  receiving keys
+- 20 change keys
 - The balance of the HD wallet
 
 The HD cache manager can load the data of HD wallets from mnemonic words with the [CacheManager.fromMnemonic](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/hd-cache/src/index.ts#L605) function or from a keystore file with the [CacheManager.loadFromKeystore](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/hd-cache/src/index.ts#L571) function.
@@ -259,7 +261,9 @@ The following example loads the data from a keystore file of an HD wallet, and t
 
 Example:
 
-```typescript title="/mydapp/src/manageaccounts.ts/getBalancebyHDCache()" {14}
+```typescript title="/mydapp/src/manageaccounts.ts/getBalancebyHDCache()" {16}
+import { CacheManager,CellCollector, getBalance, getDefaultInfos } from "@ckb-lumos/hd-cache";
+
 export async function getBalancebyHDCache (
   path:string,
   password: string,
@@ -307,7 +311,9 @@ The HD wallet balance is 2833614223561041n
 
 ### Generate the Address from a Lock Script
 
-The [generateAddress](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/helpers/src/index.ts#L89) function of the `@ckb-lumos/helpers` package can be used to generate the address from a specific lock script.
+The [generateAddress](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/helpers/src/index.ts#L89) function of the `@ckb-lumos/helpers` package can be used to generate the address from a specific lock script. 
+
+The function generates the address with the "**ckb**" prefix or the "**ckt**" prefix. The prefix can be leveraged from `config.PREFIX`.
 
 Example:
 

@@ -6,7 +6,7 @@ This guide will help you get your system set up for building DApps with Lumos. I
 
 ## System Recommendations
 
-CKB DApps can be developed upon Lumos on all major platforms including Linux, Windows, and Mac. 
+CKB DApps can be developed upon Lumos on all major platforms including Linux, Windows, and macOS. 
 
 ## Install Node.js
 

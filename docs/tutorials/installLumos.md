@@ -2,7 +2,7 @@
 id: installlumos
 title: Install Lumos Packages
 ---
-To add necessary Lumos components (packages) to a project, follow the instruction in this guide to install the Lumos packages that a DApp requires as dependencies. <!--For the projects that have already listed Lumos packages as dependencies, just run `yarn install` in the projects directly to install the packages.--> 
+This guide introduces how to add necessary  [Lumos packages(components)](../introduction/lumoscomponents) to a Node.js project as dependencies. <!--For the projects that have already listed Lumos packages as dependencies, just run `yarn install` in the projects directly to install the packages.--> 
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ The following examples are verified on Ubuntu 20.04.2. Steps on the other platfo
 
 ### Step 1. Navigate into the directory of the project.
 
-To navigate into a project directory, run the `cd <project folder name>` command:
+Navigate into the directory of the project, for example, <var>mydapp</var>.
 
 ```
 $ cd mydapp
@@ -61,7 +61,7 @@ Done in 44.54s.
 
 A Lumos package can be installed by using the `yarn add @ckb-lumos/<package name> ` command according to the application requirements.
 
-The following example installs the indexer, the common-scripts, the config-manager packages and their dependencies for the project.
+The following example installs the Lumos RocksDB backed indexer, the common-scripts, the config-manager packages and their dependencies for the project.
 
 ```shell
 $ yarn add @ckb-lumos/indexer@0.16.0 @ckb-lumos/common-scripts@0.16.0 @ckb-lumos/config-manager@0.16.0

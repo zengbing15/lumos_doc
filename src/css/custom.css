@@ -227,3 +227,6 @@ ol > li:before {
     font-size: .8em;
     text-align: left;
 }
+.DocSearch-Button-Key {
+  display: none !important;
+}

@@ -2,7 +2,7 @@
 id: querytransactions
 title: Query on Transactions
 ---
-> Transactions are the most fundamental entities for a DApp to interact with Nervos CKB. For more information about CKB transactions, see [Transaction](https://docs.nervos.org/docs/reference/transaction#docsNav) and [CKB RFC](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0019-data-structures/0019-data-structures.md#transaction).
+> Transactions are the most fundamental entities for a DApp to interact with Nervos CKB. For more information about CKB transactions, see [Nervos Docs: Transaction](https://docs.nervos.org/docs/reference/transaction) and [CKB RFC: Data Structures](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0019-data-structures/0019-data-structures.md#transaction).
 
 Lumos provides functions to support querying on transactions for specific query options.
 

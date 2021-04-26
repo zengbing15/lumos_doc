@@ -73,7 +73,7 @@ To initialize and start the RocksDB backed indexer:
 ```typescript
 import { Indexer } from "@ckb-lumos/indexer";
 const CKB_RPC = "http://127.0.0.1:8114";
-const INDEXER = new Indexer(CKB_RPC, "./indexed-data");
+export const INDEXER = new Indexer(CKB_RPC, "./indexed-data");
 INDEXER.startForever();
 ```
 
@@ -90,6 +90,13 @@ To create a postgreSQL instance:
 ```shell
 $ docker run --name postgres -e POSTGRES_USER=user -e POSTGRES_DB=lumos -e POSTGRES_PASSWORD=mypassword -d -p 5432:5432 postgres
 ```
+
+- --name <var>postgres</var>: The container is named as <var>postgres</var>.
+- -e POSTGRES_USER=<var>user</var>: Name the superuser account as <var>user</var>.
+-  -e POSTGRES_DB=<var>lumos</var>: Name the default database as <var>lumos</var>.
+- -e POSTGRES_PASSWORD=<var>mypassword</var>: The password for the user account is <var>mypassword</var>.
+- -p 5432:5432: Publish the container's 5432 port to the whole network of the host machine.
+- -d: Run the container in the background with `--detach`.
 
 ### Step 3. Install dependencies for the DApp project.
 

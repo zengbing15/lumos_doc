@@ -2,9 +2,17 @@
 id: createaccount
 title: Create Accounts
 ---
-This guide introduces the concepts of CKB account, CKB capacity of an account, and how to create CKB accounts by using ckb-cli before the DApp development. We will prepare two CKB accounts, Alice and Bob for later usage in the [Hello Lumos](../preparation/hellolumos) example.
+import useBaseUrl from "@docusaurus/useBaseUrl";
+
+This guide introduces the concepts of CKB account, CKB capacity of an account, and how to create CKB accounts before the DApp development. We will prepare two CKB accounts, Alice and Bob for later usage in the [Hello Lumos](../preparation/hellolumos) example. 
+
+The accounts can be created by using ckb-cli. For DEV chain, you can also get two accounts from the genesis cells that were issued with a considerable amount of capacity. 
+
+## CKB Account
 
 In CKB, an account is represented as a collection of [live cells](https://docs.nervos.org/docs/reference/cell#live-cell) (unspent cells) that contain the same lock script.
+
+> A live cell refers to an unspent cell in CKB. It is similar to the concept of [UTXO](https://en.wikipedia.org/wiki/Unspent_transaction_output) in Bitcoin's terminology. The full set of live cells in CKB, is considered the full state of CKB at that particular time point. Any transaction on CKB consumes some live cells. The live cells become spent cells just after the transaction is committed. At the same time, some new live cells are created.
 
 A cell example:
 
@@ -38,17 +46,9 @@ For more information about cells, see [CKB RFC: Cell](https://github.com/nervosn
 > - It represents the amount of CKB tokens stored in the cell. 
 > - It sets the limit on how much information the cell can store. 
 >
-> The basic unit for CKB capacity is **shannon**. A bigger unit, **CKByte** or just **CKB** is also used. 1 CKB equals to 10<sup>8</sup> shannons. 1 CKB also means the cell can store 1 byte of information. For more information about how to calculate the cell information size, see [Cell Information Size Calculation](http://docs.nervos.org/docs/reference/cell#cell-information-size-calculation).
+> The basic unit for CKB capacity is **shannon**. A bigger unit, **CKByte** or just **CKB** is also used. 1 CKB equals to 10<sup>8</sup> shannons. 1 CKB also means the cell can store 1 byte of information. For more information about how to calculate the cell information size, see [Nervos Docs: Cell Information Size Calculation](http://docs.nervos.org/docs/reference/cell#cell-information-size-calculation).
 
 The CKB capacity of an account is the total `capacity` of the live cells owned by the account.
-
-:::note
-
-If an account wants to perform transaction actions like transferring CKB to other accounts, the account must have enough CKB capacity that is equal to or more than the minimal CKB requirement of a transaction.
-
-For example, the minimum CKB capacity requirement is 61 [CKB](https://docs.nervos.org/docs/basics/glossary#shannon "One CKByte is equal to 100,000,000 Shannons.") (6,100,000,000 shannons) for one common transaction, and 102 CKB (10,200,000,000 shannons) for a DAO deposit transaction.
-
-:::
 
 Let us look at the following example. There are three live (unspent) cells in Charlie's account. The three cells contain the same lock script with the lock args "0x9118f7600d395709d08dc4596967d8c929982f1a". Each cell contains **200** (0x4a817c800 in hex) CKB. So the total amount of CKB capacity that Charlie owns is **200 * 3 = 600** CKB.
 
@@ -121,9 +121,13 @@ Let us look at the following example. There are three live (unspent) cells in Ch
   }
   ```
 
-:::info
+:::note
 
-The accounts on the Testnet can claim CKB capacity on [https://faucet.nervos.org](https://faucet.nervos.org/). The accounts on DEV chain can get CKB capacity by mining blocks as a miner. For more information about getting CKB capacity, see **step 4** of [Create the accounts by Using ckb-cli](../preparation/createaccount#create-the-accounts-by-using-ckb-cli).
+If an account wants to perform transaction actions like transferring CKB to other accounts, the account must have enough CKB capacity that is equal to or more than the minimal CKB requirement of a transaction.
+
+For example, the minimum CKB capacity requirement is 61 [CKB](https://docs.nervos.org/docs/basics/glossary#shannon "One CKByte is equal to 100,000,000 Shannons.") (6,100,000,000 shannons) for one common transaction, and 102 CKB (10,200,000,000 shannons) for a DAO deposit transaction.
+
+The accounts on the Testnet can claim CKB capacity on [https://faucet.nervos.org](https://faucet.nervos.org/). The accounts on DEV chain can get CKB capacity by mining blocks as a miner. For more information about getting CKB capacity, see **[step 5](../preparation/createaccount#step-5-get-ckb-capacity-for-the-account-of-alice)** of [Create the accounts by Using ckb-cli](../preparation/createaccount#create-the-accounts-by-using-ckb-cli).
 
 :::
 
@@ -157,11 +161,14 @@ The ownership of CKB capacity for a CKB account is established through private k
 
   ```
   ckt1qyqfzx8hvqxnj4cf6zxugktfvlvvj2vc9udqww932t
+  ckb1qyqfzx8hvqxnj4cf6zxugktfvlvvj2vc9udqntmwxh
   ```
+  
+  The address with the "**ckb**" prefix is for CKB mainnet. The address with the "**ckt**" prefix is for both testnet and DEV chain.
 
 The following figure shows the relationship between private key, public key, Lock Script, and CKB address.
 
-<img src="../../img/ownership.png"/>
+<img src={useBaseUrl("img/ownership.png")}/>
 
 <!--Create an account by using ckb-cli.--> <!--Get the private key of an account.--><!--Get CKB capacity for an account.--><!--Check the capacity of an account.-->
 
@@ -171,7 +178,7 @@ The following prerequisites apply for creating the accounts:
 
 - The CKB node is installed and running. 
 
-## Create the accounts by using ckb-cli.
+## Create the Accounts by Using ckb-cli
 
 > **ckb-cli** is included in the CKB pre-built installer package. It is a command line tool that provides the functions of rpc requests, creating CKB addresses, managing wallets, sending transactions, and depositing to Nervos DAO etc. These functions can help with debugging and testing during the development process. For more information, see [ckb-cli Sub Commands](https://github.com/nervosnetwork/ckb-cli/wiki/Sub-Commands).
 
@@ -206,7 +213,7 @@ lock_hash: 0xf6ea009a4829de7aeecd75f3ae6bcdbaacf7328074ae52a48456a8793a4b1cca
 
 ### Step 4. Get the private key for the account of Alice.
 
-The extended private key is exported to the `$(pwd)/alice` file. The first line in the file is the private key of the account. The second line is the chain code.
+The extended private key (a private key and a chain code) is exported to the <var>alice</var> file under the current working directory. The first line in the file is the private key of the account. The second line is the chain code.
 
 ```shell {1}
 ckb-cli account export --extended-privkey-path alice --lock-arg 0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e
@@ -242,15 +249,17 @@ The process of getting CKB capacity varies for the accounts on different network
 
   50,000 CKB can be claimed for each Testnet address from the [faucet](https://faucet.nervos.org/) per 24 hours. 
 
-### Step 6. Check the Capacity of the Account of Alice.
+### Step 6. Check the Balance for the Account of Alice.
 
-To check the capacity of the account, execute the `ckb-cli wallet get-capacity --address <the Testnet address of the account>` command as follows:
+To check the balance of an account on DEV chain or Testnet, execute the `ckb-cli wallet get-capacity --address <the Testnet address of the account>` command.
 
 ```shell {1}
 ckb-cli wallet get-capacity --address "ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf"
 immature: 8039446.8758295 (CKB)
 total: 10451302.54823011 (CKB)
 ```
+
+To check the balance of an account on Mainnet, execute the `ckb-cli wallet get-capacity --address <the Mainnet address of the account>` command.
 
 ### Step 7. Create an account for Bob.
 
@@ -266,10 +275,69 @@ lock_arg: 0xecbe30bcf5c6b2f2d8ec2dd229a4603a7e206b99
 lock_hash: 0x34f085b5d2fa3f4ad2880713082a72864522a6ebffa1eb931b09e0407092eda5
 ```
 
-To get the private key for the account of Bob:
+### Step 8. Get the private key for the account of Bob.
+
+The extended private key (a private key and a chain code) is exported to the <var>bob</var> file under the current working directory. The first line in the file is the private key of the account. The second line is the chain code.
 
 ```shell {1}
 ckb-cli account export --extended-privkey-path bob --lock-arg 0xecbe30bcf5c6b2f2d8ec2dd229a4603a7e206b99
 Password: 
 message: "Success exported account as extended privkey to: \"bob\", please use this file carefully"
 ```
+
+## Get Two Accounts Provided by Genesis Issued Cells
+
+DEV chain provides two accounts from genesis issued cells. Each account has a considerable amount of capacity that can be used  for development and testing without extra configuration or mining settings. 
+
+### Step 1. Get the private key, lock args from the specs/dev.toml file.
+
+The **dev.toml** file is generated when the CKB node is initialized on DEV chain. 
+
+:::info
+
+For the CKB node installed by Tippy:
+
+- On Windows: The file is located in C:/Users/<var>username</var>/AppData/Roaming/Tippy/chain-<var>number</var>/specs. 
+
+- On Ubuntu: The file is located in Home/.config/Tippy/chain-<var>number</var>/specs.
+
+:::
+
+```toml {1,5,8,12}
+# issue for random generated private key: d00c06bfd800d27397002dca6fb0993d5ba6399b4238b2f29ee9deb97593d2bc
+[[genesis.issued_cells]]
+capacity = 20_000_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0xc8328aabcd9b9e8e64fbc566c4385c3bdeb219d7"
+lock.hash_type = "type"
+
+# issue for random generated private key: 63d86723e08f0f813a36ce6aa123bb2289d90680ae1e99d4de8cdb334553f24d
+[[genesis.issued_cells]]
+capacity = 5_198_735_037_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0x470dcdc5e44064909650113a274b3b36aecb6dc7"
+lock.hash_type = "type"
+```
+
+### Step 2. Generate the addresses for the two accounts.
+
+1. Save `d00c06bfd800d27397002dca6fb0993d5ba6399b4238b2f29ee9deb97593d2bc` to the genesis1 file.
+
+2. Save `63d86723e08f0f813a36ce6aa123bb2289d90680ae1e99d4de8cdb334553f24d` to the genesis2 file.
+
+3. Generate the addresses for the two accounts.
+
+   ```shell {1,7}
+   ckb-cli account import --privkey-path "genesis1"
+   Password: 
+   address:
+     mainnet: ckb1qyqvsv5240xeh85wvnau2eky8pwrhh4jr8ts6f6daz
+     testnet: ckt1qyqvsv5240xeh85wvnau2eky8pwrhh4jr8ts8vyj37
+   lock_arg: 0xc8328aabcd9b9e8e64fbc566c4385c3bdeb219d7
+   ckb-cli account import --privkey-path "genesis2"
+   Password: 
+   address:
+     mainnet: ckb1qyqywrwdchjyqeysjegpzw38fvandtktdhrsj8renf
+     testnet: ckt1qyqywrwdchjyqeysjegpzw38fvandtktdhrs0zaxl4
+   lock_arg: 0x470dcdc5e44064909650113a274b3b36aecb6dc7
+   ```
