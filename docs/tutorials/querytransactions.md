@@ -4,25 +4,7 @@ title: Query on Transactions
 ---
 > Transactions are the most fundamental entities for a DApp to interact with Nervos CKB. For more information about CKB transactions, see [Nervos Docs: Transaction](https://docs.nervos.org/docs/reference/transaction) and [CKB RFC: Data Structures](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0019-data-structures/0019-data-structures.md#transaction).
 
-Lumos provides functions to support querying on transactions for specific query options.
-
-## Functions
-
-### TransactionCollector
-
-The [indexer.TransactionCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/base/lib/indexer.js#L9) function of the `@ckb-lumos/indexer` package can be used to query transactions by specific query options (lock, type, argsLen, fromBlock, toBlock, order, skip) and returns the transactions as the result.
-
-The [indexer.TransactionCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/sql-indexer/lib/index.js#L811) function of the `@ckb-lumos/sql-indexer` package can be used to query transactions by specific query options (lock, type, argsLen, fromBlock, toBlock, order, skip) and returns the transactions as the result.
-
-### rpc.get_transaction
-
-The [get_transaction](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/rpc/src/index.ts#L196) function of the `@ckb-lumos/rpc` package can be used to get the transaction information (<var>status</var>, <var>block_hash</var>) for a specific transaction hash.
-
-A transaction can be in one of the following status:
-
-- A **pending** result means the transaction is in the pool, and not proposed yet.
-- A **proposed** result means the transaction is in the pool, and can be committed in the next block.
-- A **committed** result means that the block involving the transaction has been mined and is officially on chain.
+Lumos provides functions to support querying on transactions for specific query options. For more information about query options, see [Query Options](../tutorials/querycells#query-options).
 
 ## Prerequisites
 
@@ -40,31 +22,29 @@ The following examples are verified on Ubuntu 20.04.2. Steps on the other platfo
 
 ### Query Transactions by a Lock Script
 
-The following example creates a new TransactionCollector to collect transactions for a specific lock script and returns the transactions with status.
+The following example creates a new [TransactionCollector](https://nervosnetwork.github.io/lumos/classes/indexer.transactioncollector.html) to collect transactions for a specific lock script and returns the transactions with status.
 
 Example:
 
-```typescript title="hellolumos/src/querytransactions.ts/getTxsbyLock()" {9}
-import {INDEXER} from "./index";
+```typescript title="hellolumos/src/querytransactions.ts/getTxsbyLock" {7}
+import { INDEXER } from "./index";
 import { Script, Transaction } from "@ckb-lumos/base";
 import { TransactionCollector } from "@ckb-lumos/indexer";
 
-export async function getTxsbyLock (
-  lockScript: Script,
-) {
+export async function getTxsbyLock(lockScript: Script) {
   console.log("Get transactions by lock script:");
-  const txCollector = new TransactionCollector(INDEXER,{lock:lockScript});
-  const txs:Transaction[]= [];
+  const txCollector = new TransactionCollector(INDEXER, { lock: lockScript });
+  const txs: Transaction[] = [];
   for await (const txWithStatus of txCollector.collect()) {
-    
-    const tx = txWithStatus.transaction; 
-    const txStatus=txWithStatus.tx_status.status;
+    //@ts-ignore
+    const tx = txWithStatus.transaction;
+    //@ts-ignore
+    const txStatus = txWithStatus.tx_status.status;
     txs.push(tx);
     //console.log(txStatus);
   }
   return txs;
 }
-
 ```
 
 Try the `getTxsbyLock` function in the Node.js REPL mode:
@@ -72,67 +52,85 @@ Try the `getTxsbyLock` function in the Node.js REPL mode:
 <details><summary>CLICK ME</summary>
 <p>
 
-```shell {1,4,6-12}
+```shell {1,2,5,7-10}
+$ cd hellolumos
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
 Type ".help" for more information.
 > const { accounts, querytransactions }=require(".");
 The server is started.
-> const alice = accounts.ALICE;
-> const script={
-  code_hash: "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
-  hash_type: "type",
-  args: alice.ARGS,
- };
+> const bob = accounts.BOB;
+> const { parseAddress } = require("@ckb-lumos/helpers");
+> const script = parseAddress(bob.ADDRESS);
 > await querytransactions.getTxsbyLock(script);
 Get transactions by lock script:
 [
   {
-    cell_deps: [],
-    hash: '0x84a1ff885e82f1d48813968994f63eae22df5baf65519240fc74811ba3b31e92',
+    cell_deps: [ [Object] ],
+    hash: '0x32a717c2af9160b800805796c68803213060df782834486c72cfbacbb0868d62',
     header_deps: [],
     inputs: [ [Object] ],
-    outputs: [ [Object] ],
-    outputs_data: [ '0x' ],
+    outputs: [ [Object], [Object] ],
+    outputs_data: [ '0x', '0x' ],
     version: '0x0',
     witnesses: [
-      '0x590000000c00000055000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce801140000007e00660b8ab122bca3ba468c5b6eee71f40b7d8e00000000'
+      '0x55000000100000005500000055000000410000003056c419901742aeb36c95e0b3d17449f086ac9a551b7cce1fd67b61de2ff9c05a4730738de3a3c06cf0405276226508b8423cb29e187e58895fae0cfd2fe75d01'
     ]
   },
   {
-    cell_deps: [],
-    hash: '0xbdc50e04c88978fe53debe989863855b2e3e4be02dd989c6f8771a2b263ef213',
+    cell_deps: [ [Object] ],
+    hash: '0x144ae79bc6064ae99e51b7105f4b61328dd4293d68d132b7a04d86409952ae2e',
     header_deps: [],
     inputs: [ [Object] ],
-    outputs: [ [Object] ],
-    outputs_data: [ '0x' ],
+    outputs: [ [Object], [Object] ],
+    outputs_data: [ '0x', '0x' ],
     version: '0x0',
     witnesses: [
-      '0x590000000c00000055000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce801140000007e00660b8ab122bca3ba468c5b6eee71f40b7d8e00000000'
+      '0x550000001000000055000000550000004100000047441d4fea439fd06577eafadfe15c58e0a3aa13cbd13851d622b99c08e59b05354706bafeb411b1d244f022229ffd559a10a5b1cd545a699bdea824da420bf000'
     ]
   },
-...
+  {
+    cell_deps: [ [Object] ],
+    hash: '0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e',
+    header_deps: [],
+    inputs: [ [Object] ],
+    outputs: [ [Object], [Object] ],
+    outputs_data: [ '0x', '0x' ],
+    version: '0x0',
+    witnesses: [
+      '0x5500000010000000550000005500000041000000ec0fa41cca9234b12b7451e3894219c32af0a493d93bf1ec38d9fcccc5297c8a3598a427b4124e30329a3b4b80e885e89006d6b3abf65f385eccf19676977f4e00'
+    ]
+  }
+]
 ```
 </p>
 </details>
 
 ### Query Transactions between Given Block Numbers
 
-The following example fetches the transactions between `[fromBlock, toBlock]`. Both `fromBlock` and `toBlock` are included in the [QueryOptions](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/base/index.d.ts#L337).
+The following example fetches the transactions between [<var>fromBlock</var>, <var>toBlock</var>].
 
 Example:
 
-```typescript title="hellolumos/src/querytransactions.ts/getTxsbetweenBlocks()" {6}
-export async function getTxsbetweenBlocks (
-    lockScript: Script,
-    fromBlock: string,
-    toBlock: string
-  )  {
-    const txCollector = new TransactionCollector(INDEXER,{lock:lockScript,fromBlock,toBlock});
-    console.log("Get transactions between given blocks:");
-    for await (const txWithStatus of txCollector.collect()) {
-        console.log(txWithStatus);
-    }
+```typescript title="hellolumos/src/querytransactions.ts/getTxsbetweenBlocks" {10-14}
+import { INDEXER } from "./index";
+import { Script } from "@ckb-lumos/base";
+import { TransactionCollector } from "@ckb-lumos/indexer";
+
+export async function getTxsbetweenBlocks(
+  lockScript: Script,
+  fromBlock: string,
+  toBlock: string
+) {
+  const txCollector = new TransactionCollector(INDEXER, {
+    lock: lockScript,
+    fromBlock,
+    toBlock,
+  });
+  console.log("Get transactions between given blocks:");
+  for await (const txWithStatus of txCollector.collect()) {
+    console.log(txWithStatus);
+  }
 }
 ```
 Try the `getTxsbetweenBlocks` function in the Node.js REPL mode:
@@ -140,10 +138,19 @@ Try the `getTxsbetweenBlocks` function in the Node.js REPL mode:
 <details><summary>CLICK ME</summary>
 <p>
 
-```shell {1-3}
-> const from="0x801";
-> const to="0x804";
-> await querytransactions.getTxsbetweenBlocks(script,from,to);
+```shell {1,2,5,7-12}
+$ cd hellolumos
+$ node --experimental-repl-await
+Welcome to Node.js v14.0.0.
+Type ".help" for more information.
+> const { accounts, querytransactions } = require(".");
+The server is started.
+> const alice = accounts.ALICE;
+> const { parseAddress } = require("@ckb-lumos/helpers");
+> const script = parseAddress(alice.ADDRESS);
+> const from = "0x801";
+> const to = "0x804";
+> await querytransactions.getTxsbetweenBlocks(script, from, to);
 Get transactions between given blocks:
 {
   transaction: {
@@ -245,114 +252,225 @@ The <var>skip</var> query option represents the number of transactions being ski
 
 Example:
 
-```typescript title="hellolumos/src/querytransactions.ts/getTxsandSkip()" {5}
-export async function getTxsandSkip (
-    lock: Script,
-    skip: number
-  )  {
-    const txCollector = new TransactionCollector(INDEXER,{lock,skip});
-    console.log("Get transactions and skip the first", skip, "trasactions");
-    for await (const txWithStatus of txCollector.collect()) {
-        console.log(txWithStatus);
-    }
+```typescript title="hellolumos/src/querytransactions.ts/getTxsandSkip" {6}
+import { INDEXER } from "./index";
+import { Script } from "@ckb-lumos/base";
+import { TransactionCollector } from "@ckb-lumos/indexer";
+
+export async function getTxsandSkip(lock: Script, skip: number) {
+  const txCollector = new TransactionCollector(INDEXER, { lock, skip });
+  console.log("Get transactions and skip the first", skip, "trasactions");
+  for await (const txWithStatus of txCollector.collect()) {
+    console.log(txWithStatus);
+  }
 }
 ```
 
 ### Order Transactions by Block Number
 
-The following example creates a new TransactionCollector and uses the TransactionCollector to collect transactions in order of block numbers for a specific lock script. If the order is not specified, the default order is "asc" for the returned result.
+The following example creates a new [TransactionCollector](https://nervosnetwork.github.io/lumos/classes/indexer.transactioncollector.html) and uses the TransactionCollector to collect transactions in order of block numbers for a specific lock script. If the order is not specified, the default order is "asc" (ascending) for the returned result.
 
 Example:
 
-```typescript title="hellolumos/src/querytransactions.ts/getTxsandOrder()" {5}
-export async function getTxsandOrder (
-    lock: Script,
-    order: "asc"|"desc"
-  )  {
-    const txCollector = new TransactionCollector(INDEXER,{lock,order});
-    console.log("Get transactions in order of", order);
-    for await (const txWithStatus of txCollector.collect()) {
-        console.log(txWithStatus);
-    }
+```typescript title="hellolumos/src/querytransactions.ts/getTxsandOrder" {6}
+import { INDEXER } from "./index";
+import { Script } from "@ckb-lumos/base";
+import { TransactionCollector } from "@ckb-lumos/indexer";
+
+export async function getTxsandOrder(lock: Script, order: "asc" | "desc") {
+  const txCollector = new TransactionCollector(INDEXER, { lock, order });
+  console.log("Get transactions in order of", order);
+  for await (const txWithStatus of txCollector.collect()) {
+    console.log(txWithStatus);
+  }
 }
 ```
 
 ### Prefix Search on <var>args</var>
 
-The default value of <var>argsLen</var> is -1 for the query on a full slice of the args of a lock script.
+To enable prefix search on the args of a lock script or a type script, <var>argsLen</var> can be assigned with a value other than the default value -1.
 
-You can specify <var>argsLen</var> with a value other than the default value to enable the prefix search on the args of a lock script.
+The lock script args length is **20** in normal scenarios and **28** in the multisig scenario. When the length is not certain, the <var>argsLen</var> parameter can be set as `any`. 
 
 :::info
 
-It is recommended to specify an explicit length for the <var>argsLen</var> parameter for prefix search. For example, the length is **20** in normal scenarios and **28** in the multisig scenario for the lock script. When the length is not certain, the <var>argsLen</var> parameter can be set as `any`. But there is performance lost when using `any` rather than an explicit length.
+It is recommended to specify an explicit length for the <var>argsLen</var> parameter in a prefix search, that has better performance than using `any` for <var>argsLen</var>.
 
 :::
 
 Example:
 
-```typescript title="hellolumos/src/querytransactions.ts/findTXsbyPrefix()" {5}
-export async function findTXsbyPrefix  (
-    lock: Script,
-    argsLen : number
-  )  {
-    const txCollector = new TransactionCollector(INDEXER,{lock,argsLen});
-    console.log("Prefix Search");
-    for await (const txWithStatus of txCollector.collect()) {
-        console.log(txWithStatus);
-    }
+```typescript title="hellolumos/src/querytransactions.ts/findTXsbyPrefix" {6}
+import { INDEXER } from "./index";
+import { Script } from "@ckb-lumos/base";
+import { TransactionCollector } from "@ckb-lumos/indexer";
+
+export async function findTXsbyPrefix(lock: Script, argsLen: number) {
+  const txCollector = new TransactionCollector(INDEXER, { lock, argsLen });
+  console.log("Prefix Search");
+  for await (const txWithStatus of txCollector.collect()) {
+    console.log(txWithStatus);
+  }
 }
 ```
 
 ### Fine Grained Query for Transactions
 
-Fine Grained Query for Transactions can be achieved by using [ScriptWrapper](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/base/index.d.ts#L351) with customized options like <var>ioType</var>, <var>argsLen</var>.
+Fine grained query for transactions can be achieved by using [ScriptWrapper](https://nervosnetwork.github.io/lumos/interfaces/base.scriptwrapper.html) that combines <var>ioType</var>, <var>argsLen</var> with <var>script</var> (a lock script or a type script). 
 
-The value for the <var>ioType</var> field is among `input | output | both`.
+The <var>ioType</var> option means the cell type that can be `input`, `output` or `both`. 
+
+<var>argsLen</var> is the length of the script args in the ScriptWrapper. If <var>argsLen</var> is not specified, the <var>argsLen</var> config outside of the ScriptWrapper or the default value -1 will be used.
+
+The following example is the fine grained query on lock script for transactions.
 
 Example:
 
-```typescript title="hellolumos/src/querytransactions.ts/finegrainedSearch()" {9-13}
-import { ScriptWrapper} from "@ckb-lumos/base";
+```typescript title="hellolumos/src/querytransactions.ts/finegrainedSearch" {10-14}
+import { INDEXER } from "./index";
+import { Script, ScriptWrapper } from "@ckb-lumos/base";
+import { TransactionCollector } from "@ckb-lumos/indexer";
 
-export async function finegrainedSearch  (
-    lockScript: Script,
-    typescript : Script,
-    argslen: number,
-    iotype:"output"|"input"|"both"
-    ) {
-    const type:ScriptWrapper = {
-      script:typescript,
-      ioType:iotype,
-      argsLen: argslen
-    }
-    const txCollector = new TransactionCollector(INDEXER,{lock:lockScript,type:type});
-    console.log("Fine Grained Query");
-    for await (const txWithStatus of txCollector.collect()) {
-        console.log(txWithStatus);
-    }
+export async function finegrainedSearch(
+  lockScript: Script,
+  argslen: number,
+  iotype: "output" | "input" | "both"
+) {
+  const lock: ScriptWrapper = {
+    script: lockScript,
+    ioType: iotype,
+    argsLen: argslen,
+  };
+  const txCollector = new TransactionCollector(INDEXER, {
+    lock,
+  });
+  console.log("Fine Grained Query");
+  for await (const txWithStatus of txCollector.collect()) {
+    console.log(txWithStatus);
+  }
 }
 ```
+
+Try the `finegrainedSearch` function in the Node.js REPL mode:
+
+<details><summary>CLICK ME</summary>
+<p>
+
+
+```shell {1,2,5,7-10}
+$ cd hellolumos
+$ node --experimental-repl-await
+Welcome to Node.js v14.0.0.
+Type ".help" for more information.
+> const { accounts, querytransactions } = require(".");
+The server is started.
+> const bob = accounts.BOB;
+> const { parseAddress } = require("@ckb-lumos/helpers");
+> const script = parseAddress(bob.ADDRESS);
+> await querytransactions.finegrainedSearch(script, 20, "output");
+Fine Grained Query
+{
+  transaction: {
+    cell_deps: [ [Object] ],
+    hash: '0x32a717c2af9160b800805796c68803213060df782834486c72cfbacbb0868d62',
+    header_deps: [],
+    inputs: [ [Object] ],
+    outputs: [ [Object], [Object] ],
+    outputs_data: [ '0x', '0x' ],
+    version: '0x0',
+    witnesses: [
+      '0x55000000100000005500000055000000410000003056c419901742aeb36c95e0b3d17449f086ac9a551b7cce1fd67b61de2ff9c05a4730738de3a3c06cf0405276226508b8423cb29e187e58895fae0cfd2fe75d01'
+    ]
+  },
+  tx_status: {
+    block_hash: '0xc21b34b009d5e355357eb55d9ee3456c6a90632434cff8dc515b2f0a207f854c',
+    status: 'committed'
+  }
+}
+{
+  transaction: {
+    cell_deps: [ [Object] ],
+    hash: '0x144ae79bc6064ae99e51b7105f4b61328dd4293d68d132b7a04d86409952ae2e',
+    header_deps: [],
+    inputs: [ [Object] ],
+    outputs: [ [Object], [Object] ],
+    outputs_data: [ '0x', '0x' ],
+    version: '0x0',
+    witnesses: [
+      '0x550000001000000055000000550000004100000047441d4fea439fd06577eafadfe15c58e0a3aa13cbd13851d622b99c08e59b05354706bafeb411b1d244f022229ffd559a10a5b1cd545a699bdea824da420bf000'
+    ]
+  },
+  tx_status: {
+    block_hash: '0x2d70e178be2447f784d9c8c1c52630d10b3b3b23575896e61ff15983a7e5ba59',
+    status: 'committed'
+  }
+}
+{
+  transaction: {
+    cell_deps: [ [Object] ],
+    hash: '0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e',
+    header_deps: [],
+    inputs: [ [Object] ],
+    outputs: [ [Object], [Object] ],
+    outputs_data: [ '0x', '0x' ],
+    version: '0x0',
+    witnesses: [
+      '0x5500000010000000550000005500000041000000ec0fa41cca9234b12b7451e3894219c32af0a493d93bf1ec38d9fcccc5297c8a3598a427b4124e30329a3b4b80e885e89006d6b3abf65f385eccf19676977f4e00'
+    ]
+  },
+  tx_status: {
+    block_hash: '0x64623c86af1df458caac8a1433e50ae7ffc228aaa1975d60ed03dfe3ec4ca3fc',
+    status: 'committed'
+  }
+}
+```
+
+</p>
+</details>
 
 ### Get Transaction Status and Block Hash
 
-The following example uses the [get_transaction](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/rpc/src/index.ts#L196) function of the `@ckb-lumos/rpc` package to get the transaction information for a specific transaction hash.
+A transaction can be in one of the following status:
+
+- A **pending** result means the transaction is in the pool, and not proposed yet.
+- A **proposed** result means the transaction is in the pool, and can be committed in the next block.
+- A **committed** result means that the block involving the transaction has been mined and is officially on chain.
+
+The following example uses the `get_transaction` function of the `@ckb-lumos/rpc` package to get the transaction information for a specific transaction hash.
 
 Example: 
 
-```typescript title="hellolumos/src/querytransactions.ts/getTxsbyHash()" {7}
+```typescript title="hellolumos/src/querytransactions.ts/getTxsbyHash" {5}
 import { RPC } from "@ckb-lumos/RPC";
 const rpc = new RPC("http://127.0.0.1:8114");
 
-export async function getTxsbyHash  (
-  txHash: string
-)   {
+export async function getTxsbyHash(txHash: string) {
   const txWithStatus = await rpc.get_transaction(txHash);
-  
+
   const status = txWithStatus?.tx_status.status;
   const blockHash = txWithStatus?.tx_status.block_hash;
-  console.log("The transaction status is",status);
-  console.log("The block hash for the transaction is",blockHash);
+  console.log("The transaction status is", status);
+  console.log("The block hash for the transaction is", blockHash);
 }
 ```
 
+Try the `getTxsbyHash` function in the Node.js REPL mode:
+
+<details><summary>CLICK ME</summary>
+<p>
+
+
+```shell {1,2,5,7}
+$ cd hellolumos
+$ node --experimental-repl-await
+Welcome to Node.js v14.0.0.
+Type ".help" for more information.
+> const { querytransactions } = require(".");
+The server is started.
+> await querytransactions.getTxsbyHash("0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e");
+The transaction status is committed
+The block hash for the transaction is 0x64623c86af1df458caac8a1433e50ae7ffc228aaa1975d60ed03dfe3ec4ca3fc
+```
+
+</p>
+</details>

@@ -34,7 +34,7 @@ Cell provider means the component that provides cells to the other functions. **
 
 ## Transaction Generator
 
-The CKB DApp mainly acts as a transaction generator that generates transactions with the support of **Common Scripts** corresponding to user requests.
+The CKB DApp mainly acts as a transaction generator that generates transactions with the support of **Common Scripts**.
 
 - **Common Scripts**: The common scripts component (`@ckb-lumos/common-scripts`) integrates known scripts on CKB. The scripts use a cell provider (the Lumos indexer or `transactionManager`) to collect cells and assemble transactions. Each script implements a specific  `TransactionSkeleton`  for building transactions that forms a unified workflow for transaction generation.
 

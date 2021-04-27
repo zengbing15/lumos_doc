@@ -19,7 +19,7 @@ dapps-on-ckb-workshop-code/
 ## Environment
 
 - OS: Ubuntu 20.04.2 <!--with KDE Plasma GUI. For more information about the installation of the KDE plasma GUI, see [How to Install a Desktop (GUI) on An Ubuntu Server](https://phoenixnap.com/kb/how-to-install-a-gui-on-ubuntu).-->
-- NodeJS  (v14.0.0)
+- Node.js (v14.0.0)
 - Yarn (1.22.5)
 - GCC and make
 - TypeScript version 3.8.3
@@ -36,45 +36,38 @@ The following prerequisites apply for this example:
 
 ### Step 1. Install Docker on Ubuntu and manage Docker as a non-root user.
 
-**Docker** must be installed for building and deploying smart contracts. 
+**Docker** must be installed for building and deploying smart contracts. For more information about Docker installation, see [Install Docker Engine](https://docs.docker.com/engine/install/).
 
-1. To install Docker engine on **Ubuntu**, see the Docker documentations of [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/).
-2. To manage Docker as a non-root user, see the Docker documentations of [Manage Docker as a non-root user](https://docs.docker.com/engine/install/linux-postinstall/).
+To manage Docker as a non-root user, see the Docker documentations of [Manage Docker as a non-root user](https://docs.docker.com/engine/install/linux-postinstall/).
 
 ### Step 2. Install Capsule. 
 
-**Capsule** is the tool for building and deploying scripts (contracts) on Nervos CKB. The Capsule tool can be installed from source or the pre-built installer.
+**Capsule** is the tool for building and deploying scripts (contracts) on Nervos CKB. 
 
-The following example installs Capsule on Ubuntu by using the [pre-built installer](https://github.com/nervosnetwork/capsule/releases/tag/v0.1.3) of Capsule. For more information about installation from source, see the [Readme](https://github.com/nervosnetwork/capsule) of Capsule.
-
-To install Capsule by using the pre-built installer:
-
-1. Download the pre-built installer of capsule_v0.1.3_x86_64-linux.tar.gz.
+1. Download the pre-built installer of <b>capsule_v0.1.3_x86_64-linux.tar.gz</b>.
 
    :::note
 
-   There are some versions of Capsule that are incompatible with the NFT integration code example. Version **0.1.3** is verified and recommended for walking through this NFT integration example.
+   <p>There are some versions of Capsule that are incompatible with the NFT integration code example. Version <b>0.1.3</b> is verified and recommended for walking through this NFT integration example.</p>
 
    :::
 
-   ```shell
+   ```bash
    $ curl -LO https://github.com/nervosnetwork/capsule/releases/download/v0.1.3/capsule_v0.1.3_x86_64-linux.tar.gz
    $ tar xzf capsule_v0.1.3_x86_64-linux.tar.gz
    ```
 
-2. Add ckb-cli and Capsule to the PATH environment variable.
-
-   To add the PATH variables, add the lines `export PATH=$PATH:/<path to the file>` of ckb-cli and Capsule to the end of the **~/.bashrc** file for Bash shell.
+2. Add <b>ckb-cli</b> and <b>Capsule</b> to the PATH environment variable.</p><p>To add the PATH variables, add the lines <code>export PATH=$PATH:/<var>path-to-the-file</var></code> (ckb-cli and Capsule) to the end of the <b>~/.bashrc</b> file for Bash shell.
 
    For example:
 
-   - ckb-cli: `export PATH=$PATH:/home/user1/ckb_v0.39.0_x86_64-unknown-linux-gnu`
+   - ckb-cli: <code>export PATH=$PATH:/home/user1/ckb_v0.39.0_x86_64-unknown-linux-gnu</code>
 
-     The folder /home/user1/ckb_v0.40.0_x86_64-unknown-linux-gnu contains the ckb tools installed in **step 1**.
+     The folder /home/user1/ckb_v0.40.0_x86_64-unknown-linux-gnu contains the ckb tools installed in <b>step 1</b>.
 
-   - Capsule: `export PATH=$PATH:/home/user1/capsule_v0.1.3_x86_64-linux`
+   - Capsule: <code>export PATH=$PATH:/home/user1/capsule_v0.1.3_x86_64-linux</code>
 
-     The folder /home/user1/capsule_v0.1.3_x86_64-linux contains the Capsule tools installed in **step 2**.
+     The folder /home/user1/capsule_v0.1.3_x86_64-linux contains the Capsule tools installed in <b>step 2</b>.
 
      :::note
 
@@ -84,23 +77,29 @@ To install Capsule by using the pre-built installer:
 
 3. Check the Capsule installation.
 
-   ```shell
-   $ capsule check
-   ```
 
-   <details><summary>Output</summary>
-   <p>
-   
-   ```
-   ------------------------------
-   docker  installed
-   ckb-cli installed v0.39.0
-   ------------------------------
-   ```
-   
-   </p>
-   
-   </details>
+```shell
+$ capsule check
+```
+
+<details><summary>Output</summary>
+<p>
+
+
+```
+------------------------------
+docker  installed
+ckb-cli installed v0.39.0
+------------------------------
+```
+
+</p>
+
+</details>
+
+<!--The Capsule tool can be installed from source or the pre-built installer.-->
+
+<!--The following example installs Capsule on Ubuntu by using the [pre-built installer](https://github.com/nervosnetwork/capsule/releases/tag/v0.1.3) of Capsule.-->
 
 ### Step 3. Download the example code.
 

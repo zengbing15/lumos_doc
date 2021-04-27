@@ -14,7 +14,13 @@ In CKB, an account is represented as a collection of [live cells](https://docs.n
 
 > A live cell refers to an unspent cell in CKB. It is similar to the concept of [UTXO](https://en.wikipedia.org/wiki/Unspent_transaction_output) in Bitcoin's terminology. The full set of live cells in CKB, is considered the full state of CKB at that particular time point. Any transaction on CKB consumes some live cells. The live cells become spent cells just after the transaction is committed. At the same time, some new live cells are created.
 
-A cell example:
+The following example is a cell from the queries by Lumos:
+
+:::note
+
+Lumos enriches the cell structure defined in [CKB RFC: Cell](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#42-cell) by adding some customized fields (`out_point`, `block_hash` and `block_number`) to simplify the DApp development. 
+
+:::
 
 ```typescript
 {
@@ -37,7 +43,7 @@ A cell example:
 }
 ```
 
-For more information about cells, see [CKB RFC: Cell](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#42-cell).<!--These live cells are locked by a [lock script](https://docs.nervos.org/docs/reference/script#lock-script) of the account.-->
+<!--These live cells are locked by a [lock script](https://docs.nervos.org/docs/reference/script#lock-script) of the account.-->
 
 ## CKB Capacity of an Account
 
@@ -147,7 +153,7 @@ The ownership of CKB capacity for a CKB account is established through private k
   0x03ff69140121e0f1b1533e451ead79849acae8cd4e1ad77feac2ec5186598a98a9
   ```
 
-- **Lock Script**: A lock script consists of three key parameters, including *code_hash*, *hash_type* and *args*. The ID of the account is the lock script args. For more information, see [CKB RFC: Data Structures](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0019-data-structures/0019-data-structures.md#Script).<br/>Example:<br/>
+- **Lock Script**: A lock script consists of three key parameters, including *code_hash*, *hash_type* and *args*. The unique identifier of an account, is the lock script used in the cells for this account. For more information, see [CKB RFC: Data Structures](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0019-data-structures/0019-data-structures.md#Script).<br/>Example:<br/>
 
   ```typescript
   {

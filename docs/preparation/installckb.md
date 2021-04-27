@@ -138,7 +138,7 @@ $ ./tippy-linux-x64/Tippy
     {label: 'macOS', value: 'macos'},
     {label: 'Windows 10', value: 'windows'},
   ]}>
-<TabItem value="ubuntu"><p>Download the <b>ckb_v0.<var>xx.x</var>_x86_64-unknown-linux-gnu.tar.gz</b> file and unzip the file.</p><p>The following commands download the CKB version 0.39.0 and unzip the file into the ckb_v0.39.0_x86_64-unknown-linux-gnu folder. All releases can be found on the <a title="Download" href="https://github.com/nervosnetwork/ckb/releases"><i class="feather icon-download"></i>CKB releases</a> page.</p>
+<TabItem value="ubuntu"><p>Download the <b>ckb_v0.<var>xx.x</var>_x86_64-unknown-linux-gnu.tar.gz</b> file and unzip the file.</p><p>The following commands download the 0.39.0 version and unzip the file into the ckb_v0.39.0_x86_64-unknown-linux-gnu folder. All releases can be found on the <a title="Download" href="https://github.com/nervosnetwork/ckb/releases"><i class="feather icon-download"></i>CKB releases</a> page.</p>
 
 ```bash
 $ curl -LO https://github.com/nervosnetwork/ckb/releases/download/v0.39.0/ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
@@ -148,7 +148,7 @@ $ tar xzf ckb_v0.39.0_x86_64-unknown-linux-gnu.tar.gz
 </TabItem><TabItem value="macos">
 
 <p>Download the <b>ckb_v0.<var>xx.x</var>_x86_64-unknown-apple-darwin.zip</b> file.</p>
-<p>The following command downloads the CKB version 0.39.0. All releases can be found on the <a title="Download" href="https://github.com/nervosnetwork/ckb/releases"><i class="feather icon-download"></i>CKB releases</a> page.</p>
+<p>The following command downloads the 0.39.0 version. All releases can be found on the <a title="Download" href="https://github.com/nervosnetwork/ckb/releases"><i class="feather icon-download"></i>CKB releases</a> page.</p>
 
 ```bash {1}
 $ curl -LO https://github.com/nervosnetwork/ckb/releases/download/v0.39.0/ckb_v0.39.0_x86_64-apple-darwin.zip

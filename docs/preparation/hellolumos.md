@@ -193,7 +193,8 @@ For more information about setting up the config manager, see [Set Up the Config
    ```javascript {1}
    > await buildTXs.commonTransfer([alice.ADDRESS], bob.ADDRESS,20000000000n,10000000n,alice.PRIVATE_KEY);
    [warn] ANYONE_CAN_PAY script info not found in config!
-   The transaction hash is 0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e
+   The transaction hash is 0x32a717c2af9160b800805796c68803213060df782834486c72cfbacbb0868d62
+   '0x32a717c2af9160b800805796c68803213060df782834486c72cfbacbb0868d62'
    ```
 
 4. Check the transaction status.
@@ -207,8 +208,9 @@ For more information about setting up the config manager, see [Set Up the Config
    For more information about getting transaction information by using Lumos, see [Get Transaction Status and Block Hash](../tutorials/querytransactions#get-transaction-status-and-block-hash). 
 
    ```javascript {1}
-   > await querytransactions.getTXbyHash("0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e");
+   > await querytransactions.getTxsbyHash("0x32a717c2af9160b800805796c68803213060df782834486c72cfbacbb0868d62");
    The transaction status is committed
+   The block hash for the transaction is 0xc21b34b009d5e355357eb55d9ee3456c6a90632434cff8dc515b2f0a207f854c
    ```
 
 5. Check the new balance of Bob.

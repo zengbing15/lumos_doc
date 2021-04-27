@@ -4,9 +4,12 @@ title: Set Up the Development Environment
 ---
 This guide will help you get your system set up for building DApps with Lumos. If you already have everything installed, read the other guides and walk through the examples to learn the usage of Lumos.
 
-## System Recommendations
+## System Requirements
 
-CKB DApps can be developed upon Lumos on all major platforms including Linux, Windows, and macOS. 
+- Operating System:  CKB DApps can be developed upon Lumos on all major platforms including Linux, Windows, and macOS.
+- JavaScript runtime environment: [Node.js](https://nodejs.org/en/download/) LTS Version (>=12)
+- Development tools to build native addons: GCC and make
+- JavaScript package manager: Yarn or npm
 
 ## Install Node.js
 
