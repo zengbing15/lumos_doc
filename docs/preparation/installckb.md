@@ -65,7 +65,7 @@ import TabItem from '@theme/TabItem';
 ```bash {1-3}
 $ chmod +x ./tippy-linux-x64/Tippy
 $ cd tippy-linux-x64
-$ ./tippy-linux-x64/Tippy
+$ ./Tippy
 ```
 
 <p>If a desktop GUI is installed, double click the Tippy file under the tippy-linux-x64 folder to run Tippy.</p>
@@ -83,13 +83,19 @@ $ ./tippy-linux-x64/Tippy
 
 <p>The CKB node starts running just after it is created. It can be stopped or restarted on the Tippy <b>Dashboard</b>. Details of blocks and transactions of the chain can be checked on the <b>Blocks</b> and <b>Transactions</b> pages that are visible when the node is started.</p>
 
+:::info
+
+The chain specific configuration files like dev.toml and data files are located in Home/.config/Tippy/chain-<var>number</var>.
+
+:::
+
 </TabItem><TabItem value="macos"><p><b>Step 1. Download Tippy.</b></p>
 
-<p><ul><li>Download the <b>Tippy.dmg</b> file. All versions of Tippy can be found on the <a href="https://github.com/nervosnetwork/tippy/releases"><i class="feather icon-download"></i>Tippy Releases</a> page.</li><li>Open the Tippy.dmg file and drag Tippy.app to /Applications folder.</li></ul></p>
+<p><ul><li>Download the <b>Tippy.dmg</b> file. All versions of Tippy can be found on the <a href="https://github.com/nervosnetwork/tippy/releases"><i class="feather icon-download"></i>Tippy Releases</a> page.</li><li>Open the Tippy.dmg file and drag <b>Tippy.app</b> to the Applications folder.</li></ul></p>
 
 <p><b>Step 2. Run Tippy.</b></p>
 
-<p>Click Tippy.app in /Applications to run Tippy.</p>
+<p>Click Tippy.app in the Applications folder to run Tippy.</p>
 
 <p>A web page on <a>http://localhost:5000/Home</a> will be opened in a browser after the execution or the double click. If the page is not opened, open the browser and type <a>http://localhost:5000/Home</a> in the address field to access the Tippy web UI.</p>
 
@@ -123,6 +129,12 @@ $ ./tippy-linux-x64/Tippy
 <p>To create a CKB node on the <b>other</b> networks, click <b>Create a customized chain</b> to choose the network in the <b>Chain Type</b> dropdown list of the <b>Create Chain</b> form.</p>
 
 <p>The CKB node starts running just after it is created. It can be stopped or restarted on the Dashboard. Details of blocks and transactions of the chain can be checked on the Blocks and Transaction pages.</p>
+
+:::info
+
+The chain specific configuration files and data files are located in C:/Users/<var>username</var>/AppData/Roaming/Tippy/chain-<var>number</var>. 
+
+:::
 
 </TabItem>
 </Tabs>

@@ -1,6 +1,6 @@
 ---
-id: operateoncells
-title: Operate on Cells
+id: querycapacity
+title: Query on CKB Capacity
 ---
 
 
@@ -123,7 +123,7 @@ The balance of the account is 522545522203302n
 
 ### Get the SUDT Balance of an Account
 
-The following example collects the cells for a lock script and a SUDT script, and then calculates the total amount of SUDT tokens for the account. 
+The following example collects the cells for a lock script and an SUDT script, and then calculates the total amount of SUDT tokens for the account. 
 
 Example:
 
@@ -150,7 +150,7 @@ For more information about SUDT and SUDT operations, see [Issue SUDT Tokens](../
 
 ### Find Cells for Sufficient Capacity
 
-The following example collects a set of cells that can provide sufficient CKB capacity.
+The following example collects a set of cells and the total amount of CKB capacity of the cells is sufficient for the required <var>amount</var>.
 
 Example:
 
@@ -196,7 +196,7 @@ Try the `findCellsforSufficientAmount` function in the Node.js REPL mode:
 <p>
 
 
-```shell {1,2,5,7-9,11,47}
+```shell {1,2,5,7-9,12,48}
 $ cd hellolumos
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
@@ -206,7 +206,8 @@ The server is started.
 > const bob = accounts.BOB;
 > const { parseAddress } = require("@ckb-lumos/helpers");
 > const script = parseAddress(bob.ADDRESS);
-//Take a look at the cells that Bob owns. Bob owns three cells, and each cell contain 200 CKB in the capacity field.
+//Bob owns three cells, and each cell contains 200 CKB in the capacity field.
+//This can be achieved by transferring 600 CKB from Alice to Bob in three times, and 200 CKB each time.
 > await querycells.findCellsbyLock(script);
 Find the cells by lock script:
 [

@@ -4,7 +4,29 @@ title: Query on Transactions
 ---
 > Transactions are the most fundamental entities for a DApp to interact with Nervos CKB. For more information about CKB transactions, see [Nervos Docs: Transaction](https://docs.nervos.org/docs/reference/transaction) and [CKB RFC: Data Structures](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0019-data-structures/0019-data-structures.md#transaction).
 
-Lumos provides functions to support querying on transactions for specific query options. For more information about query options, see [Query Options](../tutorials/querycells#query-options).
+Lumos provides functions to support querying on transactions for specific query options.
+
+## Query Options
+
+Lumos supports to query on transactions for the options including <var>lock</var>, <var>type</var>, <var>argsLen</var>, <var>fromBlock</var>, <var>toBlock</var>, <var>skip</var> and <var>order</var>.
+
+- <var>lock</var>: A lock script or a ScriptWrapper of a lock script.
+
+- <var>type</var>: A type script or a ScriptWrapper of a type script.
+
+  <!--The [ScriptWrapper](https://nervosnetwork.github.io/lumos/interfaces/base.scriptwrapper.html) interface combines <var>argsLen</var> and <var>ioType</var> with a lock or type script to enable fine-grained queries.-->
+
+  For more information about [ScriptWrapper](https://nervosnetwork.github.io/lumos/interfaces/base.scriptwrapper.html), see [Fine-grained Query for Transactions](../tutorials/querytransactions#fine-grained-query-for-transactions).
+
+- <var>argsLen</var>: The lock or type args length. The default value of <var>argsLen</var> is -1 for the query on a full slice of the args.
+
+- <var>fromBlock</var>: The starting block number that the query returns.
+
+- <var>toBlock</var>: The ending block number that the query returns.
+
+- <var>skip</var>: The number of transactions being skipped for the Lumos indexer.
+
+- <var>order</var>: The query result can be returned in order of block numbers. The default value is <var>asc</var> (ascending) for the returned result.
 
 ## Prerequisites
 
@@ -57,7 +79,7 @@ $ cd hellolumos
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
 Type ".help" for more information.
-> const { accounts, querytransactions }=require(".");
+> const { accounts, querytransactions } = require(".");
 The server is started.
 > const bob = accounts.BOB;
 > const { parseAddress } = require("@ckb-lumos/helpers");
@@ -314,15 +336,15 @@ export async function findTXsbyPrefix(lock: Script, argsLen: number) {
 }
 ```
 
-### Fine Grained Query for Transactions
+### Fine-grained Query for Transactions
 
-Fine grained query for transactions can be achieved by using [ScriptWrapper](https://nervosnetwork.github.io/lumos/interfaces/base.scriptwrapper.html) that combines <var>ioType</var>, <var>argsLen</var> with <var>script</var> (a lock script or a type script). 
+<!--Fine-grained query for transactions can be achieved by using [ScriptWrapper](https://nervosnetwork.github.io/lumos/interfaces/base.scriptwrapper.html) that combines <var>ioType</var>, <var>argsLen</var> with <var>script</var> (a lock script or a type script).--><!--The <var>ioType</var> option means the cell type that can be `input`, `output` or `both`.--><!--<var>argsLen</var> is the length of the script args in the ScriptWrapper. If <var>argsLen</var> is not specified, the <var>argsLen</var> config outside of the ScriptWrapper or the default value -1 will be used.-->
 
-The <var>ioType</var> option means the cell type that can be `input`, `output` or `both`. 
+Fine-grained query can query on transactions at the granularity of a cell type, a lock or type script, and the args length of the lock or type script by using [ScriptWrapper](https://nervosnetwork.github.io/lumos/interfaces/base.scriptwrapper.html).
 
-<var>argsLen</var> is the length of the script args in the ScriptWrapper. If <var>argsLen</var> is not specified, the <var>argsLen</var> config outside of the ScriptWrapper or the default value -1 will be used.
+The query gets the transactions containing the cells in <var>ioType</var> ( `input` or `output` or `both`) and with a specific lock or type script, and the args length of the script is <var>argsLen</var>. The <var>argsLen</var> config in the ScriptWrapper takes priority over the <var>argsLen</var> config outside of the ScriptWrapper. If <var>argsLen</var> is not specified in the ScriptWrapper, the <var>argsLen</var> config outside of the ScriptWrapper or the default value -1 will be used.
 
-The following example is the fine grained query on lock script for transactions.
+The following example is the fine-grained query for transactions on a ScriptWrapper that wraps a lock script, a lock args length and a cell type.
 
 Example:
 
@@ -368,6 +390,8 @@ The server is started.
 > const { parseAddress } = require("@ckb-lumos/helpers");
 > const script = parseAddress(bob.ADDRESS);
 > await querytransactions.finegrainedSearch(script, 20, "output");
+//The result shows the transactions that produced output cells with Bob's lock script.
+//Bob received CKB capacity in these transactions.
 Fine Grained Query
 {
   transaction: {
@@ -436,7 +460,7 @@ A transaction can be in one of the following status:
 - A **proposed** result means the transaction is in the pool, and can be committed in the next block.
 - A **committed** result means that the block involving the transaction has been mined and is officially on chain.
 
-The following example uses the `get_transaction` function of the `@ckb-lumos/rpc` package to get the transaction information for a specific transaction hash.
+The following example uses the [get_transaction](https://nervosnetwork.github.io/lumos/classes/rpc.rpc-2.html#get_transaction) function of the `@ckb-lumos/rpc` package to get the transaction information for a specific transaction hash.
 
 Example: 
 

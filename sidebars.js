@@ -3,7 +3,7 @@ module.exports = {
 	{type:'doc',id:'introduction/about'},
 	{Introduction: ['introduction/intro','introduction/lumoscomponents','introduction/workflow']},
 	{'Getting Started': ['preparation/setupsystem', 'preparation/installckb','preparation/createaccount','preparation/hellolumos']},
-	{'Guides': [{'Install and Configure Lumos':['tutorials/installlumos','tutorials/config','tutorials/indexer']},'tutorials/querycells','tutorials/operateoncells','tutorials/querytransactions','tutorials/buildtransactions','tutorials/manageaccounts']},
+	{'Guides': [{'Install and Configure Lumos':['tutorials/installlumos','tutorials/config','tutorials/indexer']},'tutorials/querycells','tutorials/querycapacity','tutorials/querytransactions','tutorials/buildtransactions','tutorials/manageaccounts']},
 	{'Examples': ['tutorials/integratenft']}
   ],
 };

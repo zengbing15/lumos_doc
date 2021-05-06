@@ -2,9 +2,9 @@
 id: hellolumos
 title: Hello Lumos
 ---
-The Hello Lumos example is designed as a simple "DApp" that implemented the most basic functions, such as the query functions, the common transfer function, the DAO operations etc., based on Lumos functionalities.
+The Hello Lumos example is designed as a simple "DApp" that implemented the most basic functions, such as the query functions, the common transfer function, the DAO operations, etc., based on Lumos functionalities.
 
-You can follow the steps in this guide to perform a common transfer with the function provided by the Hello Lumos "DApp".
+You can follow the steps in this guide to perform a common transfer with the functions provided by the Hello Lumos "DApp".
 
 The sections in the later guides, for example, [Query on Cells](../tutorials/querycells), [Query on Transactions](../tutorials/querytransactions), and [Assemble Transactions](../tutorials/buildtransactions), explain the usage of Lumos by using the code examples of Hello Lumos. The full code of the example can be found [here](https://github.com/xying21/hellolumos). 
 
@@ -107,7 +107,9 @@ Done in 52.70s.
 
 ### Update the account information in the account.ts file.
 
-Replace the value of `PRIVATE_KEY`, `ADDRESS`, `ARGS` and `LOCKHASH` for ALICE and BOB in the `accounts.ts` file with the account information you have prepared when creating accounts. You can retrieve the `ADDRESS`, `ARGS` and `LOCKHASH` for ALICE and BOB by executing the `ckb-cli account list` command. The private keys are stored in the alice file and the bob file during the creation of the accounts. For more information about creating accounts, see [Create Accounts](../preparation/createaccount).
+Replace the value of `PRIVATE_KEY`, `ADDRESS` and `ARGS` for ALICE and BOB in the `accounts.ts` file with the account information you have prepared when creating accounts.
+
+You can retrieve the `ADDRESS` and `ARGS` for ALICE and BOB by executing the `ckb-cli account list` command. The private keys are stored in the <var>alice</var> file and the <var>bob</var> file during the creation of the accounts. For more information about creating accounts, see [Create Accounts](../preparation/createaccount).
 
 :::note
 
@@ -150,7 +152,7 @@ Type ".help" for more information.
 
 
 ```javascript {1}
-> require(".");
+> const { accounts, querycells, buildTXs, querytransactions } = require(".");
 The server is started.
 ```
 
@@ -163,7 +165,6 @@ For more information about setting up the config manager, see [Set Up the Config
 1. Get the account information of Alice and Bob.
 
    ```javascript {1-7}
-   > const { accounts, querycells, buildTXs, querytransactions }=require(".");
    > const alice = accounts.ALICE;
    > const bob = accounts.BOB;
    > const { parseAddress } = require("@ckb-lumos/helpers");
@@ -176,7 +177,7 @@ For more information about setting up the config manager, see [Set Up the Config
      args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
    }
    ```
-
+   
 2. Check the balance for the accounts of Alice and Bob.
 
    ```javascript {1,3}

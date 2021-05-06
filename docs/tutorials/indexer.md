@@ -60,8 +60,8 @@ The following examples are verified on Ubuntu 20.04.2. Steps on the other platfo
 To install the RocksDB backed indexer as a dependency for a project:
 
 ```shell
-$ cd mydapp
-$ yarn add @ckb-lumos/indexer
+cd mydapp
+yarn add @ckb-lumos/indexer
 ```
 
 ### Step 2. Start the indexer.
@@ -88,7 +88,7 @@ Docker is required for setting up the SQL backed indexer. For more information a
 To create a postgreSQL instance: 
 
 ```shell
-$ docker run --name postgres -e POSTGRES_USER=user -e POSTGRES_DB=lumos -e POSTGRES_PASSWORD=mypassword -d -p 5432:5432 postgres
+docker run --name postgres -e POSTGRES_USER=user -e POSTGRES_DB=lumos -e POSTGRES_PASSWORD=mypassword -d -p 5432:5432 postgres
 ```
 
 - --name <var>postgres</var>: The container is named as <var>postgres</var>.
@@ -103,17 +103,17 @@ $ docker run --name postgres -e POSTGRES_USER=user -e POSTGRES_DB=lumos -e POSTG
 To install the SQL backed indexer as a dependency for a project:
 
 ```shell
-$ cd mydapp
-$ yarn add @ckb-lumos/sql-indexer@0.16.0 knex pg
+cd mydapp
+yarn add @ckb-lumos/sql-indexer@0.16.0 knex pg
 ```
 
 ### Step 3. Initialize the SQL database.
 
-To initialize the SQL database:
+Create the knexfile.js file under the <var>projectName</var>/node-modules/@ckb-lumos/packages/sql-indexer folder.
 
-```shell
-$ cd mydapp/node-modules/@ckb-lumos/packages/sql-indexer
-$ cat << EOF > knexfile.js
+Example:
+
+```javascript title="mydapp/node-modules/@ckb-lumos/packages/sql-indexer/knexfile.js"
 module.exports = {
   development: {
     client: 'postgresql',
@@ -131,13 +131,19 @@ module.exports = {
     }
   }
 };
-EOF
-$ npx knex migrate:up
+```
+
+Run the following command to migrate and update the local database:
+
+```
+npx knex migrate:up
 ```
 
 ### Step 4. Start the Indexer.
 
-To start the indexer:
+The Indexer URI, for example, http://127.0.0.1:8114 (the default RPC URL), is the <var>listen_address</var> configuration in the `ckb.toml` file of the CKB node.
+
+Example:
 
 ```typescript
 import { Indexer } from "@ckb-lumos/sql-indexer";

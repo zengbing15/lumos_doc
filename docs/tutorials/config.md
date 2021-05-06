@@ -63,55 +63,84 @@ export const CONFIG = getConfig();
 
 ## Set Up the Config Manager by Using a Local Config File
 
-Lumos reads the configurations from the config file that is specified by the <var>LUMOS_CONFIG_FILE</var> variable. 
+To boot the DApp on **DEV chain**, assign a local config file to the <var>LUMOS_CONFIG_FILE</var> variable. Lumos can read the configurations from the config file that is specified by the <var>LUMOS_CONFIG_FILE</var> variable. 
 
 If the <var>LUMOS_CONFIG_FILE</var> variable is unsigned, Lumos reads configurations from the `config.json` file in the current directory.
 
-To boot the DApp on **DEV chain**, the config file must contain the configurations of DEV chain.
+### Step 1. Generate the config.json file for the DEV chain.
 
-To set up the config manager by using a local config file:
+<Tabs
+  defaultValue="ubuntu"
+  values={[
+    {label: 'Ubuntu 20.04', value: 'ubuntu'},
+    {label: 'macOS', value: 'macos'},
+    {label: 'Windows 10', value: 'windows'},
+  ]}>
+<TabItem value="ubuntu"><p>Download the config generator tool, <a href="https://github.com/classicalliu/lumos-config-generator/releases/download/v0.1.1/lumos-config-generator-linux-amd64">lumos-config-generator-linux-amd64</a> for Linux platforms.</p>
 
-1. Prepare the `config.json` file with the configurations of **DEV chain** in the project root directory.
+```shell
+$ wget https://github.com/classicalliu/lumos-config-generator/releases/download/v0.1.1/lumos-config-generator-linux-amd64
+```
 
-   ```json
-   {
-     "PREFIX": "ckt",
-     "SCRIPTS": {
-       "SECP256K1_BLAKE160": {
-         "CODE_HASH": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
-         "HASH_TYPE": "type",
-         "TX_HASH": "0xace5ea83c478bb866edf122ff862085789158f5cbff155b7bb5f13058555b708",
-         "INDEX": "0x0",
-         "DEP_TYPE": "dep_group",
-         "SHORT_ID": 0
-       },
-       "SECP256K1_BLAKE160_MULTISIG": {
-         "CODE_HASH": "0x5c5069eb0857efc65e1bca0c07df34c31663b3622fd3876c876320fc9634e2a8",
-         "HASH_TYPE": "type",
-         "TX_HASH": "0xace5ea83c478bb866edf122ff862085789158f5cbff155b7bb5f13058555b708",
-         "INDEX": "0x1",
-         "DEP_TYPE": "dep_group",
-         "SHORT_ID": 1
-       },
-       "DAO": {
-         "CODE_HASH": "0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e",
-         "HASH_TYPE": "type",
-         "TX_HASH": "0xa563884b3686078ec7e7677a5f86449b15cf2693f3c1241766c6996f206cc541",
-         "INDEX": "0x2",
-         "DEP_TYPE": "code"
-       }
-     }
-   }
-   ```
+<p>Run the <b>lumos-config-generator-linux-amd64</b> file to generate the config.json file in the project root directory.</p>
 
-2. Set up the config manager in the DApp.
+:::note
 
-   Example:
+The CKB node must be running when executing the generator to generate the config file.
 
-   ```typescript title="hellolumos/src/index.ts"
-   import { env } from "process";
-   import { getConfig, initializeConfig } from "@ckb-lumos/config-manager";
-   env.LUMOS_CONFIG_FILE = env.LUMOS_CONFIG_FILE || "./config.json";
-   initializeConfig();
-   export const CONFIG = getConfig();
-   ```
+:::
+
+```shell
+$ ./lumos-config-generator-linux-amd64 ../hellolumos/config.json http://127.0.0.1:8114
+```
+
+<p>For more information, see the <a href="https://github.com/classicalliu/lumos-config-generator">Readme</a> of the generator.</p>
+
+</TabItem><TabItem value="macos"><p>Download the config generator tool, <a href="https://github.com/classicalliu/lumos-config-generator/releases/download/v0.1.1/lumos-config-generator-macos-amd64">lumos-config-generator-macos-amd64</a> for macOS platforms.</p>
+
+<p>Run the <b>lumos-config-generator-macos-amd64</b> file to generate the config.json file.</p>
+
+:::note
+
+The CKB node must be running on DEV chain when executing the generator to generate the config file.
+
+:::
+
+```shell
+$ ./lumos-config-generator ../hellolumos/config.json http://127.0.0.1:8114
+```
+
+<p>For more information, see the <a href="https://github.com/classicalliu/lumos-config-generator">Readme</a> of the generator.</p>
+
+</TabItem>
+
+<TabItem value="windows"><p>Download the config generator tool, <a href="https://github.com/classicalliu/lumos-config-generator/releases/download/v0.1.1/lumos-config-generator-windows-amd64.exe">lumos-config-generator-windows-amd64.exe</a> for Windows platforms.</p>
+
+<p>Run the <b>lumos-config-generator-linux-amd64</b> file to generate the config.json file.</p>
+
+:::note
+
+The CKB node must be running when executing the generator to generate the config file.
+
+:::
+
+```shell
+> lumos-config-generator-windows-amd64 C:\hellolumos\config.json http://127.0.0.1:8114
+```
+
+<p>For more information, see the <a href="https://github.com/classicalliu/lumos-config-generator">Readme</a> of the generator.</p>
+
+</TabItem>
+</Tabs>
+
+### **Step 2. Set up the config manager in the DApp.**
+
+Example:
+
+```typescript title="hellolumos/src/index.ts"
+import { env } from "process";
+import { getConfig, initializeConfig } from "@ckb-lumos/config-manager";
+env.LUMOS_CONFIG_FILE = env.LUMOS_CONFIG_FILE || "./config.json";
+initializeConfig();
+export const CONFIG = getConfig();
+```

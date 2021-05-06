@@ -5,11 +5,13 @@ title: Query on Cells
 
 > Cells are the primary state units in CKB and assets owned by users. A cell is the most basic structure that represents a single piece of data in Nervos. The data contained in a cell can take many forms, including CKBytes, tokens, code like JavaScript code, or even serialized data like JSON strings. For more information about the cell model, see [Nervos Docs: Cell](https://docs.nervos.org/docs/reference/cell) and [CKB RFC: CKB Cell](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#42-cell).
 
-The following example is a cell from the queries by Lumos:
+Querying on cells are the fundamental functions for a DApp to respond to user queries and transaction requests. Lumos provides functions for the queries on cells with specific query options.
+
+The following example is a cell retrieved by Lumos query functions:
 
 :::note
 
-Lumos enriches the cell structure defined in [CKB RFC: Cell](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#42-cell) by adding some customized fields (`out_point`, `block_hash` and `block_number`) to simplify the DApp development. 
+Lumos enriches the cell structure defined in [CKB RFC: Cell](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#42-cell) with some customized fields (`out_point`, `block_hash` and `block_number`). 
 
 :::
 
@@ -34,23 +36,31 @@ Lumos enriches the cell structure defined in [CKB RFC: Cell](https://github.com/
 }
 ```
 
-Querying on cells are the fundamental functions for a DApp to respond to user queries and transaction requests. Lumos provides <!--`indexer.collector` function and the `TransactionManager.collector` function, and the `CellCollector` class of the modules in the common scripts--> functions for the queries on cells with specific query options.
-
 <!--The [Indexer.collector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L242) function of the `@ckb-lumos/indexer` package can be used to collect cells by specific query options (<var>lock</var>, <var>type</var>, <var>argsLen</var>, <var>data</var>, <var>fromBlock</var>, <var>toBlock</var>, <var>skip</var>) and return the cells as the result.--><!--The [Indexer.collector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/sql-indexer/lib/index.js#L571) function of the `@ckb-lumos/sql-indexer` package can be used to collect cells by specific query options (<var>lock</var>, <var>type</var>, <var>argsLen</var>, <var>data</var>) and return the cells as the result.--><!--The [CellCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/indexer/lib/index.js#L324) class of the `@ckb-lumos/indexer` package supports query on cells with specific query options (<var>lock</var>, <var>type</var>, <var>argsLen</var>, <var>data</var>, <var>fromBlock</var>, <var>toBlock</var>, <var>order</var>, <var>skip</var>) and returns the cells as the result.--><!--The [CellCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/sql-indexer/lib/index.js#L622) class of the `@ckb-lumos/sql-indexer` package supports query on cells with specific query options (<var>lock</var>, <var>type</var>, <var>argsLen</var>, <var>data</var>, <var>fromBlock</var>, <var>toBlock</var>, <var>skip</var>, <var>order</var>) and returns the cells as the result.--><!--The CellCollector class of each common script (smart contract), for example, [anyone_can_pay.CellCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/anyone_can_pay.ts#L37), [dao.CellCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/dao.ts#L39), [locktime_pool.CellCollector](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/locktime_pool.ts#L57), also supports the query on cells with specific query options.--><!--For UTXO based blockchains, pending transactions require a certain amount of period before the transactions are accepted by the blockchain. During this period, new cells created by the pending transaction are not available for new transactions.<br/>The `@ckb-lumos/transaction-manager` package deals with this problem. The transaction manager wraps an indexer instance, and makes sure the cells that are created in pending transactions, are also exposed and available for new transactions.-->
 
 ## Query Options
 
 Lumos supports to query on cells for the options including <var>lock</var>, <var>type</var>, <var>argsLen</var>, <var>data</var>, <var>fromBlock</var>, <var>toBlock</var>, <var>skip</var> and <var>order</var>.
 
-- <var>lock</var>: A lock script.
-- <var>type</var>: A type script.
-- <var>argsLen</var>: The length of the args of a lock script or a type script. The default value of <var>argsLen</var> is -1 for the query on a full slice of the args.
+- <var>lock</var>: A lock script or a ScriptWrapper of a lock script.
+
+- <var>type</var>: A type script or a ScriptWrapper of a type script.
+
+  <!--The [ScriptWrapper](https://nervosnetwork.github.io/lumos/interfaces/base.scriptwrapper.html) interface combines <var>argsLen</var> and <var>ioType</var> with a lock or type script to enable fine-grained queries.-->
+
+  For more information about [ScriptWrapper](https://nervosnetwork.github.io/lumos/interfaces/base.scriptwrapper.html), see [Fine-grained Query for Cells](../tutorials/querycells#fine-grained-query-for-cells).
+
+- <var>argsLen</var>: The lock or type args length. The default value of <var>argsLen</var> is -1 for the query on a full slice of the args.
 
 - <var>data</var>: The cell data field.
+
 - <var>fromBlock</var>: The starting block number that the query returns.
+
 - <var>toBlock</var>: The ending block number that the query returns.
+
 - <var>skip</var>: The number of cells being skipped for the Lumos indexer.
-- <var>order</var>: The query result can be returned in the order of block numbers. The default order is "asc" for the returned result.
+
+- <var>order</var>: The query result can be returned in order of block numbers. The default value is <var>asc</var> (ascending) for the returned result.
 
 ## Prerequisites
 
@@ -87,7 +97,7 @@ export const findCellsbyLock = async (lockScript: Script): Promise<Cell[]> => {
 };
 ```
 
-The `INDEXER` of the example is a RockDB backed indexer that is initialized and started in the hellolumos/src/index.ts file. For more information about setting up the Lumos indexer, see [Set Up the RocksDB Backed Indexer](../tutorials/indexer#set-up-the-rocksdb-backed-indexer).
+The `INDEXER` of the example is a RockDB backed indexer that is initialized and started in the <var>hellolumos/src/index.ts</var> file. For more information about setting up the Lumos indexer, see [Set Up the RocksDB Backed Indexer](../tutorials/indexer#set-up-the-rocksdb-backed-indexer).
 
 Try the `findCellsbyLock` function in the Node.js REPL mode:
 
@@ -198,7 +208,7 @@ The server is started.
  hash_type: template.HASH_TYPE,
  args: "0x",
  };
-> await querycells.findCellsbyLockandType(script,typescript);
+> await querycells.findCellsbyLockandType(script, typescript);
 Find the cells by Lock and Type script
 [
   {
@@ -407,13 +417,13 @@ The server is started.
 
 ### Prefix Search on <var>args</var>
 
-To enable the prefix search on the args of a lock script or a type script, <var>argsLen</var> can be assigned with a value other than the default value -1.
+To enable the prefix search on the args of a lock script or a type script, <var>argsLen</var> can be assigned with a value other than the default value **-1**. The default value is for the query on a full slice of the args of a lock script.
 
 The lock script args length is **20** in normal scenarios and **28** in the multisig scenario. When the length is not certain, the <var>argsLen</var> parameter can be set as `any`. 
 
 :::info
 
-It is recommended to specify an explicit length for the <var>argsLen</var> parameter in a prefix search, that has better performance than using `any` for <var>argsLen</var>.
+It is recommended to specify an explicit length for the <var>argsLen</var> parameter in a prefix search, that has better performance than using `any`.
 
 :::
 
@@ -437,30 +447,102 @@ export async function findCellsbyPrefix(
 }
 ```
 
-### Fine Grained Query for Cells
+Try the `findCellsbyPrefix` function in the Node.js REPL mode: 
 
-Fine grained query for cells can be achieved by using [ScriptWrapper](https://nervosnetwork.github.io/lumos/interfaces/base.scriptwrapper.html) that combines <var>ioType</var>, <var>argsLen</var> with <var>script</var> (a lock script or a type script). 
 
-The <var>ioType</var> option means the cell type that can be `input`, `output` or `both`. 
+<details><summary>CLICK ME</summary>
+<p>
 
-<var>argsLen</var> is the length of the script args in the ScriptWrapper. If <var>argsLen</var> is not specified, the <var>argsLen</var> config outside of the ScriptWrapper or the default value -1 will be used.
 
-The following example is the fine grained query on lock script.
+
+```shell {1,2,5,8-13}
+$ cd hellolumos
+$ node --experimental-repl-await
+Welcome to Node.js v14.0.0.
+Type ".help" for more information.
+> const { querycells } = require(".");
+The server is started.
+//Truncate the lock args of Bob's account by removing the last 11 bytes and run prefix search on the truncated lock args.
+> const script = {
+ code_hash: "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+ hash_type: "type",
+ args: "0xecbe30bcf5c6b2f2d8",
+ };
+> await querycells.findCellsbyPrefix(script, 20);
+Find Cells by prefix of args
+[
+  {
+    cell_output: { capacity: '0x4a817c800', lock: [Object], type: undefined },
+    out_point: {
+      tx_hash: '0x32a717c2af9160b800805796c68803213060df782834486c72cfbacbb0868d62',
+      index: '0x0'
+    },
+    block_hash: '0xc21b34b009d5e355357eb55d9ee3456c6a90632434cff8dc515b2f0a207f854c',
+    block_number: '0x15',
+    data: '0x'
+  },
+  {
+    cell_output: { capacity: '0x4a817c800', lock: [Object], type: undefined },
+    out_point: {
+      tx_hash: '0x144ae79bc6064ae99e51b7105f4b61328dd4293d68d132b7a04d86409952ae2e',
+      index: '0x0'
+    },
+    block_hash: '0x2d70e178be2447f784d9c8c1c52630d10b3b3b23575896e61ff15983a7e5ba59',
+    block_number: '0xc9',
+    data: '0x'
+  },
+  {
+    cell_output: { capacity: '0x4a817c800', lock: [Object], type: undefined },
+    out_point: {
+      tx_hash: '0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e',
+      index: '0x0'
+    },
+    block_hash: '0x64623c86af1df458caac8a1433e50ae7ffc228aaa1975d60ed03dfe3ec4ca3fc',
+    block_number: '0xea',
+    data: '0x'
+  },
+  {
+    cell_output: { capacity: '0x4a817c800', lock: [Object], type: undefined },
+    out_point: {
+      tx_hash: '0x9a501e405653219aa8022132158820231aa5ecaff91c970b18d10fbad5ccc178',
+      index: '0x0'
+    },
+    block_hash: '0x988d92ae87a58126c6213642d363cc8102a3016ab50f486dfa44d6b03ab48e51',
+    block_number: '0xf2',
+    data: '0x'
+  }
+]
+```
+
+</p>
+</details>
+
+### Fine-grained Query for Cells
+
+Fine-grained query can query on cells at the granularity of a lock or type script, and the args length of the lock or type script by using [ScriptWrapper](https://nervosnetwork.github.io/lumos/interfaces/base.scriptwrapper.html). 
+
+The query gets the cells with a specific lock or type script, and specific args length of the script. The  <var>argsLen</var> config in the ScriptWrapper takes priority over the <var>argsLen</var> config outside of the ScriptWrapper. If <var>argsLen</var> is not specified in the ScriptWrapper, the <var>argsLen</var> config outside of the ScriptWrapper or the default value -1 will be used.
+
+:::note
+
+<var>ioType</var> is inapplicable in the fine-grained query for cells.
+
+:::
+
+The following example is the fine-grained query for cells on a ScriptWrapper that wraps a lock script and a lock args length. 
 
 Example:
 
-```typescript title="hellolumos/src/querycells.ts/finegrainedSearch()" {9-13}
+```typescript title="hellolumos/src/querycells.ts/finegrainedSearch()" {8-11}
 import { INDEXER } from "./index";
 import { Cell, Script, ScriptWrapper } from "@ckb-lumos/base";
 
 export async function finegrainedSearch(
   lockScript: Script,
   argslen: number,
-  iotype: "output" | "input" | "both"
 ): Promise<Cell[]> {
   const lock: ScriptWrapper = {
     script: lockScript,
-    ioType: iotype,
     argsLen: argslen,
   };
   const collector = INDEXER.collector({ lock: lock });
@@ -487,14 +569,15 @@ Welcome to Node.js v14.0.0.
 Type ".help" for more information.
 > const { accounts, querycells } = require(".");
 The server is started.
-> const alice = accounts.ALICE;
+> const bob = accounts.BOB;
 > const script = {
  code_hash: "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
  hash_type: "type",
- args: alice.ARGS,
+ args: bob.ARGS,
  };
 > const argslen = 20;
 > await querycells.finegrainedSearch(script, argslen);
+//The result shows the cells with Bob's lock script and the lock args length is 20 bytes.
 Fine-Grained Query:
 [
   {
@@ -569,7 +652,7 @@ Try the `findCellsandOrder` function in Node.js REPL mode:
 The following example gets the live cells for Alice and returns the result in descending order of block numbers.
 
 
-```shell {1,2,5,7-13}
+```shell {1,2,5,7-10}
 $ cd hellolumos
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
@@ -579,7 +662,7 @@ The server is started.
 > const alice = accounts.ALICE;
 > const { parseAddress } = require("@ckb-lumos/helpers");
 > const script = parseAddress(alice.ADDRESS);
-> await querycells.findCellsandOrder(script,"desc");
+> await querycells.findCellsandOrder(script, "desc");
 Find Cells in desc order of block numbers:
 [
   {
@@ -622,9 +705,11 @@ Find Cells in desc order of block numbers:
 
 Lumos provides the `locktimepool` module for the cells with a lock period. Now the `locktimepool` module supports DAO withdrawn cells and Multisig cells. 
 
-The following example collects all the **withdrawn** cells and **Multisig** cells that with a lock period of an account and returns the collected cells as the result. 
+The following example collects all the **withdrawn** cells and **Multisig** cells that with a lock period for an account and returns the collected cells as the result. 
 
-```typescript title="hellolumos/src/querycells.ts/locktimePoolCells"
+Example:
+
+```typescript title="hellolumos/src/querycells.ts/locktimePoolCells" {4}
 import { locktimePool } from "@ckb-lumos/common-scripts";
 
 export async function locktimePoolCells(frominfo: string): Promise<Cell[]> {

@@ -14,11 +14,11 @@ In CKB, an account is represented as a collection of [live cells](https://docs.n
 
 > A live cell refers to an unspent cell in CKB. It is similar to the concept of [UTXO](https://en.wikipedia.org/wiki/Unspent_transaction_output) in Bitcoin's terminology. The full set of live cells in CKB, is considered the full state of CKB at that particular time point. Any transaction on CKB consumes some live cells. The live cells become spent cells just after the transaction is committed. At the same time, some new live cells are created.
 
-The following example is a cell from the queries by Lumos:
+The following example is a cell retrieved by Lumos query functions:
 
 :::note
 
-Lumos enriches the cell structure defined in [CKB RFC: Cell](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#42-cell) by adding some customized fields (`out_point`, `block_hash` and `block_number`) to simplify the DApp development. 
+Lumos enriches the cell structure defined in [CKB RFC: Cell](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#42-cell) with some customized fields (`out_point`, `block_hash` and `block_number`). 
 
 :::
 
@@ -170,9 +170,9 @@ The ownership of CKB capacity for a CKB account is established through private k
   ckb1qyqfzx8hvqxnj4cf6zxugktfvlvvj2vc9udqntmwxh
   ```
   
-  The address with the "**ckb**" prefix is for CKB mainnet. The address with the "**ckt**" prefix is for both testnet and DEV chain.
+  The address with the "**ckb**" prefix is for CKB Mainnet. The address with the "**ckt**" prefix is for both Testnet and DEV chain.
 
-The following figure shows the relationship between private key, public key, Lock Script, and CKB address.
+The following figure shows the relationship between private key, public key, lock script, and CKB address.
 
 <img src={useBaseUrl("img/ownership.png")}/>
 
@@ -186,11 +186,11 @@ The following prerequisites apply for creating the accounts:
 
 ## Create the Accounts by Using ckb-cli
 
-> **ckb-cli** is included in the CKB pre-built installer package. It is a command line tool that provides the functions of rpc requests, creating CKB addresses, managing wallets, sending transactions, and depositing to Nervos DAO etc. These functions can help with debugging and testing during the development process. For more information, see [ckb-cli Sub Commands](https://github.com/nervosnetwork/ckb-cli/wiki/Sub-Commands).
+> **ckb-cli** is included in the CKB pre-built installer package. It is a command line tool that provides the functions of RPC requests, creating CKB addresses, managing wallets, sending transactions, and depositing to Nervos DAO etc. These functions can help with debugging and testing during the development process. For more information, see [ckb-cli Sub Commands](https://github.com/nervosnetwork/ckb-cli/wiki/Sub-Commands).
 
 ### Step 1. Download the CKB pre-built installer package.
 
-The example in this guide downloads the CKB version 0.39.0. All releases can be found on the <a title="Download" href="https://github.com/nervosnetwork/ckb/releases"><i class="feather icon-download"></i>CKB releases</a> page. If the package is already downloaded, go to step 2 directly.
+This guide uses the CKB 0.39.0 version. All releases can be found on the <a title="Download" href="https://github.com/nervosnetwork/ckb/releases"><i class="feather icon-download"></i>CKB releases</a> page. If the package is already downloaded, go to step 2 directly.
 
 For more information, see [Download the CKB Pre-built Installer Package](../preparation/installckb#step-1-download-the-ckb-pre-built-installer-package).
 
@@ -293,21 +293,11 @@ message: "Success exported account as extended privkey to: \"bob\", please use t
 
 ## Get Two Accounts Provided by Genesis Issued Cells
 
-DEV chain provides two accounts from genesis issued cells. Each account has a considerable amount of capacity that can be used  for development and testing without extra configuration or mining settings. 
+There is another option to get two accounts. DEV chain provides the two accounts from genesis issued cells. Each account has a considerable amount of capacity that can be used  for development and testing without extra configuration or mining settings. 
 
 ### Step 1. Get the private key, lock args from the specs/dev.toml file.
 
 The **dev.toml** file is generated when the CKB node is initialized on DEV chain. 
-
-:::info
-
-For the CKB node installed by Tippy:
-
-- On Windows: The file is located in C:/Users/<var>username</var>/AppData/Roaming/Tippy/chain-<var>number</var>/specs. 
-
-- On Ubuntu: The file is located in Home/.config/Tippy/chain-<var>number</var>/specs.
-
-:::
 
 ```toml {1,5,8,12}
 # issue for random generated private key: d00c06bfd800d27397002dca6fb0993d5ba6399b4238b2f29ee9deb97593d2bc
@@ -327,9 +317,11 @@ lock.hash_type = "type"
 
 ### Step 2. Generate the addresses for the two accounts.
 
-1. Save `d00c06bfd800d27397002dca6fb0993d5ba6399b4238b2f29ee9deb97593d2bc` to the genesis1 file.
+The addresses of the two accounts can be generated by importing the private keys by using the ckb-cli tool.
 
-2. Save `63d86723e08f0f813a36ce6aa123bb2289d90680ae1e99d4de8cdb334553f24d` to the genesis2 file.
+1. Save `d00c06bfd800d27397002dca6fb0993d5ba6399b4238b2f29ee9deb97593d2bc` to the <var>genesis1</var> file.
+
+2. Save `63d86723e08f0f813a36ce6aa123bb2289d90680ae1e99d4de8cdb334553f24d` to the <var>genesis2</var> file.
 
 3. Generate the addresses for the two accounts.
 
