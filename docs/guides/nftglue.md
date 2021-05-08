@@ -29,7 +29,7 @@ dapps-on-ckb-workshop-code/
 
 The following prerequisites apply for this example:
 
-- The CKB node is running on DEV chain. For more information, see [Install a CKB Node](../preparation/installckb).
+- The development environment is set up. For more information, see [Set Up the Development Environment](../preparation/setupsystem).
 - The account to deploy the NFT script owns enough CKB capacity (33,613.0 CKB). For more information about creating accounts, see [Create Accounts](../preparation/createaccount).
 
 ## Deploy the NFT Script on DEV Chain
@@ -264,7 +264,7 @@ To deploy the NFT script:
    </details>
 
 
-## Operate on NFT Tokens by Using Lumos
+## Perform NFT Operations by Using Lumos
 
 After the NFT script is deployed on DEV chain, perform the following steps to interact with and operate on NFT tokens by using Lumos.
 
@@ -292,11 +292,11 @@ Done in 13.02s.
 
 ### Step 2. Update the config.json file.
 
-To update the config.json file, add the NFT configuration for the NFT script under the "DAO" script.
+Add the NFT configuration for the NFT script under the "DAO" script.
 
-`CODE_HASH` is the `data_hash` from the deployment recipe.
+- `CODE_HASH` is the `data_hash` from the deployment recipe.
 
-`TX_HASH` is the `tx_hash` from the deployment recipe.
+- `TX_HASH` is the `tx_hash` from the deployment recipe.
 
 ```json title="nft-glue/config.json"
 	,
@@ -320,12 +320,12 @@ $ tsc
 
 The `index.ts` file under the nft-glue project includes the following operations:
 
-- [Generate NFT tokens](../tutorials/integratenft#generate-nft-tokens).
-- [List all live NFT cells](../tutorials/integratenft#list-all-live-nft-cells).
-- [Transfer NFT tokens from one user to another user](../tutorials/integratenft#transfer-nft-tokens-from-one-user-to-another-user).
-- [Sign and seal the transaction](../tutorials/integratenft#sign-and-seal-the-transaction).
+- [Generate NFT tokens](../guides/integratenft#generate-nft-tokens).
+- [List all live NFT cells](../guides/integratenft#list-all-live-nft-cells).
+- [Transfer NFT tokens from one user to another user](../guides/integratenft#transfer-nft-tokens-from-one-user-to-another-user).
+- [Sign and seal the transaction](../guides/integratenft#sign-and-seal-the-transaction).
 
-Let us check out how the nft-glue project implements these operations by using Lumos. The [execution](../tutorials/integratenft#run-the-functions-in-the-nodejs-repl-mode) of these operations can be found at the end of this guide.
+Let us check out how the nft-glue project implements these operations by using Lumos. The [execution](../guides/integratenft#run-the-functions-in-the-nodejs-repl-mode) of these operations can be found at the end of this guide.
 
 #### **Generate NFT tokens**
 
@@ -455,11 +455,11 @@ skeleton = await common.payFee(skeleton, [fromAddress], FEE);
 
 :::info
 
-The [common](https://github.com/nervosnetwork/lumos/blob/develop/packages/common-scripts/src/common.ts#L414) module, [locktime_pool](https://github.com/nervosnetwork/lumos/blob/develop/packages/common-scripts/src/locktime_pool.ts) and [sudt](https://github.com/nervosnetwork/lumos/blob/develop/packages/common-scripts/src/sudt.ts#L136) module of the common-scripts package can treat multiple different wallets as a single unit. The example only gathers capacities from one single wallet to demonstrate the integrations for NFT. 
+The <b>common</b> module, <b>locktime_pool</b> and <b>sudt</b> module of the [common-scripts](https://nervosnetwork.github.io/lumos/modules/common_scripts.html) package can treat multiple different wallets as a single unit. The example only gathers capacities from one single wallet to demonstrate the integrations for NFT. 
 
 :::
 
-The [common.prepareSigningEntries](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L434) function generates messages that are required in transaction signing phase.
+The [common.prepareSigningEntries](https://nervosnetwork.github.io/lumos/modules/common_scripts.html#preparesigningentries-16) function generates messages that are required in transaction signing phase.
 
 ```typescript title="nft-glue/src/index.ts"
 skeleton = common.prepareSigningEntries(skeleton, { config: CONFIG });
@@ -475,7 +475,7 @@ For simplicity, the function gathers all cells in a single array. The number of 
 export async function listNftTokens(
   governanceLock: Script
 ): Promise<Array<Cell>> {
-    const collector = INDEXER.collector({
+  const collector = INDEXER.collector({
     type: buildNftTypeScript(governanceLock),
     data: "any",
   });
@@ -551,7 +551,7 @@ skeleton = await common.payFee(
 );
 ```
 
-The [common.prepareSigningEntries](https://github.com/nervosnetwork/lumos/blob/c3bd18e6baac9c283995f25d226a689970dc9537/packages/common-scripts/src/common.ts#L434) function generates messages that are required in transaction signing phase.
+The [common.prepareSigningEntries](https://nervosnetwork.github.io/lumos/modules/common_scripts.html#preparesigningentries-16) function generates messages that are required in transaction signing phase.
 
 ```typescript title="nft-glue/src/index.ts"
  skeleton = common.prepareSigningEntries(skeleton, { config: CONFIG });

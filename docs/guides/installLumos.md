@@ -2,7 +2,7 @@
 id: installlumos
 title: Install Lumos Packages
 ---
-This guide introduces how to add necessary  [Lumos packages(components)](../introduction/lumoscomponents) to a Node.js project as dependencies. <!--For the projects that have already listed Lumos packages as dependencies, just run `yarn install` in the projects directly to install the packages.--> 
+This guide introduces how to add necessary  [Lumos Components (Packages)](../introduction/lumoscomponents) to a Node.js project as dependencies. <!--For the projects that have already listed Lumos packages as dependencies, just run `yarn install` in the projects directly to install the packages.--> 
 
 ## Prerequisites
 

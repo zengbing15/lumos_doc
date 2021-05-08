@@ -14,9 +14,8 @@ import useBaseUrl from "@docusaurus/useBaseUrl";
 
 The following prerequisites apply for the examples in this guide:
 
-- The development environment is set up. For more information, see [Set Up the Development Environment](http://localhost:3000/lumos_doc/docs/preparation/setupsystem).
-- The CKB node is installed and started on DEV chain. For more information, see [Install a CKB Node](http://localhost:3000/lumos_doc/docs/preparation/installckb).
-- The Lumos packages (`@ckb-lumos/base`, `@ckb-lumos/indexer`, `@ckb-lumos/helpers`, `@ckb-lumos/config-manager`, `@ckb-lumos/hd`, `@ckb-lumos/hd-cache`) are installed.
+- The development environment is set up. For more information, see [Set Up the Development Environment](../preparation/setupsystem).
+- The Lumos packages are installed. For more information, see [Install Lumos Packages](../guides/installlumos).
 
 ## Environment
 

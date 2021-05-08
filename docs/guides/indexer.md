@@ -143,7 +143,7 @@ npx knex migrate:up
 
 The Indexer URI, for example, http://127.0.0.1:8114 (the default RPC URL), is the <var>listen_address</var> configuration in the `ckb.toml` file of the CKB node.
 
-Example:
+To initialize and start the SQL backed indexer:
 
 ```typescript
 import { Indexer } from "@ckb-lumos/sql-indexer";

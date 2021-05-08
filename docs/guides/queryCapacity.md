@@ -10,8 +10,7 @@ title: Query on CKB Capacity
 The following prerequisites apply for the examples of this guide:
 
 - The development environment is set up. For more information, see [Set Up the Development Environment](http://localhost:3000/lumos_doc/docs/preparation/setupsystem).
-- The CKB node is installed and started. For more information, see [Install a CKB Node](http://localhost:3000/lumos_doc/docs/preparation/installckb).
-- The Lumos packages (`@ckb-lumos/base`, `@ckb-lumos/indexer`, `@ckb-lumos/helpers`) are installed.
+- The Lumos packages are installed. For more information, see [Install Lumos Packages](../guides/installlumos).
 
 ## Environment
 
@@ -43,13 +42,14 @@ Try the `getMinimalCellCapacity` function in the Node.js REPL mode:
 <details><summary>CLICK ME</summary>
 <p>
 
-```shell {1,2,5,7-25}
+```shell {1,2,5,8-26,29-51}
 $ cd hellolumos
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
 Type ".help" for more information.
 > const { querycells } = require(".");
 The server is started.
+//You can use the following cell data directly.
 > const cell = {
   cell_output: {
     capacity: '0x1247656167b4',
@@ -70,13 +70,38 @@ The server is started.
 }
 > await querycells.getMinimalCellCapacity(cell);
 The minimal cell capacity is 6100000000n
+//You can use the following cell data directly.
+> const DAOCell = {
+  cell_output: {
+    capacity: '0x4a817c800',
+    lock: {
+      code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+      hash_type: 'type',
+      args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
+    },
+    type: {
+      code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
+      hash_type: 'type',
+      args: '0x'
+    }
+  },
+  out_point: {
+    tx_hash: '0x58f49e100a00742396fa66bcd2541fadcae549b56e75350efaa166d5d5bfacdc',
+    index: '0x0'
+  },
+  block_hash: '0xc9a0077484dbcfa990e0d12b94d137723aec6a9f3ae44e8ed05e19084a076549',
+  block_number: '0x59',
+  data: '0x0000000000000000'
+};
+> await querycells.getMinimalCellCapacity(DAOCell);
+The minimal cell capacity is 10200000000n
 ```
 </p>
 </details>
 
 ### Get the Balance of an Account
 
-The balance of an account means the total CKB capacity of the account. For more information, see [CKB Capacity of an Account](../preparation/createaccount#ckb-capacity-of-an-account).
+The balance of an account means the total CKB capacity of the account. For more information, see [CKB Capacity of an Account](../reference/ckbaccount#ckb-capacity-of-an-account).
 
 The following example gathers the live (unspent) cells for a specific lock script (the lock script is the ID of an account) and then calculates the total capacity as the balance of the account. 
 
@@ -146,7 +171,7 @@ export async function getSUDTBalance(lock: Script, sudtType: Script) {
 }
 ```
 
-For more information about SUDT and SUDT operations, see [Issue SUDT Tokens](../tutorials/buildtransactions#issue-sudt-tokens) and [Transfer SUDT Tokens](../tutorials/buildtransactions#transfer-sudt-tokens).
+For more information about SUDT and SUDT operations, see [Issue SUDT Tokens](../guides/buildtransactions#issue-sudt-tokens) and [Transfer SUDT Tokens](../guides/buildtransactions#transfer-sudt-tokens).
 
 ### Find Cells for Sufficient Capacity
 
@@ -214,31 +239,31 @@ Find the cells by lock script:
   {
     cell_output: { capacity: '0x4a817c800', lock: [Object], type: undefined },
     out_point: {
-      tx_hash: '0x32a717c2af9160b800805796c68803213060df782834486c72cfbacbb0868d62',
+      tx_hash: '0x22cc789bdaa8e021caa303cf20cfa4063b46a17abd62b31aa2cf712844f984cb',
       index: '0x0'
     },
-    block_hash: '0xc21b34b009d5e355357eb55d9ee3456c6a90632434cff8dc515b2f0a207f854c',
-    block_number: '0x15',
+    block_hash: '0x6d60ae47167a78fbcf254c81b1d6356aceef2feeb4e039fed693c274a83faac1',
+    block_number: '0xf',
     data: '0x'
   },
   {
     cell_output: { capacity: '0x4a817c800', lock: [Object], type: undefined },
     out_point: {
-      tx_hash: '0x144ae79bc6064ae99e51b7105f4b61328dd4293d68d132b7a04d86409952ae2e',
+      tx_hash: '0x46e6e4fd23263aa8983f73962faca0bd9d40463c2e42bbcd190249e3ec6bd5f8',
       index: '0x0'
     },
-    block_hash: '0x2d70e178be2447f784d9c8c1c52630d10b3b3b23575896e61ff15983a7e5ba59',
-    block_number: '0xc9',
+    block_hash: '0x63539ac9bc533bfb16e00cfaf736ebc041442fd3c3c6e8796b53cbdec0fb7af4',
+    block_number: '0x1b',
     data: '0x'
   },
   {
     cell_output: { capacity: '0x4a817c800', lock: [Object], type: undefined },
     out_point: {
-      tx_hash: '0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e',
+      tx_hash: '0x1f279591dca01710f1e5f71480ffe9039887212ade07b025b84a3d0b19f9a2bb',
       index: '0x0'
     },
-    block_hash: '0x64623c86af1df458caac8a1433e50ae7ffc228aaa1975d60ed03dfe3ec4ca3fc',
-    block_number: '0xea',
+    block_hash: '0x29acfca00bb07d94791c0f14685d40820ac198b771c894e45755bb55018fa6ea',
+    block_number: '0x21',
     data: '0x'
   }
 ]
@@ -249,21 +274,21 @@ Find the cells by lock script:
   {
     cell_output: { capacity: '0x4a817c800', lock: [Object], type: undefined },
     out_point: {
-      tx_hash: '0x32a717c2af9160b800805796c68803213060df782834486c72cfbacbb0868d62',
+      tx_hash: '0x22cc789bdaa8e021caa303cf20cfa4063b46a17abd62b31aa2cf712844f984cb',
       index: '0x0'
     },
-    block_hash: '0xc21b34b009d5e355357eb55d9ee3456c6a90632434cff8dc515b2f0a207f854c',
-    block_number: '0x15',
+    block_hash: '0x6d60ae47167a78fbcf254c81b1d6356aceef2feeb4e039fed693c274a83faac1',
+    block_number: '0xf',
     data: '0x'
   },
   {
     cell_output: { capacity: '0x4a817c800', lock: [Object], type: undefined },
     out_point: {
-      tx_hash: '0x144ae79bc6064ae99e51b7105f4b61328dd4293d68d132b7a04d86409952ae2e',
+      tx_hash: '0x46e6e4fd23263aa8983f73962faca0bd9d40463c2e42bbcd190249e3ec6bd5f8',
       index: '0x0'
     },
-    block_hash: '0x2d70e178be2447f784d9c8c1c52630d10b3b3b23575896e61ff15983a7e5ba59',
-    block_number: '0xc9',
+    block_hash: '0x63539ac9bc533bfb16e00cfaf736ebc041442fd3c3c6e8796b53cbdec0fb7af4',
+    block_number: '0x1b',
     data: '0x'
   }
 ]

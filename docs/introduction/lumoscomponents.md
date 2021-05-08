@@ -1,6 +1,6 @@
 ---
 id: lumoscomponents
-title: Lumos Components
+title: Lumos Components (Packages)
 ---
 Lumos provides a set of fully comprehensive features and utilities with the Lumos components (packages)<!--as shown in the figure of the architecture-->. Some components, such as the **Lumos indexer** that supports a DApp to query cells, the **common scripts** component that enables the DApp to assemble transactions, and the **RPC** component that is responsible for the communication with the CKB network, form the fundamentals of Lumos.
 
@@ -20,7 +20,7 @@ The **Base** component, the **Helpers** component and the **Config Manager** com
 
   When a configuration file is loaded, the config manager handles the chain specific logic that saves corresponding coding effort for configuration management.
 
-  For more information, see [Set Up the Config Manager](../tutorials/config).
+  For more information, see [Set Up the Config Manager](../guides/config).
 
 ## Cell Provider
 
@@ -28,7 +28,7 @@ Cell provider means the component that provides cells to the other functions. **
 
 - **Lumos Indexer**: The Lumos indexer (`@ckb-lumos/indexer` and `@ckb-lumos/sql-indexer`) is a CKB cell indexer that fulfills the [Index-Query-Assemble](https://docs.nervos.org/docs/reference/cell#index-query-assemble-pattern) pattern. The Lumos indexer indexes cells and maintains a local database of the cells that provides an optimal way for querying cells.
 
-  For more information, see [Set Up the Lumos Indexer](../tutorials/indexer).
+  For more information, see [Set Up the Lumos Indexer](../guides/indexer).
 
 - **Transaction Manager**: The transaction manager (`@ckb-lumos/transaction-manager`) can serve as an optional cell provider that enables the output cells of pending transactions to be usable for assembling new transactions.
 
@@ -51,4 +51,4 @@ The CKB DApp mainly acts as a transaction generator that generates transactions 
 
 - **HD wallet manager**: The HD wallet manager (`@ckb-lumos/hd`) supports *mnemonic* and *keystore* that are compatible with `Neuron` and `ckb-cli`. 
 
-For information about the installation of Lumos components (packages), see [Install Lumos](../tutorials/installlumos). <!--For the projects that have already listed Lumos packages as dependencies, just run `yarn install` in the projects directly to install the packages.--> 
+For information about the installation of Lumos components (packages), see [Install Lumos Packages](../guides/installlumos). <!--For the projects that have already listed Lumos packages as dependencies, just run `yarn install` in the projects directly to install the packages.--> 

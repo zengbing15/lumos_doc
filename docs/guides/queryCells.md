@@ -18,7 +18,7 @@ Lumos enriches the cell structure defined in [CKB RFC: Cell](https://github.com/
 ```typescript
 {
   cell_output: {
-    capacity: '0x124788a824a4',
+    capacity: '0x2ecbd7d7dc',
     lock: {
       code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
       hash_type: 'type',
@@ -27,11 +27,11 @@ Lumos enriches the cell structure defined in [CKB RFC: Cell](https://github.com/
     type: undefined
   },
   out_point: {
-    tx_hash: '0x86a613998a501777f2c3d808f235a8767d28d56868678dd17b53797f280b8b61',
+    tx_hash: '0x0db73acbbbb04bb1b52153d30ef7486b191b5e376dcc6bc1439b3a6ed2a451d8',
     index: '0x0'
   },
-  block_hash: '0xd75069d050a530f8e670235bbcf6054e14326f81b37e5220bb3fc3513ef7e97c',
-  block_number: '0x45',
+  block_hash: '0x353b8153561400ed623ef295edb7488025ff517a119770cf0c9dca886f193c5a',
+  block_number: '0x16',
   data: '0x'
 }
 ```
@@ -48,7 +48,7 @@ Lumos supports to query on cells for the options including <var>lock</var>, <var
 
   <!--The [ScriptWrapper](https://nervosnetwork.github.io/lumos/interfaces/base.scriptwrapper.html) interface combines <var>argsLen</var> and <var>ioType</var> with a lock or type script to enable fine-grained queries.-->
 
-  For more information about [ScriptWrapper](https://nervosnetwork.github.io/lumos/interfaces/base.scriptwrapper.html), see [Fine-grained Query for Cells](../tutorials/querycells#fine-grained-query-for-cells).
+  For more information about [ScriptWrapper](https://nervosnetwork.github.io/lumos/interfaces/base.scriptwrapper.html), see [Fine-grained Query for Cells](../guides/querycells#fine-grained-query-for-cells).
 
 - <var>argsLen</var>: The lock or type args length. The default value of <var>argsLen</var> is -1 for the query on a full slice of the args.
 
@@ -67,8 +67,7 @@ Lumos supports to query on cells for the options including <var>lock</var>, <var
 The following prerequisites apply for the examples of this guide:
 
 - The development environment is set up. For more information, see [Set Up the Development Environment](http://localhost:3000/lumos_doc/docs/preparation/setupsystem).
-- The CKB node is installed and started. For more information, see [Install a CKB Node](http://localhost:3000/lumos_doc/docs/preparation/installckb).
-- The Lumos packages (`@ckb-lumos/base`, `@ckb-lumos/indexer`, `@ckb-lumos/helpers`, `@ckb-lumos/common-scripts`) are installed.
+- The Lumos packages are installed. For more information, see [Install Lumos Packages](../guides/installlumos).
 
 ## Environment
 
@@ -97,7 +96,7 @@ export const findCellsbyLock = async (lockScript: Script): Promise<Cell[]> => {
 };
 ```
 
-The `INDEXER` of the example is a RockDB backed indexer that is initialized and started in the <var>hellolumos/src/index.ts</var> file. For more information about setting up the Lumos indexer, see [Set Up the RocksDB Backed Indexer](../tutorials/indexer#set-up-the-rocksdb-backed-indexer).
+The `INDEXER` of the example is a RockDB backed indexer that is initialized and started in the <var>hellolumos/src/index.ts</var> file. For more information about setting up the Lumos indexer, see [Set Up the RocksDB Backed Indexer](../guides/indexer#set-up-the-rocksdb-backed-indexer).
 
 Try the `findCellsbyLock` function in the Node.js REPL mode:
 
@@ -123,36 +122,36 @@ The server is started.
 Find the cells by lock script:
 [
   {
-    cell_output: { capacity: '0x1247953509b2', lock: [Object], type: undefined },
+    cell_output: { capacity: '0x12479ca35838', lock: [Object], type: undefined },
     out_point: {
-      tx_hash: '0xe8655b071e3eeb94d73c2307295bbe88431e74d9091bd8ec081404a9ac485251',
+      tx_hash: '0xf8c0964b90a4cb6e148e13d28ff945e83577ed1aa0bba3304068f418951d9ad9',
       index: '0x0'
     },
-    block_hash: '0x4feda2b0950c3137d4a2128cbe7b25f9dd255c3468007a6b10118f2fccd855bb',
-    block_number: '0x26',
+    block_hash: '0x06cb6adb0737838fb3982ff98084efd643ee426e167ab5dd96688008a19371f3',
+    block_number: '0x14',
     data: '0x'
   },
   {
-    cell_output: { capacity: '0x124794cb65db', lock: [Object], type: undefined },
+    cell_output: { capacity: '0x12479c398188', lock: [Object], type: undefined },
     out_point: {
-      tx_hash: '0xd99327f73c6278589d59cde617982a08e3fabadefa18bbae14eab30fa89b9fb1',
+      tx_hash: '0x65d86b9695fcbd376c245ad5566ea6c65c7fa8c61e485293e55c2dc236866c68',
       index: '0x0'
     },
-    block_hash: '0xe8016c14a198a2b9f7acd4964ec876527ff55082d6e3a210e7b73c6316f86690',
-    block_number: '0x27',
+    block_hash: '0x72bf246cae9d776f8db37ba27c80b1c65e56063ddc9663ca690033bc6647edce',
+    block_number: '0x15',
     data: '0x'
   },
   {
-    cell_output: { capacity: '0x12479461c26d', lock: [Object], type: undefined },
+    cell_output: { capacity: '0x12479bcfab3f', lock: [Object], type: undefined },
     out_point: {
-      tx_hash: '0x0b2ac03c909402057eabf4202ae3ee8fc65f9f6182837db2599c53d2cc8051ba',
+      tx_hash: '0xfea673fcbff06b7a85a6aea80f9ca7e5f6d8ff2750070b49c1afce3d518c7789',
       index: '0x0'
     },
-    block_hash: '0x19bb281bc4e53a76cce55a10b99abf82bc528b6eb37e72c9bd62cd520109a1a8',
-    block_number: '0x28',
+    block_hash: '0x42cb31ce51f37d85cc52b369135148f13fa22d1c89bc501c6acd536d3a7b676f',
+    block_number: '0x16',
     data: '0x'
   },
-...
+  ...
 ]
 ```
 
@@ -189,7 +188,7 @@ Try the `findCellsbyLockandType` function in the Node.js REPL mode:
 <p>
 
 
-```shell {1-2,5,7-19}
+```shell {1-2,5,7-15,18}
 $ cd hellolumos
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
@@ -197,39 +196,28 @@ Type ".help" for more information.
 > const { accounts, querycells, CONFIG } = require(".");
 The server is started.
 > const alice = accounts.ALICE;
-> const script = {
- code_hash: "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
- hash_type: "type",
- args: alice.ARGS,
- };
+> const { parseAddress } = require("@ckb-lumos/helpers");
+> const script = parseAddress(alice.ADDRESS);
 > const template = CONFIG.SCRIPTS["DAO"];
 > const typescript = {
  code_hash: template.CODE_HASH,
  hash_type: template.HASH_TYPE,
  args: "0x",
  };
+//The example finds the DAO cells that Alice owns.
+//For more information about DAO operations, see Build Transactions.
 > await querycells.findCellsbyLockandType(script, typescript);
 Find the cells by Lock and Type script
 [
   {
     cell_output: { capacity: '0x4a817c800', lock: [Object], type: [Object] },
     out_point: {
-      tx_hash: '0x313378dc3ce2d5c3f3efd546bc9595b54907844c20a72adae15cb9e970ce90df',
+      tx_hash: '0x6d9a12180755791eaf61d070d8d5112513cfd671d14434bec5b57c91fef17ee8',
       index: '0x0'
     },
-    block_hash: '0x657bef9f9d300bfd884065992f243770b9fa7dc8aafa304c98e210d2e02d1248',
-    block_number: '0x12c',
-    data: '0x6a00000000000000'
-  },
-  {
-    cell_output: { capacity: '0x4a817c800', lock: [Object], type: [Object] },
-    out_point: {
-      tx_hash: '0xbc708146e8fea53a4629d37fbd345f7e9dca79225d90bb1f73e7077ade93da19',
-      index: '0x0'
-    },
-    block_hash: '0xfc4a10116dbfb591796dcbf19e95c26ac647e7c2e41fc1b327a19c7ddd1eb938',
-    block_number: '0x135',
-    data: '0x1a01000000000000'
+    block_hash: '0x23b5e3299f50305f76ad55789e1958a9e26b2145cc9eef464cd14006b8c01304',
+    block_number: '0x77b',
+    data: '0x2b07000000000000'
   }
 ]
 ```
@@ -271,7 +259,7 @@ Try the `findCellsBetweenBlocks` function in the Node.js REPL mode:
 
 
 
-```shell {1,2,5,7-15}
+```shell {1,2,5,7-12}
 $ cd hellolumos
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
@@ -279,46 +267,63 @@ Type ".help" for more information.
 > const { accounts, querycells } = require(".");
 The server is started.
 > const alice = accounts.ALICE;
-> const script = {
- code_hash: "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
- hash_type: "type",
- args: alice.ARGS,
- };
-> const from = "0x81";
-> const to = "0x83";
+> const { parseAddress } = require("@ckb-lumos/helpers");
+> const script = parseAddress(alice.ADDRESS);
+> const from = "0x11";
+> const to = "0x15";
 > await querycells.findCellsBetweenBlocks(script, from, to);
-Find cells from block 0x81 to block 0x84
+Find cells from block 0x11 to block 0x15
 [
   {
-    cell_output: { capacity: '0x12476faec3ef', lock: [Object], type: undefined },
+    cell_output: { capacity: '0x2ecbd7e568', lock: [Object], type: undefined },
     out_point: {
-      tx_hash: '0x4f6efa5ee4a116940d2dfe549c1e2ddac9ae02268d68d5e300fade7e8466072d',
+      tx_hash: '0xa4e46a4d656c849ecee9b80fb2490967b0a89a6fd767acddc59ddd7d1013d1a9',
       index: '0x0'
     },
-    block_hash: '0x6a8d2e35b024128c06cbf5ba551b6c7de576566fce12e61c646052e622f701d7',
-    block_number: '0x81',
+    block_hash: '0xe87b33e3b499ede1390cf12ec1f2df772762fa7cc981c55fe3753a01fcc52d14',
+    block_number: '0x11',
     data: '0x'
   },
   {
-    cell_output: { capacity: '0x12476fa0d2a2', lock: [Object], type: undefined },
+    cell_output: { capacity: '0x2ecbd7e2b3', lock: [Object], type: undefined },
     out_point: {
-      tx_hash: '0xede91f58056a467cf5114a258ebc7a96a581e8e0a23fde083f84f833a6f0503c',
+      tx_hash: '0x8e4eded5087d8341e739885d4dd39b78661fde80c711a42b4aeee856de4d5d1c',
       index: '0x0'
     },
-    block_hash: '0xaefdfe2473ce86d137cbb9d2e7cf4f1f3600663bb18aa6e4d30518c6b3870be5',
-    block_number: '0x82',
+    block_hash: '0xf410bc8b58e5edcc0f6f9277a3d4c1ada599884b7395ad2a57f65643051c5752',
+    block_number: '0x12',
     data: '0x'
   },
   {
-    cell_output: { capacity: '0x12476edbf23a', lock: [Object], type: undefined },
+    cell_output: { capacity: '0x2ecbd7dffd', lock: [Object], type: undefined },
     out_point: {
-      tx_hash: '0x73c528726d7ca1cad5af6d7debdf962814f49994ef8ad686d071d8aac96e394c',
+      tx_hash: '0x4b4e37eda430c4c288398b518e00a93eae0fa979f65dc4f874feb2f4c8b5ae0b',
       index: '0x0'
     },
-    block_hash: '0x721d22c925d98b0260d9b6a647fdb6e93010f816f1158c14971a73c0cb073b60',
-    block_number: '0x83',
+    block_hash: '0xb8166998d66f21d8b2b46c30a935a66c9f13ed6fb0dafa43679d6b781046f1eb',
+    block_number: '0x13',
     data: '0x'
   },
+  {
+    cell_output: { capacity: '0x2ecbd7dd47', lock: [Object], type: undefined },
+    out_point: {
+      tx_hash: '0xc5e1990313383e57bbd7954808731c35666fe73b58a8c2c6bd5531a59af95e22',
+      index: '0x0'
+    },
+    block_hash: '0xb0b006d8b1df2bbd67a0effabc9a018874f45eed06f9e299b169e2f17ef62b20',
+    block_number: '0x14',
+    data: '0x'
+  },
+  {
+    cell_output: { capacity: '0x2ecbd7da92', lock: [Object], type: undefined },
+    out_point: {
+      tx_hash: '0xeb37d08d17356435bc52dedcea5780b282ab40979ed0321cde12c91b9325ac86',
+      index: '0x0'
+    },
+    block_hash: '0x6a6c07981e60d3a0e021c14c61d0962947724a616c64ff64a6e583f4e3409c5d',
+    block_number: '0x15',
+    data: '0x'
+  }
 ]
 ```
 
@@ -357,9 +362,9 @@ Try the `findCellsandSkip` function in the Node.js REPL mode:
 <p>
 
 
-The example skips the first 20 cells and get the result from the 21st. cell by using the `findCellsandSkip` function.
+The example skips the first 10 cells and get the result from the 11<sup>th.</sup> cell.
 
-```shell {1,2,5,7-13}
+```shell {1,2,5,7-10}
 $ cd hellolumos
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
@@ -367,15 +372,13 @@ Type ".help" for more information.
 > const { accounts, querycells } = require(".");
 The server is started.
 > const alice = accounts.ALICE;
-> const script = {
- code_hash: "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
- hash_type: "type",
- args: alice.ARGS,
- };
-> await querycells.findCellsandSkip(script, 20);
+> const { parseAddress } = require("@ckb-lumos/helpers");
+> const script = parseAddress(alice.ADDRESS);
+> await querycells.findCellsandSkip(script1, 10);
+Find Cells and Skip the first 10 cells:
 {
   cell_output: {
-    capacity: '0x1247656167b4',
+    capacity: '0x2ecbd7d7dc',
     lock: {
       code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
       hash_type: 'type',
@@ -384,16 +387,16 @@ The server is started.
     type: undefined
   },
   out_point: {
-    tx_hash: '0xdcd898c29a2d9dcbaca6c5112bb681d55acb5a557aaf2cbaa1ea2fe561ba3b36',
+    tx_hash: '0x0db73acbbbb04bb1b52153d30ef7486b191b5e376dcc6bc1439b3a6ed2a451d8',
     index: '0x0'
   },
-  block_hash: '0x8030e31e760905f4e2c220f45b653ed73d0bdea5962bd34ca96bc3ea50cbc725',
-  block_number: '0x9a',
+  block_hash: '0x353b8153561400ed623ef295edb7488025ff517a119770cf0c9dca886f193c5a',
+  block_number: '0x16',
   data: '0x'
 }
 {
   cell_output: {
-    capacity: '0x124764f7f310',
+    capacity: '0x2ecbd7d526',
     lock: {
       code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
       hash_type: 'type',
@@ -402,11 +405,11 @@ The server is started.
     type: undefined
   },
   out_point: {
-    tx_hash: '0x0913fd98eb1a56c9b7a460cf46f6c447d0a5048c5f2ad955c3ae7c74d3d55bbf',
+    tx_hash: '0x90085bb7d249ef4794bcb2d4114b62e4b94e24b02282fd2985ab5ebe36ff8769',
     index: '0x0'
   },
-  block_hash: '0x19b16cd024c8d3ae06a5cd20db7f86a04b0b3160d499145d8fdee659c959f70d',
-  block_number: '0x9b',
+  block_hash: '0x406d16483b941b38bf95bd9e5188f719807007f16293b86c15ae5e6e5f63a717',
+  block_number: '0x17',
   data: '0x'
 }
 ...
@@ -474,43 +477,14 @@ Find Cells by prefix of args
   {
     cell_output: { capacity: '0x4a817c800', lock: [Object], type: undefined },
     out_point: {
-      tx_hash: '0x32a717c2af9160b800805796c68803213060df782834486c72cfbacbb0868d62',
+      tx_hash: '0x22cc789bdaa8e021caa303cf20cfa4063b46a17abd62b31aa2cf712844f984cb',
       index: '0x0'
     },
-    block_hash: '0xc21b34b009d5e355357eb55d9ee3456c6a90632434cff8dc515b2f0a207f854c',
-    block_number: '0x15',
-    data: '0x'
-  },
-  {
-    cell_output: { capacity: '0x4a817c800', lock: [Object], type: undefined },
-    out_point: {
-      tx_hash: '0x144ae79bc6064ae99e51b7105f4b61328dd4293d68d132b7a04d86409952ae2e',
-      index: '0x0'
-    },
-    block_hash: '0x2d70e178be2447f784d9c8c1c52630d10b3b3b23575896e61ff15983a7e5ba59',
-    block_number: '0xc9',
-    data: '0x'
-  },
-  {
-    cell_output: { capacity: '0x4a817c800', lock: [Object], type: undefined },
-    out_point: {
-      tx_hash: '0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e',
-      index: '0x0'
-    },
-    block_hash: '0x64623c86af1df458caac8a1433e50ae7ffc228aaa1975d60ed03dfe3ec4ca3fc',
-    block_number: '0xea',
-    data: '0x'
-  },
-  {
-    cell_output: { capacity: '0x4a817c800', lock: [Object], type: undefined },
-    out_point: {
-      tx_hash: '0x9a501e405653219aa8022132158820231aa5ecaff91c970b18d10fbad5ccc178',
-      index: '0x0'
-    },
-    block_hash: '0x988d92ae87a58126c6213642d363cc8102a3016ab50f486dfa44d6b03ab48e51',
-    block_number: '0xf2',
+    block_hash: '0x6d60ae47167a78fbcf254c81b1d6356aceef2feeb4e039fed693c274a83faac1',
+    block_number: '0xf',
     data: '0x'
   }
+  ...
 ]
 ```
 
@@ -581,36 +555,16 @@ The server is started.
 Fine-Grained Query:
 [
   {
-    cell_output: { capacity: '0x1247953509b2', lock: [Object], type: undefined },
+    cell_output: { capacity: '0x4a817c800', lock: [Object], type: undefined },
     out_point: {
-      tx_hash: '0xe8655b071e3eeb94d73c2307295bbe88431e74d9091bd8ec081404a9ac485251',
+      tx_hash: '0x22cc789bdaa8e021caa303cf20cfa4063b46a17abd62b31aa2cf712844f984cb',
       index: '0x0'
     },
-    block_hash: '0x4feda2b0950c3137d4a2128cbe7b25f9dd255c3468007a6b10118f2fccd855bb',
-    block_number: '0x26',
+    block_hash: '0x6d60ae47167a78fbcf254c81b1d6356aceef2feeb4e039fed693c274a83faac1',
+    block_number: '0xf',
     data: '0x'
-  },
-  {
-    cell_output: { capacity: '0x124794cb65db', lock: [Object], type: undefined },
-    out_point: {
-      tx_hash: '0xd99327f73c6278589d59cde617982a08e3fabadefa18bbae14eab30fa89b9fb1',
-      index: '0x0'
-    },
-    block_hash: '0xe8016c14a198a2b9f7acd4964ec876527ff55082d6e3a210e7b73c6316f86690',
-    block_number: '0x27',
-    data: '0x'
-  },
-  {
-    cell_output: { capacity: '0x12479461c26d', lock: [Object], type: undefined },
-    out_point: {
-      tx_hash: '0x0b2ac03c909402057eabf4202ae3ee8fc65f9f6182837db2599c53d2cc8051ba',
-      index: '0x0'
-    },
-    block_hash: '0x19bb281bc4e53a76cce55a10b99abf82bc528b6eb37e72c9bd62cd520109a1a8',
-    block_number: '0x28',
-    data: '0x'
-  },
-...
+  }
+  ...
 ]
 ```
 
@@ -665,37 +619,69 @@ The server is started.
 > await querycells.findCellsandOrder(script, "desc");
 Find Cells in desc order of block numbers:
 [
+  ...
   {
-    cell_output: { capacity: '0x124462255f12', lock: [Object], type: undefined },
+    cell_output: { capacity: '0x2ecbd7d526', lock: [Object], type: undefined },
     out_point: {
-      tx_hash: '0x53d845d810109d6ee4e94df96565100a4126c6fa671db1d237f60eca4a8d2105',
+      tx_hash: '0x90085bb7d249ef4794bcb2d4114b62e4b94e24b02282fd2985ab5ebe36ff8769',
       index: '0x0'
     },
-    block_hash: '0x0301f7aa0c2902383e15662008f9886aa4cd628c4948ba737d13894e7334ea54',
-    block_number: '0x805',
+    block_hash: '0x406d16483b941b38bf95bd9e5188f719807007f16293b86c15ae5e6e5f63a717',
+    block_number: '0x17',
     data: '0x'
   },
   {
-    cell_output: { capacity: '0x1244628be0aa', lock: [Object], type: undefined },
+    cell_output: { capacity: '0x2ecbd7d7dc', lock: [Object], type: undefined },
     out_point: {
-      tx_hash: '0xea8f658e6ea08c38f58f6a0af3530396aba0e51e1064db8626ecd38976625c34',
+      tx_hash: '0x0db73acbbbb04bb1b52153d30ef7486b191b5e376dcc6bc1439b3a6ed2a451d8',
       index: '0x0'
     },
-    block_hash: '0xbae60c9c4f54d6f6a970fb76c2fdd226a83dd8724cff082157da559ce6cf507f',
-    block_number: '0x804',
+    block_hash: '0x353b8153561400ed623ef295edb7488025ff517a119770cf0c9dca886f193c5a',
+    block_number: '0x16',
     data: '0x'
   },
   {
-    cell_output: { capacity: '0x1242ecee4f71', lock: [Object], type: undefined },
+    cell_output: { capacity: '0x2ecbd7da92', lock: [Object], type: undefined },
     out_point: {
-      tx_hash: '0xe332fb6efba38e16b8fd20a4f47d5fffcf8fcac0c863b0eb30ef75067847936d',
-      index: '0x1'
+      tx_hash: '0xeb37d08d17356435bc52dedcea5780b282ab40979ed0321cde12c91b9325ac86',
+      index: '0x0'
     },
-    block_hash: '0xd0c09a6615b30f685dd0b0e627021f89e0f35e9b59c575001d8a11f63436b76c',
-    block_number: '0x803',
+    block_hash: '0x6a6c07981e60d3a0e021c14c61d0962947724a616c64ff64a6e583f4e3409c5d',
+    block_number: '0x15',
     data: '0x'
   },
-...
+  {
+    cell_output: { capacity: '0x2ecbd7dd47', lock: [Object], type: undefined },
+    out_point: {
+      tx_hash: '0xc5e1990313383e57bbd7954808731c35666fe73b58a8c2c6bd5531a59af95e22',
+      index: '0x0'
+    },
+    block_hash: '0xb0b006d8b1df2bbd67a0effabc9a018874f45eed06f9e299b169e2f17ef62b20',
+    block_number: '0x14',
+    data: '0x'
+  },
+  {
+    cell_output: { capacity: '0x2ecbd7dffd', lock: [Object], type: undefined },
+    out_point: {
+      tx_hash: '0x4b4e37eda430c4c288398b518e00a93eae0fa979f65dc4f874feb2f4c8b5ae0b',
+      index: '0x0'
+    },
+    block_hash: '0xb8166998d66f21d8b2b46c30a935a66c9f13ed6fb0dafa43679d6b781046f1eb',
+    block_number: '0x13',
+    data: '0x'
+  },
+  {
+    cell_output: { capacity: '0x2ecbd7e2b3', lock: [Object], type: undefined },
+    out_point: {
+      tx_hash: '0x8e4eded5087d8341e739885d4dd39b78661fde80c711a42b4aeee856de4d5d1c',
+      index: '0x0'
+    },
+    block_hash: '0xf410bc8b58e5edcc0f6f9277a3d4c1ada599884b7395ad2a57f65643051c5752',
+    block_number: '0x12',
+    data: '0x'
+  },
+  ...
+]
 ```
 
 </p>
@@ -723,4 +709,4 @@ export async function locktimePoolCells(frominfo: string): Promise<Cell[]> {
 }
 ```
 
-For more information, see the [Transfer CKB with Locktime Pool](../tutorials/buildtransactions#transfer-ckb-with-locktime-pool) example.
+For more information, see the [Transfer CKB with Locktime Pool](../guides/buildtransactions#transfer-ckb-with-locktime-pool) example.

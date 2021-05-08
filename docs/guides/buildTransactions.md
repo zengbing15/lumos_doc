@@ -1,6 +1,6 @@
 ---
 id: buildtransactions
-title: Assemble Transactions
+title: Build Transactions
 ---
 The goal and the core functionality of a DApp built on top of Lumos is to build transactions in response to user requests. Lumos provides the [TransactionSkeleton](https://nervosnetwork.github.io/lumos/modules/helpers.html#transactionskeletontype) that significantly simplifies the transaction assembling process. Each transaction skeleton corresponds to an action, and will be built into a single transaction that is ready to be submitted to CKB.
 
@@ -37,8 +37,7 @@ The DApp can assemble a transaction in the following steps:
 The following prerequisites apply for the examples in this guide:
 
 - The development environment is set up. For more information, see [Set Up the Development Environment](http://localhost:3000/lumos_doc/docs/preparation/setupsystem).
-- The CKB node is installed and started on DEV chain. For more information, see [Install a CKB Node](http://localhost:3000/lumos_doc/docs/preparation/installckb).
-- The Lumos packages (`@ckb-lumos/base`, `@ckb-lumos/indexer`, `@ckb-lumos/helpers`, `@ckb-lumos/config-manager`, `@ckb-lumos/common-scripts`, `@ckb-lumos/rpc`) are installed.
+- The Lumos packages are installed. For more information, see [Install Lumos Packages](../guides/installlumos).
 
 ## Environment
 
@@ -60,19 +59,19 @@ Then the [common.transfer](https://nervosnetwork.github.io/lumos/modules/common_
 Example:
 
 ```typescript title="hellolumos/src/buildTXs.ts/commonTransfer"
-  let txSkeleton: TransactionSkeletonType = TransactionSkeleton({
-    cellProvider: INDEXER,
-  });
-  const tipheader = await rpc.get_tip_header();
+let txSkeleton: TransactionSkeletonType = TransactionSkeleton({
+  cellProvider: INDEXER,
+});
+const tipheader = await rpc.get_tip_header();
 
-  txSkeleton = await common.transfer(
-    txSkeleton,
-    fromInfos,
-    toAddress,
-    BigInt(amount),
-    undefined,
-    tipheader
-  );
+txSkeleton = await common.transfer(
+  txSkeleton,
+  fromInfos,
+  toAddress,
+  BigInt(amount),
+  undefined,
+  tipheader
+);
 ```
 
 The [common.transfer](https://nervosnetwork.github.io/lumos/modules/common_scripts.html#transfer-15) function creates a common transfer transaction.
@@ -149,7 +148,7 @@ The following example uses the cells without lock period to add the pay fee to t
 Example:
 
 ```typescript title="hellolumos/src/buildTXs.ts/commonTransfer"
-  txSkeleton = await common.payFee(txSkeleton, fromInfos, BigInt(txFee));
+txSkeleton = await common.payFee(txSkeleton, fromInfos, BigInt(txFee));
 ```
 
 #### **Step 3. Prepare the signing entries.** 
@@ -225,7 +224,7 @@ Instead of the `RPC.send_transaction` function, the [TransactionManager.send_tra
 
 ```typescript {1}
 const hash = await transactionManager.send_transaction(tx);
-console.log("The transaction hash is",hash);
+console.log("The transaction hash is", hash);
 ```
 
 A transaction hash output example:
@@ -250,7 +249,7 @@ Example:
 import { RPC } from "@ckb-lumos/rpc";
 const rpc = new RPC("http://127.0.0.1:8114");
 const txWithStatus = await rpc.get_transaction(hash);
-console.log("Transaction status is:", txWithStatus.tx_status.status); 
+console.log("Transaction status is:", txWithStatus.tx_status.status);
 ```
 
 ### Deposit CKB to DAO
@@ -302,7 +301,7 @@ The `deposit` action and the `payFee` action are using the same address in the e
 
 Example:
 
-```typescript title="hellolumos/src/buildTXs.ts/deposit2DAO"
+```typescript title="hellolumos/src/buildTXs.ts/deposit2DAO" {1}
 skeleton = await common.payFee(skeleton, [fromInfo], BigInt(txFee));
 ```
 
@@ -310,7 +309,7 @@ skeleton = await common.payFee(skeleton, [fromInfo], BigInt(txFee));
 
 Example:
 
-```typescript title="hellolumos/src/buildTXs.ts/deposit2DAO"
+```typescript title="hellolumos/src/buildTXs.ts/deposit2DAO" {1}
 skeleton = common.prepareSigningEntries(skeleton);
 ```
 
@@ -332,7 +331,7 @@ For more information, see Step 4 in the common transaction section.
 
 Example:
 
-```typescript title="hellolumos/src/buildTXs.ts/deposit2DAO"
+```typescript title="hellolumos/src/buildTXs.ts/deposit2DAO" {1}
 const hash = await rpc.send_transaction(tx);
 console.log("The transaction hash is", hash);
 return hash;
@@ -340,7 +339,7 @@ return hash;
 The following is a deposit transaction hash output example:
 
 
-```bash {1}
+```shell
 The transaction hash is 0x655bac89e443db42d48644f9fd89ddee70691f8e39ee4635c313375e8b2e6c0a
 ```
 Try the `deposit2DAO` function in the Node.js REPL mode:
@@ -353,24 +352,27 @@ $ cd hellolumos
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
 Type ".help" for more information.
-> const {accounts,buildTXs} = require(".");
+> const { accounts, buildTXs } = require(".");
 The server is started.
 > const alice = accounts.ALICE;
-> await buildTXs.deposit2DAO(alice.ADDRESS,20000000000n,10000000n,alice.PRIVATE_KEY);
+> await buildTXs.deposit2DAO(alice.ADDRESS, alice.ADDRESS, 20000000000n, 10000000n, alice.PRIVATE_KEY);
 Deposit to DAO transaction
+[warn] ANYONE_CAN_PAY script info not found in config!
+1
+1
 {
   "version": "0x0",
   "cell_deps": [
     {
       "out_point": {
-        "tx_hash": "0xa563884b3686078ec7e7677a5f86449b15cf2693f3c1241766c6996f206cc541",
+        "tx_hash": "0xb57669e3d40cdb3b4246e5e696307bfb46355dea6a9ba57d839860be101abf9a",
         "index": "0x2"
       },
       "dep_type": "code"
     },
     {
       "out_point": {
-        "tx_hash": "0xace5ea83c478bb866edf122ff862085789158f5cbff155b7bb5f13058555b708",
+        "tx_hash": "0x6ddc6718014b7ad50121b95bb25ff61b4445b6c57ade514e7d08447e025f9f30",
         "index": "0x0"
       },
       "dep_type": "dep_group"
@@ -381,7 +383,7 @@ Deposit to DAO transaction
     {
       "since": "0x0",
       "previous_output": {
-        "tx_hash": "0xd1b20dd4042374ad44d8ef9489420ff9d09cb6e72767fa549926ca42deced13a",
+        "tx_hash": "0x439c19db1367dfa9dd3fe105c3ae66a88520c58f7bf699ff45a571b7b3790c4d",
         "index": "0x0"
       }
     }
@@ -401,7 +403,7 @@ Deposit to DAO transaction
       }
     },
     {
-      "capacity": "0x1242f69cc698",
+      "capacity": "0x1242f741bdf5",
       "lock": {
         "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
         "hash_type": "type",
@@ -417,16 +419,15 @@ Deposit to DAO transaction
     "0x55000000100000005500000055000000410000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
   ]
 }
-1
 signingEntries: [
   {
     type: 'witness_args_lock',
     index: 0,
-    message: '0x9728a156408f43f8d8de4fe48e3d14f16b1fc3086eaa419ae435f83b08dc6dfa'
+    message: '0x4b756c942c7cf999e37b51b730298904148154539590a94cafb07b14fd728cc9'
   }
 ]
-The transaction hash is 0x58f49e100a00742396fa66bcd2541fadcae549b56e75350efaa166d5d5bfacdc
-'0x58f49e100a00742396fa66bcd2541fadcae549b56e75350efaa166d5d5bfacdc'
+The transaction hash is 0xdf206bbebc18f9df18940c4b9bedaaf0b34e7d8640b5bbab5d8610bbb39ccbaa
+'0xdf206bbebc18f9df18940c4b9bedaaf0b34e7d8640b5bbab5d8610bbb39ccbaa'
 ```
 </p>
 </details>
@@ -442,9 +443,9 @@ Ensure the CKB minder is started to enable the transaction to be committed.
 ```shell {1}
 $ ckb-cli wallet get-capacity --address "ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf"
 dao: 200.0 (CKB)
-free: 16078049.27374609 (CKB)
-immature: 8039369.55859429 (CKB)
-total: 16078249.27374609 (CKB)
+free: 77585.38025888 (CKB)
+immature: 70346.24338446 (CKB)
+total: 77785.38025888 (CKB)
 ```
 
 ### List DAO Cells
@@ -468,13 +469,13 @@ Example:
 import { dao } from "@ckb-lumos/common-scripts";
 
 export async function listDAOCells(
-    fromAddress: string,
-    cellType: "deposit" | "all" | "withdraw"
+  fromAddress: string,
+  cellType: "deposit" | "all" | "withdraw"
 ) {
-    console.log("List the",cellType,"cells for the address", fromAddress);
-    for await (const cell of dao.listDaoCells(INDEXER,fromAddress,cellType)) {
-         console.log(cell); 
-    }
+  console.log("List the", cellType, "cells for the address", fromAddress);
+  for await (const cell of dao.listDaoCells(INDEXER, fromAddress, cellType)) {
+    console.log(cell);
+  }
 }
 ```
 
@@ -484,17 +485,13 @@ You can also use the collect function of the [dao.CellCollector](https://nervosn
 import { dao } from "@ckb-lumos/common-scripts";
 
 export async function listDAOCells2(
-     fromInfo: FromInfo,
-     cellType: "deposit" | "all" | "withdraw"
+  fromInfo: FromInfo,
+  cellType: "deposit" | "all" | "withdraw"
 ) {
-    const CellCollector = new dao.CellCollector(
-      fromInfo,
-      INDEXER,
-      cellType,
-    )
-    for await (const cell of CellCollector.collect()) {
-         console.log(cell); 
-    }
+  const CellCollector = new dao.CellCollector(fromInfo, INDEXER, cellType);
+  for await (const cell of CellCollector.collect()) {
+    console.log(cell);
+  }
 }
 ```
 
@@ -509,10 +506,10 @@ $ cd hellolumos
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
 Type ".help" for more information.
-> const {accounts,buildTXs} = require(".");
+> const { accounts, buildTXs } = require(".");
 The server is started.
 > const alice = accounts.ALICE;
-> await buildTXs.listDAOCells(alice.ADDRESS,"deposit");
+> await buildTXs.listDAOCells(alice.ADDRESS, "deposit");
 List the deposit cells for the address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
 {
   cell_output: {
@@ -529,11 +526,11 @@ List the deposit cells for the address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qm
     }
   },
   out_point: {
-    tx_hash: '0x58f49e100a00742396fa66bcd2541fadcae549b56e75350efaa166d5d5bfacdc',
+    tx_hash: '0xdf206bbebc18f9df18940c4b9bedaaf0b34e7d8640b5bbab5d8610bbb39ccbaa',
     index: '0x0'
   },
-  block_hash: '0xc9a0077484dbcfa990e0d12b94d137723aec6a9f3ae44e8ed05e19084a076549',
-  block_number: '0x59',
+  block_hash: '0x453e13d6da2c863b44cfa49ff8dd421d34f6448cb21e3677bed54a3ffbe05ff9',
+  block_number: '0x13',
   data: '0x0000000000000000'
 }
 ```
@@ -564,7 +561,6 @@ export async function withdrawfromDAO(
   skeleton = await dao.withdraw(skeleton, cell, frominfo);
   skeleton = await common.payFee(skeleton, [frominfo], BigInt(txFee));
   skeleton = common.prepareSigningEntries(skeleton);
-  console.log("signingEntries:", skeleton.get("signingEntries").toArray());
   //For simplicity and demonstration, this example uses the signandSeal function to sign the transaction.
   const tx = await signandSeal(skeleton, privateKey);
   const hash = await rpc.send_transaction(tx);
@@ -583,48 +579,41 @@ Try the `withdrawfromDAO` function in the Node.js REPL mode:
 <p>
 
 
-```shell {1,2,5,7-31}
+```shell {1,2,5,7,9-31}
 $ cd hellolumos
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
 Type ".help" for more information.
-> const {accounts,buildTXs} = require(".");
+> const { accounts, buildTXs } = require(".");
 The server is started.
 > const alice = accounts.ALICE;
 //Choose one deposited cell from the result of the listDAOCells step.
-> const depositcell = {
-	   cell_output: {
-	     capacity: '0x4a817c800',
-	     lock: {
-	       code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-	       hash_type: 'type',
-	       args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
-	     },
-	     type: {
-	       code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
-	       hash_type: 'type',
-	       args: '0x'
-	     }
-	   },
-	   out_point: {
-	     tx_hash: '0x58f49e100a00742396fa66bcd2541fadcae549b56e75350efaa166d5d5bfacdc',
-	     index: '0x0'
-	   },
-	   block_hash: '0xc9a0077484dbcfa990e0d12b94d137723aec6a9f3ae44e8ed05e19084a076549',
-	   block_number: '0x59',
-	   data: '0x0000000000000000'
-	 };
-> await buildTXs.withdrawfromDAO(fullcell,alice.ADDRESS,10000000n,alice.PRIVATE_KEY);
+> const depositCell = {
+  cell_output: {
+    capacity: '0x4a817c800',
+    lock: {
+      code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+      hash_type: 'type',
+      args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
+    },
+    type: {
+      code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
+      hash_type: 'type',
+      args: '0x'
+    }
+  },
+  out_point: {
+    tx_hash: '0xdf206bbebc18f9df18940c4b9bedaaf0b34e7d8640b5bbab5d8610bbb39ccbaa',
+    index: '0x0'
+  },
+  block_hash: '0x453e13d6da2c863b44cfa49ff8dd421d34f6448cb21e3677bed54a3ffbe05ff9',
+  block_number: '0x13',
+  data: '0x0000000000000000'
+}
+> await buildTXs.withdrawfromDAO(depositCell, alice.ADDRESS, 10000000n, alice.PRIVATE_KEY);
 Withdraw a DAO cell for the address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
-signingEntries: [
-  {
-    type: 'witness_args_lock',
-    index: 0,
-    message: '0x7223a1da8032b346a69fc78957e144427e3c31c4c14afc2d87ed41635707df39'
-  }
-]
-The transaction hash is 0x00df109343e2335a4e91375b37b575373902660be5f0d3fd0c2281b4425c1a7e
-'0x00df109343e2335a4e91375b37b575373902660be5f0d3fd0c2281b4425c1a7e'
+The transaction hash is 0x5b2e8e943a9e9209b105e4de63a81657dc7e177dc366b9314b7f794727a9cccb
+'0x5b2e8e943a9e9209b105e4de63a81657dc7e177dc366b9314b7f794727a9cccb'
 ```
 
 </p>
@@ -635,13 +624,7 @@ The transaction hash is 0x00df109343e2335a4e91375b37b575373902660be5f0d3fd0c2281
 
 A withdrawn cell must be unlocked to make it usable as a live cell for new transactions.
 
-:::info
-
-A withdrawn cell can only be successfully unlocked when the epoch reaches the number that fulfills the lock period, i.e. the lock period of the cell has passed. Otherwise the unlock function will throw an error like "... the transaction is immature because of the since requirement...". 
-
-The epoch number that fulfills the lock period = 180 (the default lock period) + <var>the epoch number of the deposit transaction</var> + <var>the epoch index of the deposit transaction</var>/<var>epoch length</var>. 
-
-:::
+The following example uses the [dao.unlock](https://nervosnetwork.github.io/lumos/modules/common_scripts.html#unlock-2) function to implement the unlock function.
 
 Example: 
 
@@ -678,7 +661,21 @@ export async function unlockWithdraw(
 }
 ```
 
-The epoch information is located in the block header. For example, the epoch information is 0xa0009000008 of the deposit transaction, the epoch number that fulfills the lock period for the withdrawn cell is (180+8+9/10) . 
+:::note
+
+A withdrawn cell can only be successfully unlocked when the epoch reaches the number that fulfills the lock period, i.e. the lock period of the cell has passed. Otherwise the unlock function will throw an error like "... the transaction is immature because of the since requirement...". 
+
+:::
+
+<b>The earliest epoch number</b> (since when the withdrawn cell can be unlocked) = <b>180</b> (the default lock period) + <b><var>the epoch number of the deposit transaction</var></b> + <b><var>the block index of the deposit transaction</var></b>/<b><var>epoch length</var>. </b>
+
+The epoch information is located in the block header. For the CKB node installed by Tippy, you can check the epoch number and the block index of the deposit transaction on the Tippy Block page.<!--For example, the epoch information is 0xa0009000001 of the deposit transaction, the epoch number that fulfills the lock period for the withdrawn cell is (180 + 1 + 9/10) . It is approximately the 1,820th. block.-->
+
+The following figure shows the epoch number and the block index of the deposit transaction (0x3162e8ccef8844e83c6cc63122f332f89d7dbd65c7d5f9fa040f4dd532b7abee). The withdrawn cell can be unlocked after epoch (180 + 1 + 9/10).
+
+import useBaseUrl from "@docusaurus/useBaseUrl";
+
+<img src={useBaseUrl("img/block.png")}/>
 
 Try the `unlockWithdraw` function in the Node.js REPL mode.
 
@@ -686,23 +683,36 @@ Try the `unlockWithdraw` function in the Node.js REPL mode.
 <p>
 
 
-```shell {1,2,5,7-13,16}
+```shell {1,2,5,7-29,53-74,76}
 $ cd hellolumos
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
 Type ".help" for more information.
 > const { querytransactions } = require(".");
 The server is started.
-> await querytransactions.getTxsbyHash("0x58f49e100a00742396fa66bcd2541fadcae549b56e75350efaa166d5d5bfacdc");
-The transaction status is committed
-The block hash for the transaction is 0xc9a0077484dbcfa990e0d12b94d137723aec6a9f3ae44e8ed05e19084a076549
-> const {RPC} = require("@ckb-lumos/rpc");
-> const rpc = new RPC("http://127.0.0.1:8114");
-> const block = await rpc.get_block("0xc9a0077484dbcfa990e0d12b94d137723aec6a9f3ae44e8ed05e19084a076549");
-> console.log(block.header.epoch);
-0xa0009000008 // {number: 8, index: 9, length: 10}
-//The withdrawn cell can be unlocked after epoch (180+8+9/10).
-> await buildTXs.listDAOCells(alice.ADDRESS,"withdraw");
+> const depositCell = {
+  cell_output: {
+    capacity: '0x4a817c800',
+    lock: {
+      code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+      hash_type: 'type',
+      args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
+    },
+    type: {
+      code_hash: '0x82d76d1b75fe2fd9a27dfbaa65a039221a380d76c926f378d3f81cf3e7e13f2e',
+      hash_type: 'type',
+      args: '0x'
+    }
+  },
+  out_point: {
+    tx_hash: '0xdf206bbebc18f9df18940c4b9bedaaf0b34e7d8640b5bbab5d8610bbb39ccbaa',
+    index: '0x0'
+  },
+  block_hash: '0x453e13d6da2c863b44cfa49ff8dd421d34f6448cb21e3677bed54a3ffbe05ff9',
+  block_number: '0x13',
+  data: '0x0000000000000000'
+}
+> await buildTXs.listDAOCells(alice.ADDRESS, "withdraw");
 List the withdraw cells for the address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
 {
   cell_output: {
@@ -719,14 +729,14 @@ List the withdraw cells for the address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8q
     }
   },
   out_point: {
-    tx_hash: '0x00df109343e2335a4e91375b37b575373902660be5f0d3fd0c2281b4425c1a7e',
+    tx_hash: '0x5b2e8e943a9e9209b105e4de63a81657dc7e177dc366b9314b7f794727a9cccb',
     index: '0x0'
   },
-  block_hash: '0x3d1589aa3a2fdaf2971a2528f5285b9755c983142f9eb42dcf27181711410d85',
-  block_number: '0x5f',
-  data: '0x5900000000000000'
+  block_hash: '0x06b0b91738866e50fd670e8c25dbd7ab35297c497a14c1e084afbea06e07a6b0',
+  block_number: '0x19',
+  data: '0x1300000000000000'
 }
-> const withdrawcell = {
+> const withdrawnCell = {
   cell_output: {
     capacity: '0x4a817c800',
     lock: {
@@ -741,24 +751,17 @@ List the withdraw cells for the address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8q
     }
   },
   out_point: {
-    tx_hash: '0x00df109343e2335a4e91375b37b575373902660be5f0d3fd0c2281b4425c1a7e',
+    tx_hash: '0x5b2e8e943a9e9209b105e4de63a81657dc7e177dc366b9314b7f794727a9cccb',
     index: '0x0'
   },
-  block_hash: '0x3d1589aa3a2fdaf2971a2528f5285b9755c983142f9eb42dcf27181711410d85',
-  block_number: '0x5f',
-  data: '0x5900000000000000'
+  block_hash: '0x06b0b91738866e50fd670e8c25dbd7ab35297c497a14c1e084afbea06e07a6b0',
+  block_number: '0x19',
+  data: '0x1300000000000000'
 };
 //Unlock the withdrawn cell.
-> await buildTXs.unlockWithdraw(depositcell,withdrawcell,alice.ADDRESS, alice.ADDRESS,10000000n,alice.PRIVATE_KEY);
-signingEntries: [
-  {
-    type: 'witness_args_lock',
-    index: 0,
-    message: '0xbc12c2f7123eb9c55addac3c93f22ad337e1cf6324c158b2ec8bd018755dd46f'
-  }
-]
-The transaction hash is 0xe41b9a78b96719ac4e75eed1359d804e97812131ed961be0c33f27c6f254e08b
-'0xe41b9a78b96719ac4e75eed1359d804e97812131ed961be0c33f27c6f254e08b'
+> await buildTXs.unlockWithdraw(depositCell, withdrawnCell, alice.ADDRESS, alice.ADDRESS, 10000000n, alice.PRIVATE_KEY);
+The transaction hash is 0x9c29e46995de785a0713e72447c8a0832d7d62cb53272a0d1b075102a21cc23f
+'0x9c29e46995de785a0713e72447c8a0832d7d62cb53272a0d1b075102a21cc23f'
 ```
 
 </p>
@@ -769,7 +772,7 @@ The transaction hash is 0xe41b9a78b96719ac4e75eed1359d804e97812131ed961be0c33f27
 
 Lumos provides the locktime pool for the cells that has a lock period. A cell with a lock period is only available for new transactions when the lock period has passed.
 
-:::info
+:::note
 
 The default lock period is 180 epochs. If the cell is still in the lock period, the [locktimepool.transfer](https://nervosnetwork.github.io/lumos/modules/common_scripts.html#transfer-12) function will throw an error like "Uncaught Error: Not enough capacity in from addresses!". 
 
@@ -777,8 +780,11 @@ The default lock period is 180 epochs. If the cell is still in the lock period, 
 
 Example:
 
-```typescript title="hellolumos/src/buildTXs.ts/locktimepoolTX" {16-22}
-import { TransactionSkeleton, createTransactionFromSkeleton } from "@ckb-lumos/helpers";
+```typescript title="hellolumos/src/buildTXs.ts/locktimePoolTransfer" {19-25}
+import {
+  TransactionSkeleton,
+  createTransactionFromSkeleton,
+} from "@ckb-lumos/helpers";
 import { Hash } from "@ckb-lumos/base";
 import { INDEXER } from "./index";
 const rpc = new RPC("http://127.0.0.1:8114");
@@ -811,29 +817,31 @@ export async function locktimePoolTransfer(
 }
 ```
 
-Try the `locktimepoolTX` function in the Node.js REPL mode:
+Try the `locktimePoolTransfer` function in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
 
 
 
-```shell {1,2,5,8,11,15,40-61,65,71,76,106}
+```shell {1,2,5,7,9,13,17,42-63,66,72,77,108}
 $ cd hellolumos
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
 Type ".help" for more information.
-> const { accounts,querytransactions, buildTXs } = require(".");
+> const { accounts, querycells, querytransactions, buildTXs } = require(".");
 The server is started.
+> const alice = accounts.ALICE;
 //Perform another deposit action to create a deposit cell 
-> await buildTXs.deposit2DAO(alice.ADDRESS,20000000000n,10000000n,alice.PRIVATE_KEY);
+> await buildTXs.deposit2DAO(alice.ADDRESS, alice.ADDRESS, 20000000000n, 10000000n, alice.PRIVATE_KEY);
 ...
-The transaction hash is 0x3162e8ccef8844e83c6cc63122f332f89d7dbd65c7d5f9fa040f4dd532b7abee
-> await querytransactions.getTxsbyHash("0x3162e8ccef8844e83c6cc63122f332f89d7dbd65c7d5f9fa040f4dd532b7abee");
+The transaction hash is 0xc9a29ac9984b508f4bd7bbe3c6453540e1c4f6b03009133bffa250f2c28485ab
+'0xc9a29ac9984b508f4bd7bbe3c6453540e1c4f6b03009133bffa250f2c28485ab'
+> await querytransactions.getTXbyHash("0xc9a29ac9984b508f4bd7bbe3c6453540e1c4f6b03009133bffa250f2c28485ab");
 The transaction status is committed
-The block hash for the transaction is 0xd025028f2bc4e4381c0fb1743ada5a5c48e387bf6a49e162120ea9a626fe0772
+The block hash for the transaction is 0x3ca4a7ce76b12ae6687f3402e3e840b44f2171f1e4dde38283f05e97e39adc24
 >
-> await buildTXs.listDAOCells(alice.ADDRESS,"deposit");
+> await buildTXs.listDAOCells(alice.ADDRESS, "deposit");
 List the deposit cells for the address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
 {
   cell_output: {
@@ -850,15 +858,15 @@ List the deposit cells for the address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qm
     }
   },
   out_point: {
-    tx_hash: '0x3162e8ccef8844e83c6cc63122f332f89d7dbd65c7d5f9fa040f4dd532b7abee',
+    tx_hash: '0xc9a29ac9984b508f4bd7bbe3c6453540e1c4f6b03009133bffa250f2c28485ab',
     index: '0x0'
   },
-  block_hash: '0xd025028f2bc4e4381c0fb1743ada5a5c48e387bf6a49e162120ea9a626fe0772',
-  block_number: '0xf0e',
+  block_hash: '0x3ca4a7ce76b12ae6687f3402e3e840b44f2171f1e4dde38283f05e97e39adc24',
+  block_number: '0x72b',
   data: '0x0000000000000000'
 }
 >
->const depositcell = {
+> const depositCell = {
   cell_output: {
     capacity: '0x4a817c800',
     lock: {
@@ -873,31 +881,30 @@ List the deposit cells for the address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qm
     }
   },
   out_point: {
-    tx_hash: '0x3162e8ccef8844e83c6cc63122f332f89d7dbd65c7d5f9fa040f4dd532b7abee',
+    tx_hash: '0xc9a29ac9984b508f4bd7bbe3c6453540e1c4f6b03009133bffa250f2c28485ab',
     index: '0x0'
   },
-  block_hash: '0xd025028f2bc4e4381c0fb1743ada5a5c48e387bf6a49e162120ea9a626fe0772',
-  block_number: '0xf0e',
+  block_hash: '0x3ca4a7ce76b12ae6687f3402e3e840b44f2171f1e4dde38283f05e97e39adc24',
+  block_number: '0x72b',
   data: '0x0000000000000000'
-};
->
+}
 >
 //Withdraw the cell from DAO to prepare a withdraw cell that has a lock period.
-> await buildTXs.withdrawfromDAO(depositcell,alice.ADDRESS,10000000n,alice.PRIVATE_KEY);
+> await buildTXs.withdrawfromDAO(depositCell, alice.ADDRESS, 10000000n, alice.PRIVATE_KEY);
 ...
-The transaction hash is 0xee510df9a3bebbb00eef405318ba4fa19e5112139a3718ff13921bb962f9dda0
-'0xee510df9a3bebbb00eef405318ba4fa19e5112139a3718ff13921bb962f9dda0'
+The transaction hash is 0x6d9a12180755791eaf61d070d8d5112513cfd671d14434bec5b57c91fef17ee8
+'0x6d9a12180755791eaf61d070d8d5112513cfd671d14434bec5b57c91fef17ee8'
 >
 //Check the withdraw transaction status.
-> await querytransactions.getTxsbyHash("0xee510df9a3bebbb00eef405318ba4fa19e5112139a3718ff13921bb962f9dda0");
+> await querytransactions.getTXbyHash("0x6d9a12180755791eaf61d070d8d5112513cfd671d14434bec5b57c91fef17ee8");
 The transaction status is committed
-The block hash for the transaction is 0x63afdb21e9ce8173eb84bd59ac519aa80ab6f18cd4c61be9ceb5d536116c7a3f
+The block hash for the transaction is 0x23b5e3299f50305f76ad55789e1958a9e26b2145cc9eef464cd14006b8c01304
 >
 //Check the cell in locktimepool, we can see the withdrawn cell in the locktime pool.
-> await querycells.locktimepoolCells(alice.ADDRESS);
+> await querycells.locktimePoolCells(alice.ADDRESS);
 {
   cell_output: {
-    capacity: '0x4a81c0719',
+    capacity: '0x4a82d540f',
     lock: {
       code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
       hash_type: 'type',
@@ -910,21 +917,24 @@ The block hash for the transaction is 0x63afdb21e9ce8173eb84bd59ac519aa80ab6f18c
     }
   },
   out_point: {
-    tx_hash: '0xee510df9a3bebbb00eef405318ba4fa19e5112139a3718ff13921bb962f9dda0',
+    tx_hash: '0x6d9a12180755791eaf61d070d8d5112513cfd671d14434bec5b57c91fef17ee8',
     index: '0x0'
   },
-  block_hash: '0x63afdb21e9ce8173eb84bd59ac519aa80ab6f18cd4c61be9ceb5d536116c7a3f',
-  block_number: '0xf1e',
-  data: '0x0e0f000000000000',
-  since: '0x20000a0004000235',
-  depositBlockHash: '0xd025028f2bc4e4381c0fb1743ada5a5c48e387bf6a49e162120ea9a626fe0772',
-  withdrawBlockHash: '0x63afdb21e9ce8173eb84bd59ac519aa80ab6f18cd4c61be9ceb5d536116c7a3f',
+  block_hash: '0x23b5e3299f50305f76ad55789e1958a9e26b2145cc9eef464cd14006b8c01304',
+  block_number: '0x77b',
+  data: '0x2b07000000000000',
+  since: '0x20000a000500016b',
+  depositBlockHash: '0x3ca4a7ce76b12ae6687f3402e3e840b44f2171f1e4dde38283f05e97e39adc24',
+  withdrawBlockHash: '0x23b5e3299f50305f76ad55789e1958a9e26b2145cc9eef464cd14006b8c01304',
   sinceValidationInfo: undefined
 }
+...
 >
 >
-//when the epoch reaches '0x20000a0004000235'(565+4/10), the locktimepool.transfer function can be executed sucessfully.
-> await buildTXs.locktimePoolTransfer(bob.ADDRESS,alice.ADDRESS, 10000000000n,10000000n,alice.PRIVATE_KEY);
+//When the epoch reaches '0x20000a000500016b'(363 + 5/10), the locktimepool.transfer function can be executed sucessfully.
+> await buildTXs.locktimePoolTransfer(bob.ADDRESS, alice.ADDRESS, 10000000000n, 10000000n, alice.PRIVATE_KEY);
+The transaction hash is 0x60db4b0dc2e21632a035c021ad05a56e80fd2d50aeb3d9e00aa554f9f7c1e87a
+'0x60db4b0dc2e21632a035c021ad05a56e80fd2d50aeb3d9e00aa554f9f7c1e87a'
 ```
 
 </p>
@@ -937,7 +947,7 @@ The block hash for the transaction is 0x63afdb21e9ce8173eb84bd59ac519aa80ab6f18c
 
 :::note
 
-The SUDT script needs to be deployed to DEV chain before operating on SUDT tokens. For more information about deploying the SUDT script, see [Write a SUDT script by Capsule](https://docs.nervos.org/docs/labs/sudtbycapsule). You can also refer to the [Deploy the NFT Script on DEV Chain](http://localhost:3000/lumos_doc/docs/tutorials/integratenft#deploy-the-nft-script-on-dev-chain) example for details about deploying a script on DEV chain.
+The SUDT script needs to be deployed to DEV chain before operating on SUDT tokens. For more information about deploying the SUDT script, see [Write a SUDT script by Capsule](https://docs.nervos.org/docs/labs/sudtbycapsule). You can also refer to the [Deploy the NFT Script on DEV Chain](../guides/integratenft#deploy-the-nft-script-on-dev-chain) example for details about deploying a script on DEV chain.
 
 :::
 
@@ -956,7 +966,7 @@ sudt.issueToken(
 )
 ```
 
-The <var>amount</var> parameter means the amount of SUDT tokens to be generated. The <var>capacity</var> parameter is an optional, and it means the amount of CKB capacity used for the generation. If <var>capacity</var> is not defined, the `sudt.issueToken` function will use 142 CKB (the minimal CKB capacity of a SUDT cell) to generate SUDT tokens. 
+The <var>amount</var> parameter means the amount of SUDT tokens to be generated. The <var>capacity</var> parameter is  optional, and it means the amount of CKB capacity used for the generation. If <var>capacity</var> is not defined, the `sudt.issueToken` function will use 142 CKB (the minimal CKB capacity of an SUDT cell) to generate SUDT tokens. 
 
 Example:
 
@@ -984,12 +994,9 @@ export async function issueSUDT(
   });
   console.log("Issue SUDT tokens.");
   skeleton = await sudt.issueToken(skeleton, fromInfo, amount, capacity);
-  console.log(JSON.stringify(createTransactionFromSkeleton(skeleton), null, 2));
   skeleton = await common.payFee(skeleton, [fromInfo], BigInt(txFee));
   console.log(createTransactionFromSkeleton(skeleton).inputs.length);
   skeleton = common.prepareSigningEntries(skeleton);
-  console.log("signingEntries:", skeleton.get("signingEntries").toArray());
-
   const tx = await signandSeal(skeleton, privateKey);
   const hash = await rpc.send_transaction(tx);
   console.log("The transaction hash is", hash);
@@ -1005,87 +1012,18 @@ Try the `issueSUDT` function in the Node.js REPL mode:
 
 
 
-```shell {1,2,5,8-10}
+```shell {1,2,5,7-8}
 $ cd hellolumos
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
 Type ".help" for more information.
-> const { accounts,querytransactions, buildTXs} = require(".");
+> const { accounts, querytransactions, buildTXs } = require(".");
 The server is started.
->// 
 > const alice = accounts.ALICE;
-> const bob = accounts.BOB;
-> await buildTXs.issueSUDT(alice.ADDRESS,60000000000n,20000000000n,10000000n,alice.PRIVATE_KEY);
+> await buildTXs.issueSUDT(alice.ADDRESS, 60000000000n, 20000000000n, 10000000n, alice.PRIVATE_KEY);
 Issue SUDT tokens.
-{
-  "version": "0x0",
-  "cell_deps": [
-    {
-      "out_point": {
-        "tx_hash": "0xd256a71c30b3f3adbf75a14add58a831336c4beebf04ed142f48d5f608655a48",
-        "index": "0x0"
-      },
-      "dep_type": "code"
-    },
-    {
-      "out_point": {
-        "tx_hash": "0xace5ea83c478bb866edf122ff862085789158f5cbff155b7bb5f13058555b708",
-        "index": "0x0"
-      },
-      "dep_type": "dep_group"
-    }
-  ],
-  "header_deps": [],
-  "inputs": [
-    {
-      "since": "0x0",
-      "previous_output": {
-        "tx_hash": "0xd450fbc655a794f60a687af7af1fd742961c582753edcb417acce660e9f9cc52",
-        "index": "0x0"
-      }
-    }
-  ],
-  "outputs": [
-    {
-      "capacity": "0x4a817c800",
-      "lock": {
-        "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
-        "hash_type": "type",
-        "args": "0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e"
-      },
-      "type": {
-        "code_hash": "0x82a4784a46f42916f144bfd1926fda614560e403bc131408881de82fee0724ad",
-        "hash_type": "data",
-        "args": "0xf6ea009a4829de7aeecd75f3ae6bcdbaacf7328074ae52a48456a8793a4b1cca"
-      }
-    },
-    {
-      "capacity": "0x2a23bfcd72",
-      "lock": {
-        "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
-        "hash_type": "type",
-        "args": "0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e"
-      }
-    }
-  ],
-  "outputs_data": [
-    "0x005847f80d0000000000000000000000",
-    "0x"
-  ],
-  "witnesses": [
-    "0x55000000100000005500000055000000410000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-  ]
-}
-1
-signingEntries: [
-  {
-    type: 'witness_args_lock',
-    index: 0,
-    message: '0x94328eafa1895a7b00bc6410136feaddb494a2cc9b19d39569d80477161eb349'
-  }
-]
-The transaction hash is 0x037c03dddf4a5cd03c6fa3798d082a2a93702f72f7a2c1d60c0bc915031ee48a
-'0x037c03dddf4a5cd03c6fa3798d082a2a93702f72f7a2c1d60c0bc915031ee48a'
+The transaction hash is 0xa0b29a0cf416e8971207070860f0add8af25e35b6861b0b08470072d1370bb4b
+'0xa0b29a0cf416e8971207070860f0add8af25e35b6861b0b08470072d1370bb4b'
 ```
 
 </p>
@@ -1157,12 +1095,9 @@ export async function transferSUDT(
     undefined,
     capacity
   );
-  console.log(JSON.stringify(createTransactionFromSkeleton(skeleton), null, 2));
   skeleton = await common.payFee(skeleton, [fromInfo], BigInt(txFee));
   console.log(createTransactionFromSkeleton(skeleton).inputs.length);
   skeleton = common.prepareSigningEntries(skeleton);
-  console.log("signingEntries:", skeleton.get("signingEntries").toArray());
-
   const tx = await signandSeal(skeleton, privateKey);
   const hash = await rpc.send_transaction(tx);
   console.log("The transaction hash is", hash);
@@ -1183,94 +1118,14 @@ $ cd hellolumos
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
 Type ".help" for more information.
-> const { accounts,querytransactions, buildTXs} = require(".");
+> const { accounts, querytransactions, buildTXs } = require(".");
 The server is started.
 > const alice = accounts.ALICE;
 > const bob = accounts.BOB;
-> await buildTXs.transferSUDT(alice.ADDRESS, bob.ADDRESS, 20000000000n,20000000000n,10000000n,alice.PRIVATE_KEY);
-Transfer SUDT tokens.
-{
-  "version": "0x0",
-  "cell_deps": [
-    {
-      "out_point": {
-        "tx_hash": "0xd256a71c30b3f3adbf75a14add58a831336c4beebf04ed142f48d5f608655a48",
-        "index": "0x0"
-      },
-      "dep_type": "code"
-    },
-    {
-      "out_point": {
-        "tx_hash": "0xace5ea83c478bb866edf122ff862085789158f5cbff155b7bb5f13058555b708",
-        "index": "0x0"
-      },
-      "dep_type": "dep_group"
-    }
-  ],
-  "header_deps": [],
-  "inputs": [
-    {
-      "since": "0x0",
-      "previous_output": {
-        "tx_hash": "0xf861df9da401fd25acbc400d9de79ccabad4090de39822c866be3efe0b86260e",
-        "index": "0x1"
-      }
-    },
-    {
-      "since": "0x0",
-      "previous_output": {
-        "tx_hash": "0xb87c7a858395f5be72f73a60ef87784ba5a53ed243eacae003ef62d0c9740cac",
-        "index": "0x0"
-      }
-    }
-  ],
-  "outputs": [
-    {
-      "capacity": "0x4a817c800",
-      "lock": {
-        "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
-        "hash_type": "type",
-        "args": "0xecbe30bcf5c6b2f2d8ec2dd229a4603a7e206b99"
-      },
-      "type": {
-        "code_hash": "0x82a4784a46f42916f144bfd1926fda614560e403bc131408881de82fee0724ad",
-        "hash_type": "data",
-        "args": "0xf6ea009a4829de7aeecd75f3ae6bcdbaacf7328074ae52a48456a8793a4b1cca"
-      }
-    },
-    {
-      "capacity": "0x5ccf69bde4",
-      "lock": {
-        "code_hash": "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
-        "hash_type": "type",
-        "args": "0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e"
-      },
-      "type": {
-        "code_hash": "0x82a4784a46f42916f144bfd1926fda614560e403bc131408881de82fee0724ad",
-        "hash_type": "data",
-        "args": "0xf6ea009a4829de7aeecd75f3ae6bcdbaacf7328074ae52a48456a8793a4b1cca"
-      }
-    }
-  ],
-  "outputs_data": [
-    "0x00c817a8040000000000000000000000",
-    "0x00e40b54020000000000000000000000"
-  ],
-  "witnesses": [
-    "0x55000000100000005500000055000000410000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-    "0x"
-  ]
-}
-3
-signingEntries: [
-  {
-    type: 'witness_args_lock',
-    index: 0,
-    message: '0x93a5fa04bd70001d913acb986bd4a3dd4fa2ed4dabde2a1e6e55964d4093b36d'
-  }
-]
-The transaction hash is 0xe7c73db5250d2ff1bbd933a2c5fd0925e8749d24768cb9125d4fc0adfebc02ea
-'0xe7c73db5250d2ff1bbd933a2c5fd0925e8749d24768cb9125d4fc0adfebc02ea'
+> await buildTXs.transferSUDT(alice.ADDRESS, bob.ADDRESS, 20000000000n, 20000000000n, 10000000n, alice.PRIVATE_KEY);
+Transfer SUDT tokens:
+The transaction hash is 0x1c6c608969d5e09f3e55d1628df05d1f1c26f6f65f6a5e728b66c6eae5e074e2
+'0x1c6c608969d5e09f3e55d1628df05d1f1c26f6f65f6a5e728b66c6eae5e074e2'
 > 
 ```
 

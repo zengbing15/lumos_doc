@@ -83,7 +83,7 @@ module.exports = {
             },
             {
               label: 'Install Lumos Packages',
-              to: 'docs/tutorials/installlumos',
+              to: 'docs/guides/installlumos',
             }
           ],
         },
@@ -92,11 +92,11 @@ module.exports = {
           items: [
             {
               label: 'Set Up the Config Manager',
-              to: 'docs/tutorials/config',
+              to: 'docs/guides/config',
             },
 			{
               label: 'Set Up the Lumos Indexer',
-              to: 'docs/tutorials/indexer',
+              to: 'docs/guides/indexer',
             },
           ],
         }

@@ -6,7 +6,7 @@ The Hello Lumos example is designed as a simple "DApp" that implemented the most
 
 You can follow the steps in this guide to perform a common transfer with the functions provided by the Hello Lumos "DApp".
 
-The sections in the later guides, for example, [Query on Cells](../tutorials/querycells), [Query on Transactions](../tutorials/querytransactions), and [Assemble Transactions](../tutorials/buildtransactions), explain the usage of Lumos by using the code examples of Hello Lumos. The full code of the example can be found [here](https://github.com/xying21/hellolumos). 
+The sections in the later guides, for example, [Query on Cells](../guides/querycells), [Query on Transactions](../guides/querytransactions), and [Assemble Transactions](../guides/buildtransactions), explain the usage of Lumos by using the code examples of Hello Lumos. The full code of the example can be found [here](https://github.com/xying21/hellolumos). 
 
 The  example has the following structure:
 
@@ -33,7 +33,6 @@ hellolumos/
 The following Prerequisites apply for walking through the Hello Lumos example:
 
 - The development environment is set up. For more information, see [Set Up the Development Environment](../preparation/setupsystem).
-- The CKB node is installed and started on DEV chain. For more information, see [Install a CKB Node](../preparation/installckb).
 - Two accounts, Alice and Bob are created. Alice is specified as the miner to receive mining rewards. For more information, see [Create accounts](../preparation/createaccount).
 
 ## Environment
@@ -156,11 +155,9 @@ Type ".help" for more information.
 The server is started.
 ```
 
-For more information about setting up the Lumos indexer, see [Set Up the Lumos Indexer](../tutorials/indexer).
-
-For more information about setting up the config manager, see [Set Up the Config Manager](../tutorials/config).
-
 ### Perform a common transfer transaction.
+
+The Hello Lumos example implements the common transfer transaction function by using Lumos modules and functions. For more information about building a common transaction by using Lumos, see [Transfer CKB in a Common Transaction](../guides/buildtransactions#transfer-ckb-in-a-common-transaction).
 
 1. Get the account information of Alice and Bob.
 
@@ -170,12 +167,6 @@ For more information about setting up the config manager, see [Set Up the Config
    > const { parseAddress } = require("@ckb-lumos/helpers");
    > const script1 = parseAddress(alice.ADDRESS);
    > const script2 = parseAddress(bob.ADDRESS);
-   > console.log(script1);
-   {
-     code_hash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-     hash_type: 'type',
-     args: '0x7e00660b8ab122bca3ba468c5b6eee71f40b7d8e'
-   }
    ```
    
 2. Check the balance for the accounts of Alice and Bob.
@@ -189,15 +180,13 @@ For more information about setting up the config manager, see [Set Up the Config
 
 3. Transfer 200 CKB from Alice to Bob. 
 
-   For more information about building a common transaction by using Lumos, see [Transfer CKB in a Common Transaction](../tutorials/buildtransactions#transfer-ckb-in-a-common-transaction).
-
    ```javascript {1}
-   > await buildTXs.commonTransfer([alice.ADDRESS], bob.ADDRESS,20000000000n,10000000n,alice.PRIVATE_KEY);
+   > await buildTXs.commonTransfer([alice.ADDRESS], bob.ADDRESS, 20000000000n, 10000000n, alice.PRIVATE_KEY);
    [warn] ANYONE_CAN_PAY script info not found in config!
-   The transaction hash is 0x32a717c2af9160b800805796c68803213060df782834486c72cfbacbb0868d62
-   '0x32a717c2af9160b800805796c68803213060df782834486c72cfbacbb0868d62'
+   The transaction hash is 0x22cc789bdaa8e021caa303cf20cfa4063b46a17abd62b31aa2cf712844f984cb
+   '0x22cc789bdaa8e021caa303cf20cfa4063b46a17abd62b31aa2cf712844f984cb'
    ```
-
+   
 4. Check the transaction status.
 
    :::note
@@ -206,19 +195,19 @@ For more information about setting up the config manager, see [Set Up the Config
 
    :::
 
-   For more information about getting transaction information by using Lumos, see [Get Transaction Status and Block Hash](../tutorials/querytransactions#get-transaction-status-and-block-hash). 
+   For more information about getting transaction information by using Lumos, see [Get Transaction Status and Block Hash](../guides/querytransactions#get-transaction-status-and-block-hash). 
 
    ```javascript {1}
-   > await querytransactions.getTxsbyHash("0x32a717c2af9160b800805796c68803213060df782834486c72cfbacbb0868d62");
+   > await querytransactions.getTXbyHash("0x22cc789bdaa8e021caa303cf20cfa4063b46a17abd62b31aa2cf712844f984cb");
    The transaction status is committed
-   The block hash for the transaction is 0xc21b34b009d5e355357eb55d9ee3456c6a90632434cff8dc515b2f0a207f854c
+   The block hash for the transaction is 0x6d60ae47167a78fbcf254c81b1d6356aceef2feeb4e039fed693c274a83faac1
    ```
 
 5. Check the new balance of Bob.
 
    When the transaction is committed, the new balance appears in the result.
 
-   For more information about getting balance by a lock script, see [Get the Balance of an Account](../tutorials/querycells#get-the-balance-of-an-account).
+   For more information about getting balance by a lock script, see [Get the Balance of an Account](../guides/querycapacity#get-the-balance-of-an-account).
 
    ```javascript {1}
    > await querycells.getBalancebyLock(script2);

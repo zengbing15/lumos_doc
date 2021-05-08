@@ -16,7 +16,7 @@ Lumos supports to query on transactions for the options including <var>lock</var
 
   <!--The [ScriptWrapper](https://nervosnetwork.github.io/lumos/interfaces/base.scriptwrapper.html) interface combines <var>argsLen</var> and <var>ioType</var> with a lock or type script to enable fine-grained queries.-->
 
-  For more information about [ScriptWrapper](https://nervosnetwork.github.io/lumos/interfaces/base.scriptwrapper.html), see [Fine-grained Query for Transactions](../tutorials/querytransactions#fine-grained-query-for-transactions).
+  For more information about [ScriptWrapper](https://nervosnetwork.github.io/lumos/interfaces/base.scriptwrapper.html), see [Fine-grained Query for Transactions](../guides/querytransactions#fine-grained-query-for-transactions).
 
 - <var>argsLen</var>: The lock or type args length. The default value of <var>argsLen</var> is -1 for the query on a full slice of the args.
 
@@ -33,8 +33,7 @@ Lumos supports to query on transactions for the options including <var>lock</var
 The following prerequisites apply for the examples in this guide:
 
 - The development environment is set up. For more information, see [Set Up the Development Environment](http://localhost:3000/lumos_doc/docs/preparation/setupsystem).
-- The CKB node is installed and started on DEV chain. For more information, see [Install a CKB Node](http://localhost:3000/lumos_doc/docs/preparation/installckb).
-- The Lumos packages (`@ckb-lumos/base`, `@ckb-lumos/indexer`, `@ckb-lumos/helpers`, `@ckb-lumos/config-manager`, `@ckb-lumos/rpc`) are installed.
+- The Lumos packages are installed. For more information, see [Install Lumos Packages](../guides/installlumos).
 
 ## Environment
 
@@ -48,12 +47,12 @@ The following example creates a new [TransactionCollector](https://nervosnetwork
 
 Example:
 
-```typescript title="hellolumos/src/querytransactions.ts/getTxsbyLock" {7}
+```typescript title="hellolumos/src/querytransactions.ts/getTXsbyLock" {7}
 import { INDEXER } from "./index";
 import { Script, Transaction } from "@ckb-lumos/base";
 import { TransactionCollector } from "@ckb-lumos/indexer";
 
-export async function getTxsbyLock(lockScript: Script) {
+export async function getTXsbyLock(lockScript: Script) {
   console.log("Get transactions by lock script:");
   const txCollector = new TransactionCollector(INDEXER, { lock: lockScript });
   const txs: Transaction[] = [];
@@ -69,7 +68,7 @@ export async function getTxsbyLock(lockScript: Script) {
 }
 ```
 
-Try the `getTxsbyLock` function in the Node.js REPL mode:
+Try the `getTXsbyLock` function in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
@@ -84,43 +83,43 @@ The server is started.
 > const bob = accounts.BOB;
 > const { parseAddress } = require("@ckb-lumos/helpers");
 > const script = parseAddress(bob.ADDRESS);
-> await querytransactions.getTxsbyLock(script);
+> await querytransactions.getTXsbyLock(script);
 Get transactions by lock script:
 [
   {
     cell_deps: [ [Object] ],
-    hash: '0x32a717c2af9160b800805796c68803213060df782834486c72cfbacbb0868d62',
+    hash: '0x22cc789bdaa8e021caa303cf20cfa4063b46a17abd62b31aa2cf712844f984cb',
     header_deps: [],
     inputs: [ [Object] ],
     outputs: [ [Object], [Object] ],
     outputs_data: [ '0x', '0x' ],
     version: '0x0',
     witnesses: [
-      '0x55000000100000005500000055000000410000003056c419901742aeb36c95e0b3d17449f086ac9a551b7cce1fd67b61de2ff9c05a4730738de3a3c06cf0405276226508b8423cb29e187e58895fae0cfd2fe75d01'
+      '0x5500000010000000550000005500000041000000ac5500c3bb4487dbb7b034cd0fb4faec9a29645076d00c041e2a16bfb45c4e0c68d6470c1bd0afb9d0a1d973210896a27bbaef3f23864ac6a716b6291fb226be00'                                                                                    
     ]
   },
   {
     cell_deps: [ [Object] ],
-    hash: '0x144ae79bc6064ae99e51b7105f4b61328dd4293d68d132b7a04d86409952ae2e',
+    hash: '0x46e6e4fd23263aa8983f73962faca0bd9d40463c2e42bbcd190249e3ec6bd5f8',
     header_deps: [],
     inputs: [ [Object] ],
     outputs: [ [Object], [Object] ],
     outputs_data: [ '0x', '0x' ],
     version: '0x0',
     witnesses: [
-      '0x550000001000000055000000550000004100000047441d4fea439fd06577eafadfe15c58e0a3aa13cbd13851d622b99c08e59b05354706bafeb411b1d244f022229ffd559a10a5b1cd545a699bdea824da420bf000'
+      '0x550000001000000055000000550000004100000071222e2b88f03b643fce53e81ff281b31a0a4a11f3eb31793064586d94ad66b578e148340c980460a63fb2d31fe7e320e59c20e921fc2aa40b8b01840763b05601'
     ]
   },
   {
     cell_deps: [ [Object] ],
-    hash: '0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e',
+    hash: '0x1f279591dca01710f1e5f71480ffe9039887212ade07b025b84a3d0b19f9a2bb',
     header_deps: [],
     inputs: [ [Object] ],
     outputs: [ [Object], [Object] ],
     outputs_data: [ '0x', '0x' ],
     version: '0x0',
     witnesses: [
-      '0x5500000010000000550000005500000041000000ec0fa41cca9234b12b7451e3894219c32af0a493d93bf1ec38d9fcccc5297c8a3598a427b4124e30329a3b4b80e885e89006d6b3abf65f385eccf19676977f4e00'
+      '0x5500000010000000550000005500000041000000189e5d1d8df5b92dea79828ec074de83c03635d5a3f9e800736d576b074b03ca7c2553bff3b4f5fa38c8663dc6b976b0cd96127364bcdd2a49d454ce657b3ea801'
     ]
   }
 ]
@@ -134,12 +133,12 @@ The following example fetches the transactions between [<var>fromBlock</var>, <v
 
 Example:
 
-```typescript title="hellolumos/src/querytransactions.ts/getTxsbetweenBlocks" {10-14}
+```typescript title="hellolumos/src/querytransactions.ts/getTXsbetweenBlocks" {10-14}
 import { INDEXER } from "./index";
 import { Script } from "@ckb-lumos/base";
 import { TransactionCollector } from "@ckb-lumos/indexer";
 
-export async function getTxsbetweenBlocks(
+export async function getTXsbetweenBlocks(
   lockScript: Script,
   fromBlock: string,
   toBlock: string
@@ -155,7 +154,7 @@ export async function getTxsbetweenBlocks(
   }
 }
 ```
-Try the `getTxsbetweenBlocks` function in the Node.js REPL mode:
+Try the `getTXsbetweenBlocks` function in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
@@ -170,86 +169,86 @@ The server is started.
 > const alice = accounts.ALICE;
 > const { parseAddress } = require("@ckb-lumos/helpers");
 > const script = parseAddress(alice.ADDRESS);
-> const from = "0x801";
-> const to = "0x804";
-> await querytransactions.getTxsbetweenBlocks(script, from, to);
+> const from = "0x11";
+> const to = "0x15";
+> await querytransactions.getTXsbetweenBlocks(script, from, to);
 Get transactions between given blocks:
 {
   transaction: {
     cell_deps: [],
-    hash: '0x5457bae99ab4cea79c78d4b239a92b5e30580cd1dda6637a7a661991704020cd',
+    hash: '0xa4e46a4d656c849ecee9b80fb2490967b0a89a6fd767acddc59ddd7d1013d1a9',
     header_deps: [],
     inputs: [ [Object] ],
     outputs: [ [Object] ],
     outputs_data: [ '0x' ],
     version: '0x0',
     witnesses: [
-      '0x590000000c00000055000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce801140000007e00660b8ab122bca3ba468c5b6eee71f40b7d8e00000000'
+      '0x590000000c00000055000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce801140000007e00660b8ab122bca3ba468c5b6eee71f40b7d8e00000000'                                                                            
     ]
   },
   tx_status: {
-    block_hash: '0x0c6c197f43b4a27b6c881a2f01d9c4ba8abf2244e2284afa0f1b737979500fbe',
+    block_hash: '0xe87b33e3b499ede1390cf12ec1f2df772762fa7cc981c55fe3753a01fcc52d14',
     status: 'committed'
   }
 }
 {
   transaction: {
     cell_deps: [],
-    hash: '0xb2bf608b9e0499fb8679af8b4126c4921fadfdb6efa0a5375e3aaa0676fc65ae',
+    hash: '0x8e4eded5087d8341e739885d4dd39b78661fde80c711a42b4aeee856de4d5d1c',
     header_deps: [],
     inputs: [ [Object] ],
     outputs: [ [Object] ],
     outputs_data: [ '0x' ],
     version: '0x0',
     witnesses: [
-      '0x590000000c00000055000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce801140000007e00660b8ab122bca3ba468c5b6eee71f40b7d8e00000000'
+      '0x590000000c00000055000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce801140000007e00660b8ab122bca3ba468c5b6eee71f40b7d8e00000000'                                                                            
     ]
   },
   tx_status: {
-    block_hash: '0x40c9b99ebb5da3888efb6fbc63fd13b4425a1b81b2a4271fb99a3ba29de9a55c',
+    block_hash: '0xf410bc8b58e5edcc0f6f9277a3d4c1ada599884b7395ad2a57f65643051c5752',
     status: 'committed'
   }
 }
 {
   transaction: {
     cell_deps: [],
-    hash: '0x59dd00d1444d346b71b8a0c94ea0d418b8a4c85d86040485c145a8a60725cad0',
+    hash: '0x4b4e37eda430c4c288398b518e00a93eae0fa979f65dc4f874feb2f4c8b5ae0b',
     header_deps: [],
     inputs: [ [Object] ],
     outputs: [ [Object] ],
     outputs_data: [ '0x' ],
     version: '0x0',
     witnesses: [
-      '0x590000000c00000055000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce801140000007e00660b8ab122bca3ba468c5b6eee71f40b7d8e00000000'
+      '0x590000000c00000055000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce801140000007e00660b8ab122bca3ba468c5b6eee71f40b7d8e00000000'                                                                            
     ]
   },
   tx_status: {
-    block_hash: '0xd0c09a6615b30f685dd0b0e627021f89e0f35e9b59c575001d8a11f63436b76c',
-    status: 'committed'
-  }
-}
-{
-  transaction: {
-    cell_deps: [ [Object] ],
-    hash: '0xe332fb6efba38e16b8fd20a4f47d5fffcf8fcac0c863b0eb30ef75067847936d',
-    header_deps: [],
-    inputs: [ [Object] ],
-    outputs: [ [Object], [Object] ],
-    outputs_data: [ '0x', '0x' ],
-    version: '0x0',
-    witnesses: [
-      '0x5500000010000000550000005500000041000000709026a75b82aca580d758c62eceaa9982b81057146a6c0205db3ee7b5581e3201d3ccd5845ea6d25b9b977f98f7c1c74efe4c38292b654d03fa2d037fa0777b01'
-    ]
-  },
-  tx_status: {
-    block_hash: '0xd0c09a6615b30f685dd0b0e627021f89e0f35e9b59c575001d8a11f63436b76c',
+    block_hash: '0xb8166998d66f21d8b2b46c30a935a66c9f13ed6fb0dafa43679d6b781046f1eb',
     status: 'committed'
   }
 }
 {
   transaction: {
     cell_deps: [],
-    hash: '0xea8f658e6ea08c38f58f6a0af3530396aba0e51e1064db8626ecd38976625c34',
+    hash: '0xc5e1990313383e57bbd7954808731c35666fe73b58a8c2c6bd5531a59af95e22',
+    header_deps: [],
+    inputs: [ [Object] ],
+    outputs: [ [Object] ],
+    outputs_data: [ '0x' ],
+    version: '0x0',
+    witnesses: [
+      '0x590000000c00000055000000490000001000000030000000310000009bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce801140000007e00660b8ab122bca3ba468c5b6eee71f40b7d8e00000000'                                                                            
+    ]
+  },
+  tx_status: {
+    block_hash: '0xb0b006d8b1df2bbd67a0effabc9a018874f45eed06f9e299b169e2f17ef62b20',
+    status: 'committed'
+  }
+}
+{
+  transaction: {
+    cell_deps: [],
+    hash: '0xeb37d08d17356435bc52dedcea5780b282ab40979ed0321cde12c91b9325ac86',
     header_deps: [],
     inputs: [ [Object] ],
     outputs: [ [Object] ],
@@ -260,7 +259,7 @@ Get transactions between given blocks:
     ]
   },
   tx_status: {
-    block_hash: '0xbae60c9c4f54d6f6a970fb76c2fdd226a83dd8724cff082157da559ce6cf507f',
+    block_hash: '0x6a6c07981e60d3a0e021c14c61d0962947724a616c64ff64a6e583f4e3409c5d',
     status: 'committed'
   }
 }
@@ -274,12 +273,12 @@ The <var>skip</var> query option represents the number of transactions being ski
 
 Example:
 
-```typescript title="hellolumos/src/querytransactions.ts/getTxsandSkip" {6}
+```typescript title="hellolumos/src/querytransactions.ts/getTXsandSkip" {6}
 import { INDEXER } from "./index";
 import { Script } from "@ckb-lumos/base";
 import { TransactionCollector } from "@ckb-lumos/indexer";
 
-export async function getTxsandSkip(lock: Script, skip: number) {
+export async function getTXsandSkip(lock: Script, skip: number) {
   const txCollector = new TransactionCollector(INDEXER, { lock, skip });
   console.log("Get transactions and skip the first", skip, "trasactions");
   for await (const txWithStatus of txCollector.collect()) {
@@ -288,18 +287,59 @@ export async function getTxsandSkip(lock: Script, skip: number) {
 }
 ```
 
+Try the `getTXsandSkip` function in the Node.js REPL mode:
+
+<details><summary>CLICK ME</summary>
+<p>
+
+
+```shell {1,2,5,7-10}
+$ cd hellolumos
+$ node --experimental-repl-await
+Welcome to Node.js v14.0.0.
+Type ".help" for more information.
+> const { accounts, querytransactions } = require(".");
+The server is started.
+> const bob = accounts.BOB;
+> const { parseAddress } = require("@ckb-lumos/helpers");
+> const script = parseAddress(bob.ADDRESS);
+> await querytransactions.getTXsandSkip(script, 2);
+Get transactions and skip the first 2 trasactions
+{
+  transaction: {
+    cell_deps: [ [Object] ],
+    hash: '0x1f279591dca01710f1e5f71480ffe9039887212ade07b025b84a3d0b19f9a2bb',
+    header_deps: [],
+    inputs: [ [Object] ],
+    outputs: [ [Object], [Object] ],
+    outputs_data: [ '0x', '0x' ],
+    version: '0x0',
+    witnesses: [
+      '0x5500000010000000550000005500000041000000189e5d1d8df5b92dea79828ec074de83c03635d5a3f9e800736d576b074b03ca7c2553bff3b4f5fa38c8663dc6b976b0cd96127364bcdd2a49d454ce657b3ea801'
+    ]
+  },
+  tx_status: {
+    block_hash: '0x29acfca00bb07d94791c0f14685d40820ac198b771c894e45755bb55018fa6ea',
+    status: 'committed'
+  }
+}
+```
+
+</p>
+</details>
+
 ### Order Transactions by Block Number
 
 The following example creates a new [TransactionCollector](https://nervosnetwork.github.io/lumos/classes/indexer.transactioncollector.html) and uses the TransactionCollector to collect transactions in order of block numbers for a specific lock script. If the order is not specified, the default order is "asc" (ascending) for the returned result.
 
 Example:
 
-```typescript title="hellolumos/src/querytransactions.ts/getTxsandOrder" {6}
+```typescript title="hellolumos/src/querytransactions.ts/getTXsandOrder" {6}
 import { INDEXER } from "./index";
 import { Script } from "@ckb-lumos/base";
 import { TransactionCollector } from "@ckb-lumos/indexer";
 
-export async function getTxsandOrder(lock: Script, order: "asc" | "desc") {
+export async function getTXsandOrder(lock: Script, order: "asc" | "desc") {
   const txCollector = new TransactionCollector(INDEXER, { lock, order });
   console.log("Get transactions in order of", order);
   for await (const txWithStatus of txCollector.collect()) {
@@ -379,7 +419,7 @@ Try the `finegrainedSearch` function in the Node.js REPL mode:
 <p>
 
 
-```shell {1,2,5,7-10}
+```shell {1,2,5,7-10,68}
 $ cd hellolumos
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
@@ -396,57 +436,58 @@ Fine Grained Query
 {
   transaction: {
     cell_deps: [ [Object] ],
-    hash: '0x32a717c2af9160b800805796c68803213060df782834486c72cfbacbb0868d62',
+    hash: '0x22cc789bdaa8e021caa303cf20cfa4063b46a17abd62b31aa2cf712844f984cb',
     header_deps: [],
     inputs: [ [Object] ],
     outputs: [ [Object], [Object] ],
     outputs_data: [ '0x', '0x' ],
     version: '0x0',
     witnesses: [
-      '0x55000000100000005500000055000000410000003056c419901742aeb36c95e0b3d17449f086ac9a551b7cce1fd67b61de2ff9c05a4730738de3a3c06cf0405276226508b8423cb29e187e58895fae0cfd2fe75d01'
+      '0x5500000010000000550000005500000041000000ac5500c3bb4487dbb7b034cd0fb4faec9a29645076d00c041e2a16bfb45c4e0c68d6470c1bd0afb9d0a1d973210896a27bbaef3f23864ac6a716b6291fb226be00'                                                                                    
     ]
   },
   tx_status: {
-    block_hash: '0xc21b34b009d5e355357eb55d9ee3456c6a90632434cff8dc515b2f0a207f854c',
+    block_hash: '0x6d60ae47167a78fbcf254c81b1d6356aceef2feeb4e039fed693c274a83faac1',
     status: 'committed'
   }
 }
 {
   transaction: {
     cell_deps: [ [Object] ],
-    hash: '0x144ae79bc6064ae99e51b7105f4b61328dd4293d68d132b7a04d86409952ae2e',
+    hash: '0x46e6e4fd23263aa8983f73962faca0bd9d40463c2e42bbcd190249e3ec6bd5f8',
     header_deps: [],
     inputs: [ [Object] ],
     outputs: [ [Object], [Object] ],
     outputs_data: [ '0x', '0x' ],
     version: '0x0',
     witnesses: [
-      '0x550000001000000055000000550000004100000047441d4fea439fd06577eafadfe15c58e0a3aa13cbd13851d622b99c08e59b05354706bafeb411b1d244f022229ffd559a10a5b1cd545a699bdea824da420bf000'
+      '0x550000001000000055000000550000004100000071222e2b88f03b643fce53e81ff281b31a0a4a11f3eb31793064586d94ad66b578e148340c980460a63fb2d31fe7e320e59c20e921fc2aa40b8b01840763b05601'                                                                                    
     ]
   },
   tx_status: {
-    block_hash: '0x2d70e178be2447f784d9c8c1c52630d10b3b3b23575896e61ff15983a7e5ba59',
+    block_hash: '0x63539ac9bc533bfb16e00cfaf736ebc041442fd3c3c6e8796b53cbdec0fb7af4',
     status: 'committed'
   }
 }
 {
   transaction: {
     cell_deps: [ [Object] ],
-    hash: '0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e',
+    hash: '0x1f279591dca01710f1e5f71480ffe9039887212ade07b025b84a3d0b19f9a2bb',
     header_deps: [],
     inputs: [ [Object] ],
     outputs: [ [Object], [Object] ],
     outputs_data: [ '0x', '0x' ],
     version: '0x0',
     witnesses: [
-      '0x5500000010000000550000005500000041000000ec0fa41cca9234b12b7451e3894219c32af0a493d93bf1ec38d9fcccc5297c8a3598a427b4124e30329a3b4b80e885e89006d6b3abf65f385eccf19676977f4e00'
+      '0x5500000010000000550000005500000041000000189e5d1d8df5b92dea79828ec074de83c03635d5a3f9e800736d576b074b03ca7c2553bff3b4f5fa38c8663dc6b976b0cd96127364bcdd2a49d454ce657b3ea801'
     ]
   },
   tx_status: {
-    block_hash: '0x64623c86af1df458caac8a1433e50ae7ffc228aaa1975d60ed03dfe3ec4ca3fc',
+    block_hash: '0x29acfca00bb07d94791c0f14685d40820ac198b771c894e45755bb55018fa6ea',
     status: 'committed'
   }
 }
+> await querytransactions.finegrainedSearch(script, 20, "input");
 ```
 
 </p>
@@ -464,11 +505,11 @@ The following example uses the [get_transaction](https://nervosnetwork.github.io
 
 Example: 
 
-```typescript title="hellolumos/src/querytransactions.ts/getTxsbyHash" {5}
+```typescript title="hellolumos/src/querytransactions.ts/getTXbyHash" {5}
 import { RPC } from "@ckb-lumos/RPC";
 const rpc = new RPC("http://127.0.0.1:8114");
 
-export async function getTxsbyHash(txHash: string) {
+export async function getTXbyHash(txHash: string) {
   const txWithStatus = await rpc.get_transaction(txHash);
 
   const status = txWithStatus?.tx_status.status;
@@ -478,7 +519,7 @@ export async function getTxsbyHash(txHash: string) {
 }
 ```
 
-Try the `getTxsbyHash` function in the Node.js REPL mode:
+Try the `getTXbyHash` function in the Node.js REPL mode:
 
 <details><summary>CLICK ME</summary>
 <p>
@@ -491,9 +532,9 @@ Welcome to Node.js v14.0.0.
 Type ".help" for more information.
 > const { querytransactions } = require(".");
 The server is started.
-> await querytransactions.getTxsbyHash("0x10104ec6857fd99b818e7b401216268c067ce7fbc536b77c86f3565c108e958e");
+> await querytransactions.getTXbyHash("0x46e6e4fd23263aa8983f73962faca0bd9d40463c2e42bbcd190249e3ec6bd5f8");
 The transaction status is committed
-The block hash for the transaction is 0x64623c86af1df458caac8a1433e50ae7ffc228aaa1975d60ed03dfe3ec4ca3fc
+The block hash for the transaction is 0x63539ac9bc533bfb16e00cfaf736ebc041442fd3c3c6e8796b53cbdec0fb7af4
 ```
 
 </p>
