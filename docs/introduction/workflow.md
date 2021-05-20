@@ -10,7 +10,7 @@ The DApp development generally follows the following basic steps:
 
    - The knowledge of CKB Data Model. For more information, see [Nervos CKB Reference](https://docs.nervos.org/docs/reference/introduction) and [CKB Data Structure](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0019-data-structures/0019-data-structures.md).
 
-   - Programming skills of Node.js projects for desktop applications or server applications
+   - Programming skills of Node.js projects for desktop applications or server applications.
 
 2. <p>Set up the development environment.
 

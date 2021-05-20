@@ -2,7 +2,7 @@
 id: integratenft
 title: DApps on CKB Workshop Code
 ---
-A code example, [DApps on CKB Workshop Code](https://github.com/nervosnetwork/dapps-on-ckb-workshop-code), is provided for the demonstration of integrating the NFT script on CKB. For more information about CKB NFT, see the [RFC: CKB-NFT Draft Spec](https://talk.nervos.org/t/rfc-ckb-nft-draft-spec/4779).
+A code example, [DApps on CKB Workshop Code](https://github.com/nervosnetwork/dapps-on-ckb-workshop-code), is provided for the demonstration of integrating the NFT script on CKB. For more information about CKB NFT, see [CKB RFC: CKB-NFT Draft Spec](https://talk.nervos.org/t/rfc-ckb-nft-draft-spec/4779).
 
 The  example has the following structure:
 

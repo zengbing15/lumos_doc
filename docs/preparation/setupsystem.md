@@ -125,10 +125,11 @@ $ ./Tippy
 
 <p>To shorten DEV chain epoch and block interval:</p>
 
-<ol><li><p>Stop the DEV chain and delete the data files of the chain.</p><p>Home/.config/Tippy/chain-<var>number</var>/data</p><p>Home/.config/Tippy/chain-<var>number</var>/indexer-data</p></li><li><p>Modify the value for <code>genesis_epoch_length</code> and <code>permanent_difficulty_in_dummy</code> in the dev.toml file.</p>
+<ol><li><p>Stop the DEV chain and delete the data files of the chain.</p><p>$HOME/.config/Tippy/chain-<var>number</var>/data</p><p>$HOME/.config/Tippy/chain-<var>number</var>/indexer-data</p></li><li><p>Modify the value for <code>genesis_epoch_length</code> and <code>permanent_difficulty_in_dummy</code> in the dev.toml file.</p>
 
 
-```toml title="Home/.config/Tippy/chain-number/specs/dev.toml"
+
+```toml title="$HOME/.config/Tippy/chain-number/specs/dev.toml"
 genesis_epoch_length = 10  # The unit of meansurement is "block".
 permanent_difficulty_in_dummy = true
 ```
@@ -137,7 +138,7 @@ permanent_difficulty_in_dummy = true
 
 <p>To modify the value in the [miner.workers] section to generate a new block every second (1,000 milliseconds):</p>
 
-```toml title="Home/.config/Tippy/chain-number/ckb-miner.toml" {4}
+```toml title="$HOME/.config/Tippy/chain-number/ckb-miner.toml" {4}
 [[miner.workers]]
 worker_type = "Dummy"
 delay_type = "Constant"
@@ -168,10 +169,11 @@ value = 1000
 
 <p>To shorten DEV chain epoch and block interval:</p>
 
-<ol><li><p>Stop the DEV chain and delete the data files of the chain.</p></li><li><p>Modify the value for <code>genesis_epoch_length</code> and <code>permanent_difficulty_in_dummy</code> in the dev.toml file.</p>
+<ol><li><p>Stop the DEV chain and delete the data files of the chain.</p><p>~/Libary/Application Support/Tippy/chain-<var>number</var>/data</p><p>~/Libary/Application Support/Tippy/chain-<var>number</var>/indexer-data</p></li><li><p>Modify the value for <code>genesis_epoch_length</code> and <code>permanent_difficulty_in_dummy</code> in the dev.toml file.</p>
 
 
-```toml title="/specs/dev.toml"
+
+```toml title="~/Libary/Application Support/Tippy/chain-number/specs/dev.toml"
 genesis_epoch_length = 10  # The unit of meansurement is "block".
 permanent_difficulty_in_dummy = true
 ```
@@ -180,7 +182,7 @@ permanent_difficulty_in_dummy = true
 
 <p>To modify the value in the [miner.workers] section to generate a new block every second (1,000 milliseconds):</p>
 
-```toml title="/ckb-miner.toml" {4}
+```toml title="~/Libary/Application Support/Tippy/chain-number/ckb-miner.toml" {4}
 [[miner.workers]]
 worker_type = "Dummy"
 delay_type = "Constant"
