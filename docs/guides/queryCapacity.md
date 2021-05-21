@@ -49,7 +49,7 @@ Welcome to Node.js v14.0.0.
 Type ".help" for more information.
 > const { querycells } = require(".");
 The server is started.
-//You can use the following cell data directly.
+# You can use the following cell data directly.
 > const cell = {
   cell_output: {
     capacity: '0x1247656167b4',
@@ -70,7 +70,7 @@ The server is started.
 }
 > await querycells.getMinimalCellCapacity(cell);
 The minimal cell capacity is 6100000000n
-//You can use the following cell data directly.
+# You can use the following cell data directly.
 > const DAOCell = {
   cell_output: {
     capacity: '0x4a817c800',
@@ -221,7 +221,7 @@ Try the `findCellsforSufficientAmount` function in the Node.js REPL mode:
 <p>
 
 
-```shell {1,2,5,7-9,12,48}
+```shell {1,2,5,7-9,13,50}
 $ cd hellolumos
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.
@@ -231,8 +231,9 @@ The server is started.
 > const bob = accounts.BOB;
 > const { parseAddress } = require("@ckb-lumos/helpers");
 > const script = parseAddress(bob.ADDRESS);
-//Bob owns three cells, and each cell contains 200 CKB in the capacity field.
-//This can be achieved by transferring 600 CKB from Alice to Bob in three times, and 200 CKB each time.
+# Bob owns three cells, and each cell contains 200 CKB in the capacity field.
+# This can be achieved by transferring 600 CKB from Alice to Bob in three times,
+# and 200 CKB each time.
 > await querycells.findCellsbyLock(script);
 Find the cells by lock script:
 [
@@ -267,8 +268,9 @@ Find the cells by lock script:
     data: '0x'
   }
 ]
-//Run the findCellsforSufficientAmount function to collect the cells that have a total
-//amount at least 300 CKB. The function returns two cells with the total amount of 400 CKB that is sufficient and more than 300 CKB.
+# Run the findCellsforSufficientAmount function to collect the cells that have a total
+# amount at least 300 CKB. The function returns two cells with the total amount of 400 CKB that is
+# sufficient and more than 300 CKB.
 > await querycells.findCellsforSufficientAmount(script, 30000000000n);
 [
   {

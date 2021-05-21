@@ -204,8 +204,8 @@ The server is started.
  hash_type: template.HASH_TYPE,
  args: "0x",
  };
-//The example finds the DAO cells that Alice owns.
-//For more information about DAO operations, see Build Transactions.
+# The example finds the DAO cells that Alice owns.
+# For more information about DAO operations, see Build Transactions.
 > await querycells.findCellsbyLockandType(script, typescript);
 Find the cells by Lock and Type script
 [
@@ -465,7 +465,7 @@ Welcome to Node.js v14.0.0.
 Type ".help" for more information.
 > const { querycells } = require(".");
 The server is started.
-//Truncate the lock args of Bob's account by removing the last 11 bytes and run prefix search on the truncated lock args.
+# Truncate the lock args of Bob's account by removing the last 11 bytes and run prefix search on the truncated lock args.
 > const script = {
  code_hash: "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
  hash_type: "type",
@@ -551,7 +551,7 @@ The server is started.
  };
 > const argslen = 20;
 > await querycells.finegrainedSearch(script, argslen);
-//The result shows the cells with Bob's lock script and the lock args length is 20 bytes.
+# The result shows the cells with Bob's lock script and the lock args length is 20 bytes.
 Fine-Grained Query:
 [
   {

@@ -378,10 +378,10 @@ Welcome to Node.js v14.0.0.
 Type ".help" for more information.
 > const { manageaccounts } = require(".");
 The server is started.
-// Set the needMasterPublicKey variable as false to get the balance for all keys except the master public key
+# Set the needMasterPublicKey variable as false to get the balance for all keys except the master public key
 > await manageaccounts.getBalancebyHDCache("/user/username","test", false);
 The HD wallet balance is 40000000000n
-// Set the needMasterPublicKey variable as true to get the balance for all keys including the master public key
+# Set the needMasterPublicKey variable as true to get the balance for all keys including the master public key
 > await manageaccounts.getBalancebyHDCache("/user/username","test", true);
 The HD wallet balance is 2833614223561041n
 ```
@@ -554,7 +554,7 @@ Try the `generateAccountFromPrivateKey` function in the Node.js REPL mode:
 
 
 
-```shell {1,4,6,7}
+```shell {1,2,5,7,8}
 $ cd hellolumos
 $ node --experimental-repl-await
 Welcome to Node.js v14.0.0.

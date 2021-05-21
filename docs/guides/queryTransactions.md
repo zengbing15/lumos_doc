@@ -430,8 +430,8 @@ The server is started.
 > const { parseAddress } = require("@ckb-lumos/helpers");
 > const script = parseAddress(bob.ADDRESS);
 > await querytransactions.finegrainedSearch(script, 20, "output");
-//The result shows the transactions that produced output cells with Bob's lock script.
-//Bob received CKB capacity in these transactions.
+# The result shows the transactions that produced output cells with Bob's lock script.
+# Bob received CKB capacity in these transactions.
 Fine Grained Query
 {
   transaction: {

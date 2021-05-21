@@ -65,6 +65,12 @@ Assign the lock args of Alice to <b>Block Assembler Lock Arg</b> in the Edit Cha
 
  After the miner is specified, restart the CKB node and start the CKB miner on the Tippy dashboard.
 
+:::note
+
+The CKB is mature 4 [epochs](https://docs.nervos.org/docs/basics/glossary#epoch "An epoch is a period of time for a set of blocks. ") after it is mined. In Nervos, an epoch is approximately four hours. For DEV chain, the epoch length is defined by the `genesis_epoch_length` parameter in the **dev.toml** file. For more information about shortening the epoch length for DEV chain, see Step 4 of [Install a CKB node on DEV chain by using Tippy](../preparation/setupsystem#install-a-ckb-node-on-dev-chain-by-using-tippy).
+
+:::  
+
 ### Step 6. Check the Balance for the Account of Alice.
 
 To check the balance of Alice, execute the `ckb-cli wallet get-capacity --address <the Testnet address of the account>` command.

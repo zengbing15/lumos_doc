@@ -235,6 +235,12 @@ The process of getting CKB capacity varies for the accounts on different network
 
 - To get CKB capacity for an account on **DEV chain**, specify the account as the miner for receiving mining rewards.
 
+  :::note
+
+  The CKB is mature 4 [epochs](https://docs.nervos.org/docs/basics/glossary#epoch "An epoch is a period of time for a set of blocks. ") after it is mined. In Nervos, an epoch is approximately four hours. For DEV chain, the epoch length is defined by the `genesis_epoch_length` parameter in the **dev.toml** file. For more information about shortening the epoch length for DEV chain, see Step 4 of [Install a CKB node on DEV chain by using Tippy](../preparation/setupsystem#install-a-ckb-node-on-dev-chain-by-using-tippy).
+
+  :::  
+
   - If the CKB node is installed by Tippy: Assign the lock args of the account to <b>Block Assembler Lock Arg</b> in the Edit Chain form and save the changes.
 
     <img src={useBaseUrl("img/editchain.png")} width="50%"/>
