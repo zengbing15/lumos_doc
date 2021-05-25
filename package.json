@@ -22,8 +22,11 @@
     "@mdx-js/react": "^1.6.21",
     "clsx": "^1.1.1",
     "docusaurus-plugin-sass": "^0.1.12",
+    "lodash": "4.17.21",
     "react": "^16.8.4",
-    "react-dom": "^16.8.4"
+    "react-dom": "^16.8.4",
+    "ssri": "8.0.1",
+    "trim": "0.0.3"
   },
   "browserslist": {
     "production": [

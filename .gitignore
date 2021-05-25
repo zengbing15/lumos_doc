@@ -20,6 +20,3 @@ yarn-debug.log*
 yarn-error.log*
 /docs/concepts
 /src/css
-docusaurus.config.js*
-package.json*
-sidebars.js*
