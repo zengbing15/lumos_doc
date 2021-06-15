@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'TypeScript and JavaScript Framework for CKB DApps',
+  title: 'A TypeScript and JavaScript Framework for CKB DApps',
   tagline: 'The Development Framework for Nervos CKB DApps',
   url: 'https://github.com/xying21/lumos_doc',
   baseUrl: '/lumos_doc/',

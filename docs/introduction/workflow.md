@@ -2,7 +2,7 @@
 id: workflow
 title: Workflow
 ---
-The DApp development generally follows the following basic steps:
+The development of a DApp generally follows the following basic steps:
 
 1. Prepare the basic skills:
 
@@ -24,8 +24,7 @@ The DApp development generally follows the following basic steps:
 
    For more information about how to add Lumos packages to a project, see <a href="../guides/installlumos">Install Lumos Packages</a>.</p>
 
-6. <p>Establish the connection with the CKB network by the setup of the config manager and the Lumos indexer.
-
+5. <p>Establish the connection to the CKB network by setting up the config manager and the Lumos indexer.<br/>
    For more information about how to set up the config manager, see <a href="../guides/config">Set Up the Config Manger</a>.
 
    For more information about how to set up the Lumos indexer, see <a href="../guides/indexer">Set Up the Lumos Indexer</a>.</p>
@@ -33,3 +32,4 @@ The DApp development generally follows the following basic steps:
 7. <p>Program the DApp functions by using Lumos to deal with user queries and transaction requests.
 
    For more information about the usage of Lumos, see the sections in the Guides and Examples.</p>
+

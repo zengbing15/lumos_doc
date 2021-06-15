@@ -2,15 +2,15 @@
 id: lumoscomponents
 title: Lumos Components (Packages)
 ---
-Lumos provides a set of fully comprehensive features and utilities with the Lumos components (packages)<!--as shown in the figure of the architecture-->. Some components, such as the **Lumos indexer** that supports a DApp to query cells, the **common scripts** component that enables the DApp to assemble transactions, and the **RPC** component that is responsible for the communication with the CKB network, form the fundamentals of Lumos.
+Lumos offers an all-inclusive set of functions and utilities with the Lumos components (packages)<!--as shown in the figure of the architecture-->. Components, such as the **Lumos indexer**, which supports a DApp to query on cells, the **common scripts** component that enables the DApp to assemble transactions, and the **RPC** component that is responsible for communicating with the CKB network, form the core functions of Lumos.
 
-The **HD cache manager** and the **HD wallet manager** provide the functions that consolidate the strength of the Lumos framework. 
+The functionalities supplied by **HD cache manager** and the **HD wallet manager** consolidate the power of the Lumos framework. 
 
-These components can be utilized in combination for a DApp logic during the development. They can be classified into several groups according to their functions.
+These components can be combined for use in a DApp logic throughout the development process. They can be divided into groups according to their functionality.
 
 ## Helpers
 
-The **base** component, the **helpers** component and the **config manager** component serve as helpers that facilitate the other components functions.
+The **base**, **helpers** and **config manager** components serve as helpers that facilitate the other components functions.
 
 - **Base**: The base component (`@ckb-lumos/base`) includes the core definitions and stateless functions that can be used in the other components. The `@ckb-lumos/base` package can be used as a standalone library.
 
@@ -18,13 +18,15 @@ The **base** component, the **helpers** component and the **config manager** com
 
 - **Config manager**: The config manager component  (`@ckb-lumos/config-manager`) deals with differences between chains, such as the Mainnet, Testnet, or numerous DEV chains. Each chain is abstracted into an individual configuration file.
 
-  When a configuration file is loaded, the config manager handles the chain specific logic that saves corresponding coding effort for configuration management.
+  When a configuration file is loaded, the config manager processes the chain specific logic, sparing the corresponding coding work for configuration management.
 
   For more information, see [Set Up the Config Manager](../guides/config).
 
 ## Cell Provider
 
-Cell provider means the component that provides cells to the other functions. **Lumos indexer** or **transaction manager** can be used as the cell provider on different purposes.
+Cell provider refers to the component that provides cells to the other functions. 
+
+The **Lumos indexer** or **transaction manager** component can be used as a cell provider based on different purposes.
 
 - **Lumos indexer**: The Lumos indexer (`@ckb-lumos/indexer` and `@ckb-lumos/sql-indexer`) is a CKB cell indexer that fulfills the [Index-Query-Assemble](https://docs.nervos.org/docs/reference/cell#index-query-assemble-pattern) pattern. The Lumos indexer indexes cells and maintains a local database of the cells that provides an optimal way for querying cells.
 
@@ -34,7 +36,7 @@ Cell provider means the component that provides cells to the other functions. **
 
 ## Transaction Generator
 
-The CKB DApp mainly acts as a transaction generator that generates transactions with the support of **common scripts**.
+The CKB DApp acts primarily as a transaction generator, generating transactions with the support of **common scripts**.
 
 - **Common scripts**: The common scripts component (`@ckb-lumos/common-scripts`) integrates known scripts on CKB. The scripts use a cell provider (the Lumos indexer or `transactionManager`) to collect cells and assemble transactions. Each script implements a specific  `TransactionSkeleton`  for building transactions that forms a unified workflow for transaction generation.
 

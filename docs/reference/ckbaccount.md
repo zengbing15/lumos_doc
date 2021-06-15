@@ -233,7 +233,7 @@ message: "Success exported account as extended privkey to: \"alice\", please use
 
 The process of getting CKB capacity varies for the accounts on different networks (chains). 
 
-- To get CKB capacity for an account on **DEV chain**, specify the account as the miner for receiving mining rewards.
+- To get CKB capacity for an account on **DEV chain**, specify the account as the miner who receives mining rewards.
 
   :::note
 

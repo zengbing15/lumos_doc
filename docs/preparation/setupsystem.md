@@ -2,11 +2,11 @@
 id: setupsystem
 title: Set Up the Development Environment
 ---
-This guide will help you get your system set up for building DApps with Lumos. If you already have everything installed, read the other guides and walk through the examples to learn the usage of Lumos.
+This guide will help you set up your system for building DApps with Lumos. If you already have everything installed, feel free to read the other guides, and walk through the examples to learn the usage of Lumos.
 
 ## System Requirements
 
-- Operating System:  CKB DApps can be developed upon Lumos on all major platforms including Linux, Windows, and macOS.
+- Operating System:  CKB DApps can be developed upon Lumos on all major platforms, including Linux, Windows, and macOS.
 - JavaScript runtime environment: [Node.js](https://nodejs.org/en/download/) LTS Version (>=12)
 - Development tools to build native addons: GCC and make
 - JavaScript package manager: Yarn or npm
@@ -43,9 +43,9 @@ To install Yarn through NPM:
 npm install --global yarn
 ```
 
-## Install Dependencies for node-gyp
+## Install dependencies for node-gyp
 
-Lumos depends on **node-gyp** that is a cross-platform command-line tool for compiling native addon modules for *Node*.js. 
+Lumos relies on **node-gyp**, a cross-platform command-line tool for compiling native addon modules for *Node*.js. 
 
 node-gyp has a few additional system requirements and dependencies that have different installation steps on different operating systems.
 
@@ -83,7 +83,7 @@ For more information, see the instructions of <a href="https://github.com/nodejs
 
 ## Install a CKB node on DEV chain by using Tippy
 
-**Tippy** is a tool that helps set up and manage CKB nodes. It can install and start running a CKB node by one simple click. **DEV chain** is the recommended network for the later examples and CKB starters. 
+**Tippy** is a tool to help set up and manage CKB nodes. It can install and start running a CKB node by one simple click. **DEV chain** is the recommended network for the later examples and CKB starters. 
 
 For more information about the concepts of CKB nodes, CKB networks, and the methods to install a CKB node, see [CKB Nodes and Networks](../reference/ckbnode).
 

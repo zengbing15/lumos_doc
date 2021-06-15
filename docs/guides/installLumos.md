@@ -2,7 +2,7 @@
 id: installlumos
 title: Install Lumos Packages
 ---
-This guide introduces how to add necessary  [Lumos Components (Packages)](../introduction/lumoscomponents) to a Node.js project as dependencies. <!--For the projects that have already listed Lumos packages as dependencies, just run `yarn install` in the projects directly to install the packages.--> 
+This guide shows how to add necessary  [Lumos Components (Packages)](../introduction/lumoscomponents) to a Node.js project as dependencies. <!--For the projects that have already listed Lumos packages as dependencies, just run `yarn install` in the projects directly to install the packages.--> 
 
 ## Prerequisites
 
@@ -28,7 +28,7 @@ $ cd mydapp
 
 ### Step 2. If this is a new project, initialize the project by using the `yarn init` command.
 
-This command prompts questions about the name and version of the project and the name of the initial entry point file (by default this is **index.js**). Just accept the defaults by hitting enter or type answers for each of the questions.
+This command prompts questions about the name and version of the project and the name of the initial entry point file (by default this is **index.js**). Simply press enter to accept the defaults, or enter an answer for each question.
 
 ```
 $ yarn init

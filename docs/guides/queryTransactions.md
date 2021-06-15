@@ -4,7 +4,7 @@ title: Query on Transactions
 ---
 > Transactions are the most fundamental entities for a DApp to interact with Nervos CKB. For more information about CKB transactions, see [Nervos Docs: Transaction](https://docs.nervos.org/docs/reference/transaction) and [CKB RFC: Data Structures](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0019-data-structures/0019-data-structures.md#transaction).
 
-Lumos provides functions to support querying on transactions for specific query options.
+Lumos supports querying on transactions for specific query options.
 
 ## Query Options
 
@@ -350,7 +350,7 @@ export async function getTXsandOrder(lock: Script, order: "asc" | "desc") {
 
 ### Prefix Search on <var>args</var>
 
-To enable prefix search on the args of a lock script or a type script, <var>argsLen</var> can be assigned with a value other than the default value -1.
+To enable prefix search on the args of a lock script or a type script, you can specify a value for <var>argsLen</var> instead of the default value of **-1**.
 
 The lock script args length is **20** in normal scenarios and **28** in the multisig scenario. When the length is not certain, the <var>argsLen</var> parameter can be set as `any`. 
 

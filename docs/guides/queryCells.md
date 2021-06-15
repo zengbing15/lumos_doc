@@ -3,7 +3,7 @@ id: querycells
 title: Query on Cells
 ---
 
-> Cells are the primary state units in CKB and assets owned by users. A cell is the most basic structure that represents a single piece of data in Nervos. The data contained in a cell can take many forms, including CKBytes, tokens, code like JavaScript code, or even serialized data like JSON strings. For more information about the cell model, see [Nervos Docs: Cell](https://docs.nervos.org/docs/reference/cell) and [CKB RFC: CKB Cell](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#42-cell).
+> Cells are the primary state units in CKB and are assets owned by users. A cell is the most basic structure that represents a single piece of data in Nervos. The data contained in a cell can take many forms, including CKBytes, tokens, code like JavaScript code, or even serialized data like JSON strings. For more information about the cell model, see [Nervos Docs: Cell](https://docs.nervos.org/docs/reference/cell) and [CKB RFC: CKB Cell](https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0002-ckb/0002-ckb.md#42-cell).
 
 Querying on cells are the fundamental functions for a DApp to respond to user queries and transaction requests. Lumos provides functions for the queries on cells with specific query options.
 
@@ -40,7 +40,7 @@ Lumos enriches the cell structure defined in [CKB RFC: Cell](https://github.com/
 
 ## Query Options
 
-Lumos supports to query on cells for the options including <var>lock</var>, <var>type</var>, <var>argsLen</var>, <var>data</var>, <var>fromBlock</var>, <var>toBlock</var>, <var>skip</var> and <var>order</var>.
+Lumos supports query options on cells, including <var>lock</var>, <var>type</var>, <var>argsLen</var>, <var>data</var>, <var>fromBlock</var>, <var>toBlock</var>, <var>skip</var> and <var>order</var>.
 
 - <var>lock</var>: A lock script or a ScriptWrapper of a lock script.
 
@@ -420,9 +420,9 @@ Find Cells and Skip the first 10 cells:
 
 ### Prefix Search on <var>args</var>
 
-To enable the prefix search on the args of a lock script or a type script, <var>argsLen</var> can be assigned with a value other than the default value **-1**. The default value is for the query on a full slice of the args of a lock script.
+To enable the prefix search on the args of a lock script or a type script, you can specify a value for <var>argsLen</var> instead of the default value of **-1**. The default value is used for a query on a full slice of the args of a lock script.
 
-The lock script args length is **20** in normal scenarios and **28** in the multisig scenario. When the length is not certain, the <var>argsLen</var> parameter can be set as `any`. 
+The lock script args length is **20** in normal scenarios and **28** in the multisig scenario. When the length is uncertain, the <var>argsLen</var> parameter can be set as `any`. 
 
 :::info
 

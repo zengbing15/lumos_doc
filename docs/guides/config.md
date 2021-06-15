@@ -2,7 +2,7 @@
 id: config
 title: Set Up the Config Manager
 ---
-The config manager  (`@ckb-lumos/config-manager`) supports the DApp to boot with a specific chain configuration. All the other components in Lumos can leverage the configuration from the config manager directly.
+The config manager  (`@ckb-lumos/config-manager`) supports to launch a DApp with a specific chain configuration. All the other components in Lumos can leverage the configuration from the config manager directly.
 
 A DApp can set up the config manger by using **pre-defined configurations** with the <var>LUMOS_CONFIG_NAME</var> variable or **a local configuration file** with the <var>LUMOS_CONFIG_FILE</var> variable.
 
@@ -15,10 +15,10 @@ import TabItem from '@theme/TabItem';
     {label: 'Pre-defined Configurations', value: 'configname'},
     {label: 'A Local Configuration File', value: 'congfile'},
   ]}>
-<TabItem value="configname">  <p><ul><li>The <var>LUMOS_CONFIG_NAME</var> variable can take the <code>LINA</code> value to boot the DApp with the pre-defined configurations of the <b>Mainnet</b> network.</li><li>The <var>LUMOS_CONFIG_NAME</var> variable can take the <code>AGGRON4</code> value to boot the DApp with the pre-defined configurations of the <b>Testnet</b> network.</li></ul></p><p>For more information, see <a href="../guides/config#set-up-the-config-manager-by-using-pre-defined-configurations">Set Up the Config Manager by Using Pre-defined Configurations</a>.</p>
+<TabItem value="configname">  <p><ul><li>The <var>LUMOS_CONFIG_NAME</var> variable can take the <code>LINA</code> value to launch the DApp with the pre-defined configurations of the <b>Mainnet</b> network.</li><li>The <var>LUMOS_CONFIG_NAME</var> variable can take the <code>AGGRON4</code> value to launch the DApp with the pre-defined configurations of the <b>Testnet</b> network.</li></ul></p><p>For more information, see <a href="../guides/config#set-up-the-config-manager-by-using-pre-defined-configurations">Set Up the Config Manager by Using Pre-defined Configurations</a>.</p>
 
 </TabItem>
-    <TabItem value="congfile"><p>The <var>LUMOS_CONFIG_FILE</var> variable can take the value of a local config file name, for example, <var>config.json</var>, to boot the DApp with the configurations of <b>DEV chain</b>.</p><p>For more information, see <a href="../guides/config#set-up-the-config-manager-by-using-a-local-config-file">Set Up the Config Manager by Using a Local Config File</a>.</p>
+    <TabItem value="congfile"><p>The <var>LUMOS_CONFIG_FILE</var> variable can take the value of a local config file name, for example, <var>config.json</var>, to launch the DApp with the configurations of <b>DEV chain</b>.</p><p>For more information, see <a href="../guides/config#set-up-the-config-manager-by-using-a-local-config-file">Set Up the Config Manager by Using a Local Config File</a>.</p>
 
 </TabItem>
 </Tabs>
@@ -37,7 +37,7 @@ The following prerequisites apply for setting up the config manager:
 
 ## Set Up the Config Manager by Using Pre-defined Configurations
 
-To boot the DApp with the pre-defined **Mainnet** configurations, assign <b>LINA</b> to the <var>LUMOS_CONFIG_NAME</var> variable.
+To launch the DApp with the pre-defined **Mainnet** configurations, assign <b>LINA</b> to the <var>LUMOS_CONFIG_NAME</var> variable.
 
 Example:
 
@@ -49,7 +49,7 @@ initializeConfig();
 export const CONFIG = getConfig();
 ```
 
-To boot the DApp with the pre-defined **Testnet** configurations, assign **AGGRON4** to the <var>LUMOS_CONFIG_NAME</var> variable.
+To launch the DApp with the pre-defined **Testnet** configurations, assign **AGGRON4** to the <var>LUMOS_CONFIG_NAME</var> variable.
 
 Example:
 
@@ -63,7 +63,7 @@ export const CONFIG = getConfig();
 
 ## Set Up the Config Manager by Using a Local Config File
 
-To boot the DApp on **DEV chain**, assign a local config file to the <var>LUMOS_CONFIG_FILE</var> variable. Lumos can read the configurations from the config file that is specified by the <var>LUMOS_CONFIG_FILE</var> variable. 
+To launch the DApp on **DEV chain**, assign a local config file to the <var>LUMOS_CONFIG_FILE</var> variable. Lumos can read the configurations from the config file that is specified by the <var>LUMOS_CONFIG_FILE</var> variable. 
 
 If the <var>LUMOS_CONFIG_FILE</var> variable is unsigned, Lumos reads configurations from the `config.json` file in the current directory.
 

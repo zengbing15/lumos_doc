@@ -6,7 +6,7 @@ The Hello Lumos example is designed as a simple "DApp" that implemented the most
 
 You can follow the steps in this guide to perform a common transfer with the functions provided by the Hello Lumos "DApp".
 
-The sections in the later guides, for example, [Query on Cells](../guides/querycells), [Query on Transactions](../guides/querytransactions), and [Assemble Transactions](../guides/buildtransactions), explain the usage of Lumos by using the code examples of Hello Lumos. The full code of the example can be found [here](https://github.com/xying21/hellolumos). 
+The later sections of the guide, for example, [Query on Cells](../guides/querycells), [Query on Transactions](../guides/querytransactions), and [Assemble Transactions](../guides/buildtransactions), explain the usage of Lumos by using the code examples of Hello Lumos. The full code of the example can be found [here](https://github.com/xying21/hellolumos). 
 
 The  example has the following structure:
 
@@ -30,10 +30,10 @@ hellolumos/
 
 ## Prerequisites
 
-The following Prerequisites apply for walking through the Hello Lumos example:
+The following prerequisites apply for walking through the Hello Lumos example:
 
 - The development environment is set up. For more information, see [Set Up the Development Environment](../preparation/setupsystem).
-- Two accounts, Alice and Bob are created. Alice is specified as the miner to receive mining rewards. For more information, see [Create accounts](../preparation/createaccount).
+- Two accounts, Alice and Bob, have been created. Alice is specified as the miner to receive mining rewards. For more information, see [Create accounts](../preparation/createaccount).
 
 ## Environment
 
@@ -78,7 +78,7 @@ All required dependencies for the Hello Lumos example are listed in package.json
 
 :::note
 
-The development environment must be set up correctly for installing the dependencies successfully. For more information, see [Set Up the Development Environment](../preparation/setupsystem).
+The development environment must be set up correctly for successful installation of the dependencies. For more information, see [Set Up the Development Environment](../preparation/setupsystem).
 
 :::
 

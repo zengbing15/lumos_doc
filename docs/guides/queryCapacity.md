@@ -18,7 +18,7 @@ The following examples are verified on Ubuntu 20.04.2. Steps on the other platfo
 
 ## Examples
 
-### Get the Cell Minimal Capacity
+### Get Cell Minimal Capacity
 
 The three fields of a CKB cell and the cell itself all take up CKB capacity. The cell must have the capacity that is equal to or more than the total size of information stored in the cell. For more information, see [Nervos Docs: Cell](https://nervosnetwork.github.io/docs-new/docs/reference/cell).
 

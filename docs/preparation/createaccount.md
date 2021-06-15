@@ -4,7 +4,7 @@ title: Create Accounts
 ---
 import useBaseUrl from "@docusaurus/useBaseUrl";
 
-In this guide, we will prepare two CKB accounts, Alice and Bob that will be used in the <var>accounts.ts</var> file in the later [Hello Lumos](../preparation/hellolumos) example. For more information about the concepts of CKB accounts, CKB capacity, and the methods to create accounts, see [CKB Accounts and Capacity](../reference/ckbaccount).
+In this guide, we will prepare two CKB accounts, Alice and Bob, that will be used in the <var>accounts.ts</var> file in the later [Hello Lumos](../preparation/hellolumos) example. For more information about the concepts of CKB accounts, CKB capacity, and the methods to create accounts, see [CKB Accounts and Capacity](../reference/ckbaccount).
 
 ## Prerequisites 
 
@@ -57,7 +57,7 @@ message: "Success exported account as extended privkey to: \"alice\", please use
 
 For more information about CKB capacity, see [CKB Capacity of an Account](../reference/ckbaccount#ckb-capacity-of-an-account).
 
-To get CKB capacity for Alice on **DEV chain**, specify Alice as the miner for receiving mining rewards.
+To get CKB capacity for Alice on **DEV chain**, specify Alice as the miner who receives mining rewards.
 
 Assign the lock args of Alice to <b>Block Assembler Lock Arg</b> in the Edit Chain form and save the changes.
 
@@ -67,7 +67,7 @@ Assign the lock args of Alice to <b>Block Assembler Lock Arg</b> in the Edit Cha
 
 :::note
 
-The CKB is mature 4 [epochs](https://docs.nervos.org/docs/basics/glossary#epoch "An epoch is a period of time for a set of blocks. ") after it is mined. In Nervos, an epoch is approximately four hours. For DEV chain, the epoch length is defined by the `genesis_epoch_length` parameter in the **dev.toml** file. For more information about shortening the epoch length for DEV chain, see Step 4 of [Install a CKB node on DEV chain by using Tippy](../preparation/setupsystem#install-a-ckb-node-on-dev-chain-by-using-tippy).
+CKB is mature 4 [epochs](https://docs.nervos.org/docs/basics/glossary#epoch "An epoch is a period of time for a set of blocks. ") after being mined. In Nervos, an epoch is approximately four hours. For DEV chain, the epoch length is defined by the `genesis_epoch_length` parameter in the **dev.toml** file. For more information about shortening the epoch length for DEV chain, see Step 4 of [Install a CKB node on DEV chain by using Tippy](../preparation/setupsystem#install-a-ckb-node-on-dev-chain-by-using-tippy).
 
 :::  
 

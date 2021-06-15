@@ -2,7 +2,7 @@
 id: indexer
 title: Set Up the Lumos Indexer
 ---
-Lumos is designed based on the [Index-Query-Assemble](https://docs.nervos.org/docs/reference/cell#index-query-assemble-pattern) pattern. The Lumos indexer polls blocks from a CKB node, indexes them and stores the indexed data in a local database to provide optimal queries.
+Lumos was designed on the basis of the [Index-Query-Assemble](https://docs.nervos.org/docs/reference/cell#index-query-assemble-pattern) pattern. The Lumos indexer polls blocks from a CKB node, indexes them and stores the indexed data in a local database to provide optimal queries.
 
 <!--Dapps built with Lumos must have an indexer configured and running.-->
 
@@ -57,7 +57,7 @@ The following examples are verified on Ubuntu 20.04.2. Steps on the other platfo
 
 ### Step 1. Install the indexer package.
 
-To install the RocksDB backed indexer as a dependency for a project:
+To install the RocksDB backed indexer as a project dependency:
 
 ```shell
 cd mydapp
@@ -66,7 +66,7 @@ yarn add @ckb-lumos/indexer
 
 ### Step 2. Start the indexer.
 
-The Indexer URI, for example, http://127.0.0.1:8114 (the default RPC URL), is the <var>listen_address</var> configuration in the `ckb.toml` file of the CKB node.
+The Indexer URI is the <var>listen_address</var> configuration in the `ckb.toml` file of the CKB node. The default indexer URI is http://127.0.0.1:8114.
 
 To initialize and start the RocksDB backed indexer:
 
@@ -107,7 +107,7 @@ cd mydapp
 yarn add @ckb-lumos/sql-indexer@0.16.0 knex pg
 ```
 
-### Step 3. Initialize the SQL database.
+### Step 4. Initialize the SQL database.
 
 Create the knexfile.js file under the <var>projectName</var>/node-modules/@ckb-lumos/packages/sql-indexer folder.
 
@@ -139,9 +139,9 @@ Run the following command to migrate and update the local database:
 npx knex migrate:up
 ```
 
-### Step 4. Start the Indexer.
+### Step 5. Start the Indexer.
 
-The Indexer URI, for example, http://127.0.0.1:8114 (the default RPC URL), is the <var>listen_address</var> configuration in the `ckb.toml` file of the CKB node.
+The Indexer URI is the <var>listen_address</var> configuration in the `ckb.toml` file of the CKB node. The default indexer URI is http://127.0.0.1:8114.
 
 To initialize and start the SQL backed indexer:
 

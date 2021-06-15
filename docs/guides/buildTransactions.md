@@ -2,7 +2,7 @@
 id: buildtransactions
 title: Build Transactions
 ---
-The goal and the core functionality of a DApp built on top of Lumos is to build transactions in response to user requests. Lumos provides the [TransactionSkeleton](https://nervosnetwork.github.io/lumos/modules/helpers.html#transactionskeletontype) that significantly simplifies the transaction assembling process. Each transaction skeleton corresponds to an action, and will be built into a single transaction that is ready to be submitted to CKB.
+The objective and the core functionality of a DApp built on top of Lumos is to build transactions in response to user requests. Lumos provides the [TransactionSkeleton](https://nervosnetwork.github.io/lumos/modules/helpers.html#transactionskeletontype) that significantly simplifies the transaction assembling process. Each transaction skeleton corresponds to an action, and will be built into a single transaction that is ready to be submitted to CKB.
 
 This guide introduces the general workflow of assembling transactions. The workflow applies to the following examples of a common transfer operation, DAO operations, a transfer operation with the `locktimepool`, and SUDT operations.
 
