@@ -66,7 +66,7 @@ function Body() {
 export default function Home() {
   return (
     <Layout>
-	<Head><script async type="text/javascript" src="https://userlike-cdn-widgets.s3-eu-west-1.amazonaws.com/85e4a005c7a14117b205fec853cbe30447112d747a6747e5a40a804d4bcf715a.js"></script>
+	<Head>/*<script async type="text/javascript" src="https://userlike-cdn-widgets.s3-eu-west-1.amazonaws.com/85e4a005c7a14117b205fec853cbe30447112d747a6747e5a40a804d4bcf715a.js"></script>*/
 </Head>
       <Hero />
       <Body />
