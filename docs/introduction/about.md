@@ -3,7 +3,7 @@ id: about
 title: About This Guide
 sidebar_label: Home
 ---
-The intention of this documentation is to give you an understanding of Lumos and how Lumos is applied when developing applications on CKB. <!--This documentation guide offers the informational content to help you get started developing CKB DApps on the Lumos framework.-->
+This documentation intends to give you an understanding of Lumos and how Lumos is applied when developing applications on CKB. <!--This documentation guide offers the informational content to help you get started developing CKB DApps on the Lumos framework.-->
 
 For starters, it is recommended to read through the following sections linearly:
 

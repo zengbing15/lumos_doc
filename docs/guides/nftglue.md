@@ -148,7 +148,7 @@ Done
 
 :::note
 
-The CKB node and the miner must start running before the deployment of the NFT script. To start the CKB node, run `ckb run -C devnet` . To start the miner, run `ckb miner -C devnet`.
+The CKB node and the miner must start running before deploying the NFT script. To start the CKB node, run `ckb run -C devnet` . To start the miner, run `ckb miner -C devnet`.
 
 :::
 
@@ -215,7 +215,7 @@ To deploy the NFT script:
 
 3. Deploy the NFT binary program to DEV chain by using the "<code>capsule deploy --address <var>the testnet address of the account created in step 2</var></code>" command.
 
-   A cell is created with the binary program as cell data on the DEV chain. Transactions on NFT tokens reference the cell by cell deps, and use the NFT script in the transactions.
+   A cell is created on the DEV chain with the binary program as the cell data. Transactions on NFT tokens reference the cell via cell deps to use the NFT script.
 
    ```shell
    $ capsule deploy --address ckt1qyq8uqrxpw9tzg4u5waydrzmdmh8raqt0k8qmuetsf
@@ -266,7 +266,7 @@ To deploy the NFT script:
 
 ## Perform NFT Operations by Using Lumos
 
-After the NFT script is deployed on DEV chain, perform the following steps to interact with and operate on NFT tokens by using Lumos.
+After the deployment of the NFT script on DEV chain, implement the following steps to interact with and operate on NFT tokens by using Lumos.
 
 ### Step 1. Install dependencies in the nft-glue project.
 

@@ -98,7 +98,7 @@ import useBaseUrl from "@docusaurus/useBaseUrl";
   ]}>
 <TabItem value="ubuntu"><p><b>Step 1. Download Tippy.</b></p>
 
-<p>Download the <b>tippy-linux-x64.tar.gz</b> file and unzip the file. By default, the files are unzipped into the tippy-linux-x64 folder. All versions of Tippy can be found on the <a href="https://github.com/nervosnetwork/tippy/releases"><i class="feather icon-download"></i>Tippy Releases</a> page.</p>
+<p>Download the <b>tippy-linux-x64.tar.gz</b> file and unzip it. By default, the files are unzipped into the tippy-linux-x64 folder. All versions of Tippy can be found on the <a href="https://github.com/nervosnetwork/tippy/releases"><i class="feather icon-download"></i>Tippy Releases</a> page.</p>
 
 <p><b>Step 2. Make Tippy executable and run Tippy.</b></p>
 

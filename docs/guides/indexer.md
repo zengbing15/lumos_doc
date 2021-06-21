@@ -20,7 +20,7 @@ import TabItem from '@theme/TabItem';
 <TabItem value="rocksdb"><p>The RocksDB backed indexer is contained in the  <code>@ckb-lumos/indexer</code> package. After the <code>@ckb-lumos/indexer</code> package is installed, the RocksDB backed indexer can be used directly.</p>
 
 </TabItem>
-    <TabItem value="sql"><p>The Lumos indexer supports the SQL database of the latest stable versions of PostgreSQL and MySQL. A separate package, the <code>@ckb-lumos/sql-indexer</code> package, contains the SQL backed indexer. Specific SQL database settings are required before using the SQL backed indexer.</p>
+    <TabItem value="sql"><p>The Lumos indexer supports the latest stable versions of SQL databases for PostgreSQL and MySQL. A separate package, the <code>@ckb-lumos/sql-indexer</code> package, contains the SQL backed indexer. Specific SQL database settings are required before using the SQL backed indexer.</p>
 
 :::note
 

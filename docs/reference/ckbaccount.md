@@ -14,7 +14,7 @@ You can create new accounts when developing your DApps by using the method demon
 
 In CKB, an account is represented as a collection of [live cells](https://docs.nervos.org/docs/reference/cell#live-cell) (unspent cells) that contain the same lock script.
 
-> A live cell refers to an unspent cell in CKB. It is similar to the concept of [UTXO](https://en.wikipedia.org/wiki/Unspent_transaction_output) in Bitcoin's terminology. The full set of live cells in CKB, is considered the full state of CKB at that particular time point. Any transaction on CKB consumes some live cells. The live cells become spent cells just after the transaction is committed. At the same time, some new live cells are created.
+> A live cell refers to an unspent cell in CKB. The concept is similar to that of [UTXO](https://en.wikipedia.org/wiki/Unspent_transaction_output) in Bitcoin's terminology. The full set of live cells in CKB is considered being the full state of CKB at that particular point in time. Any transaction on CKB consumes some live cells. After the transaction is submitted, the live cells become spent cells. Concurrently, some new live cells are created.
 
 The following example is a cell retrieved by Lumos query functions:
 
@@ -52,9 +52,9 @@ Lumos enriches the cell structure defined in [CKB RFC: Cell](https://github.com/
 > The `capacity` of a cell serves two purposes: 
 >
 > - It represents the amount of CKB tokens stored in the cell. 
-> - It sets the limit on how much information the cell can store. 
+> - It sets a limit on how much information can be stored in a cell. 
 >
-> The basic unit for CKB capacity is **shannon**. A bigger unit, **CKByte** or just **CKB** is also used. 1 CKB equals to 10<sup>8</sup> shannons. 1 CKB also means the cell can store 1 byte of information. For more information about how to calculate the cell information size, see [Nervos Docs: Cell Information Size Calculation](http://docs.nervos.org/docs/reference/cell#cell-information-size-calculation).
+> The basic unit for CKB capacity is **shannon**. A larger unit, **CKByte** or just **CKB** is also in use. 1 CKB equals to 10<sup>8</sup> shannons. 1 CKB also means a cell can store 1 byte of information. For more information about how to calculate the cell information size, see [Nervos Docs: Cell Information Size Calculation](http://docs.nervos.org/docs/reference/cell#cell-information-size-calculation).
 
 The CKB capacity of an account is the total `capacity` of the live cells owned by the account.
 
@@ -131,11 +131,11 @@ Let us look at the following example. There are three live (unspent) cells in Ch
 
 :::note
 
-If an account wants to perform transaction actions like transferring CKB to other accounts, the account must have enough CKB capacity that is equal to or more than the minimal CKB requirement of a transaction.
+If an account seeks to perform transactional actions, such as transferring CKB to other accounts, the account must have sufficient CKB capacity that equals or exceeds the minimum CKB requirement for the transaction.
 
-For example, the minimum CKB capacity requirement is 61 [CKB](https://docs.nervos.org/docs/basics/glossary#shannon "One CKByte is equal to 100,000,000 Shannons.") (6,100,000,000 shannons) for one common transaction, and 102 CKB (10,200,000,000 shannons) for a DAO deposit transaction.
+For example, the minimum CKB capacity requirement for a regular transaction is 61 [CKB](https://docs.nervos.org/docs/basics/glossary#shannon "One CKByte is equal to 100,000,000 Shannons.") (6,100,000,000 shannons), and the minimum CKB capacity requirement for a DAO deposit transaction is 102 CKB (10,200,000,000 shannons).
 
-The accounts on the Testnet can claim CKB capacity on [https://faucet.nervos.org](https://faucet.nervos.org/). The accounts on DEV chain can get CKB capacity by mining blocks as a miner. For more information about getting CKB capacity, see **[step 5](../preparation/createaccount#step-5-get-ckb-capacity-for-the-account-of-alice)** of [Create the accounts by Using ckb-cli](../reference/ckbaccount#create-the-accounts-by-using-ckb-cli).
+Accounts on Testnet can request CKB capacity on [https://faucet.nervos.org](https://faucet.nervos.org/). Accounts on DEV chain can obtain CKB capacity by mining blocks as miners. For more information about getting CKB capacity, see **[step 5](../preparation/createaccount#step-5-get-ckb-capacity-for-the-account-of-alice)** of [Create the accounts by Using ckb-cli](../reference/ckbaccount#create-the-accounts-by-using-ckb-cli).
 
 :::
 

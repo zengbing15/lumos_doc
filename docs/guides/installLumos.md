@@ -111,7 +111,7 @@ Done in 125.02s.
 
 ### gyp Error About Missing Dependencies for node-gyp
 
-If any gyp error about missing dependencies for node-gyp is encountered, check the details of [Install Dependencies for node-gyp](../preparation/setupsystem#install-dependencies-for-node-gyp) or the instructions on [node-gyp](https://github.com/nodejs/node-gyp) to fix the error.
+If any gyp error encountered regarding missing node-gyp dependencies, check for details of the [node-gyp installation dependencies](../preparation/setupsystem#install-dependencies-for-node-gyp) or the instructions on [node-gyp](https://github.com/nodejs/node-gyp) to fix the error.
 
 ### Error While Rebuilding the xxhash Package
 

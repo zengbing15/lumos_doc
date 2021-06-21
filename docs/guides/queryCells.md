@@ -420,7 +420,7 @@ Find Cells and Skip the first 10 cells:
 
 ### Prefix Search on <var>args</var>
 
-To enable the prefix search on the args of a lock script or a type script, you can specify a value for <var>argsLen</var> instead of the default value of **-1**. The default value is used for a query on a full slice of the args of a lock script.
+To enable prefix search on args of lock scripts or type scripts, a value can be specified for <var>argsLen</var> instead of the default value of **-1**. The default value is used for a query on the full slice of args of a lock script or a type script.
 
 The lock script args length is **20** in normal scenarios and **28** in the multisig scenario. When the length is uncertain, the <var>argsLen</var> parameter can be set as `any`. 
 
