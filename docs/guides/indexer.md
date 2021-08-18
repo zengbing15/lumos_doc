@@ -161,7 +161,6 @@ const knex = Knex({
 const sqlindexer = new Indexer("http://127.0.0.1:8114", knex);
 sqlindexer.startForever();
 ```
-
 <!--Electron has a different application binary interface (ABI) from a given Node.js binary, that will cause different Node.js version errors for Electron applications. So the pre-built native module of the CKB indexer needs to be used.-->
 
 <!--First, we do provide pre-built binaries linked with electron's node version.-->
